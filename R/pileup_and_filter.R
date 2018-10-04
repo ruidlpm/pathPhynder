@@ -1,5 +1,3 @@
-
-
 # pileup_and_filter.R
 # runs pileup and filters bases, outputs intree files
 
@@ -73,7 +71,7 @@ for(samp in bam_list$V1){
 		system(cmd, wait=T)
 	
 		
-		cmd2=paste0("python3 call_bases_chrY_v2.1.py ",
+		cmd2=paste0("python3 inst/python/call_bases_chrY_v2.1.py ",
 			paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 			paste0(" -m ", mode),
 			paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),
