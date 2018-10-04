@@ -1,7 +1,7 @@
 Package: pathPhynder
 Title: A workflow for integrating ancient lineages into present-day Y-chromosome phylogenies.
 Version: 0.0.0.9000
-Authors@R: person("Rui", "Martiniano", email = "rm890@cam.ac.uk", role = c("aut", "dev"))
+Authors@R: person("Rui", "Martiniano", email = "rm890@cam.ac.uk", role = c("aut", "cre"))
 Description: This workflow offers a solution for integrating ancient and present-day Y-chromososome data, first by identifiying informative Y-chromosome markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely clade where it belongs.
 Depends: R (>= 3.4.2)
 License: MIT
