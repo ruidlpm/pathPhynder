@@ -29,9 +29,9 @@ dir.create(intree_folder, showWarnings = FALSE)
 
 
 if (chromosome_name=="chrY"){
-	sites_var<-paste0("tree_data/",sites_data,".siteschr.bed")
+	sites_var<-paste0(sites_data,".siteschr.bed")
 } else if (chromosome_name=="Y") {
-	sites_var<-paste0("tree_data/",sites_data,".sites.bed")
+	sites_var<-paste0(sites_data,".sites.bed")
 }
 
 
@@ -58,7 +58,7 @@ for(samp in bam_list$V1){
 	} else {
 
 		
-		pos_var<-paste0("tree_data/",sites_data,".sites.txt")
+		pos_var<-paste0(sites_data,".sites.txt")
 		
 		cmd=paste0("samtools mpileup ",
 			paste0(file_path),
@@ -71,7 +71,7 @@ for(samp in bam_list$V1){
 		system(cmd, wait=T)
 	
 		
-		cmd2=paste0("python3 inst/python/call_bases_chrY_v2.1.py ",
+		cmd2=paste0("python3 ~/in_development/pathPhynder/inst/python/call_bases_chrY_v2.1.py ",
 			paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 			paste0(" -m ", mode),
 			paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),

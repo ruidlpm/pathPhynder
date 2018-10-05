@@ -28,8 +28,8 @@ if (length(args)!=4) {
 
 
 tree_file=args[1]
-derpos_file<-paste0("tree_data/",args[2],".derpos.RData")
-ancpos_file<-paste0("tree_data/",args[2],".ancpos.RData")
+derpos_file<-paste0(args[2],".derpos.RData")
+ancpos_file<-paste0(args[2],".ancpos.RData")
 
 
 for (testfile in c(tree_file, derpos_file, ancpos_file)){
@@ -54,7 +54,7 @@ ancpos<-readRDS(file=ancpos_file)
 
 dir.create(args[4], showWarnings = FALSE)
 
-br<-read.table(paste0("tree_data/",args[2],".edge_df.txt"), h=T, sep='\t')
+br<-read.table(paste0(args[2],".edge_df.txt"), h=T, sep='\t')
 br<-br[c('Edge','Node1','Node2','hg')]
 
 file_list<-list.files(args[3], pattern ='intree.txt')
@@ -94,6 +94,7 @@ br_sample_tables<-list()
 # for each sample
 for(samp in samps){
     ancvcf<-(read_in(samp))
+    samp<-make.names(samp)
         if (is.data.frame(ancvcf)==F){
             print("ancient sample intree.txt file is empty")
             excluded<-c(excluded, samp)
@@ -157,11 +158,10 @@ for(samp in samps){
 }
 
 
-
-
 plotAncDerSNPTree<-function(sample_name){
     samp<-make.names(sample_name)
     countdata<-br_sample_tables[[samp]]
+    cat("SNP count: ",sum(countdata$support),"derived and", sum(countdata$notsupport), "ancestral.\n\n")
     pdf(file=paste0(args[4],"/",samp, '.counts_on_branches.pdf'))
     plot(tree, cex=0.1, edge.col="grey")
     edgelabels(edge=countdata$Edge[countdata$support>0],pch=20, col=alpha("darkgreen", 0.7),cex=log((countdata$support[countdata$support>0])+1)/2)

@@ -15,7 +15,7 @@ if (length(args)!=3) {
         ", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
-    cat(paste("decide.R", args[1], args[2],args[3],args[4], '\n\n'))
+    cat(paste("decide.R", args[1], args[2],args[3], '\n\n'))
 }
 
 
@@ -27,7 +27,7 @@ tree<-ladderize(tree)
 tree$tip.label<-make.names(tree$tip.label)
 
 #read anchgs table
-anchgs<-try(read.table("anchgs.txt", sep='\t'))
+try(anchgs<-(read.table("anchgs.txt", sep='\t')))
 
 br<-cbind(data.frame(tree$edge), c(1:length(tree$edge[,1])))
 colnames(br)<-c("pos1", "pos2", "branches")
@@ -37,9 +37,9 @@ br_sample_tables<-readRDS(file="results_folder/allele_count_list.RData")
 
 samps<-names(br_sample_tables)
 
-hgs<-try(read.table("hgs.txt"))
+try(hgs<-try(read.table("hgs.txt")))
 tmptree<-tree
-tmptree$tip.label<-paste0(hgs$V4[match(make.names(tree$tip.label), make.names(hgs$V1))],"___",tree$tip.label)
+try(tmptree$tip.label<-paste0(hgs$V4[match(make.names(tree$tip.label), make.names(hgs$V1))],"___",tree$tip.label))
 
 #make all possible paths
 getAncestors<-phytools:::getAncestors
@@ -219,8 +219,7 @@ getphylo_y <- function(tree, node) {
 # stopped_path<-br$branches[match(stopped_path, br$pos1)]
 
 
-
-pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=length(tree$tip.label)/30, width=15)
+pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
 plot((tmptree), col='darkgrey',cex=0.2, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 1)
 par(new=T)
 plot((tmptree), cex=0.2, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = 1)
@@ -239,8 +238,8 @@ if(pos_at_best_edge==0){
     points(x-(total_len-pos_at_best_edge),y, col="black", bg=alpha("yellow", 0.3), pch=21, cex=1)
 }
 
-mtext(paste(anchgs$V1[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))],anchgs$V4[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))], sep="___"))
-print(anchgs[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1)),])
+# try(mtext(paste(anchgs$V1[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))],anchgs$V4[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))], sep="___")))
+# try(print(anchgs[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1)),]))
 dev.off()
 closeAllConnections()
 
