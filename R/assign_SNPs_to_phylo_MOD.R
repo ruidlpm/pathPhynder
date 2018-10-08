@@ -43,7 +43,6 @@ get_vcf<-function(vcf_name){
 
 vcf<-get_vcf(args[2])
 
-warnings()
 
 #check if any samples are missing and if so, exclude from vcf
 miss<- colnames(vcf)[10:length(vcf)][!(colnames(vcf)[10:length(vcf)] %in% tree$tip.label)]
@@ -78,93 +77,91 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 #Remove missing data
 #it would be good to fix this to impute missingness in a phylogenetically aware way
 #I have fixed it, missing data is now being accounted for and used
-
 samples<-colnames(vcf[10:dim(vcf)[2]])
-
 
 vcf[samples]<-sapply(vcf[samples], as.numeric)
 
 
-cat(paste0("    Number of SNPs: ", dim(vcf)[1]),'\n')
+complete_vcf<-vcf
+complete_vcf[samples][complete_vcf[samples]=='N']<-NA
+complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
+
+vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
+
+
+
+cat(paste0("    Number of SNPs with any missing data: ", dim(vcf)[1]),'\n')
+cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
+
 
 
 
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
-
 snps<-read.table("snps.txt")
 
 
+cat("starting non missing genos\n\n")
 
 REFpos<-list()
 ALTpos<-list()
+total <- length(edges$edge)
+# pb <- txtProgressBar(min = 0, max = total, style = 3)
+
 for (edge in edges$edge){
     relevant_node<-edges$pos2[edges$edge==edge]
-    #print(relevant_node)
-    
     desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
-    #print(desc)
-
-
     nondesc<- samples[!samples %in% desc]
-    #print(nondesc)
+    REFs<-which(rowSums(complete_vcf[desc])==0 & rowSums(complete_vcf[nondesc])==length(nondesc))
+    ALTs<-which(rowSums(complete_vcf[desc])==length(desc) & rowSums(complete_vcf[nondesc])==0)
+    REFpos[[edge]]<-unique(complete_vcf$POS[REFs])
+    ALTpos[[edge]]<-unique(complete_vcf$POS[ALTs])
+    allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
+    cat("\r",allele_count)
+# 	snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
+# 	if (length(snp_info)>0){
+# 		print(snp_info)
+# 	}
+# }
+}
+cat('\n\n\n')
 
-    vcf$na_count_samples <- apply(vcf[samples], 1, function(x) sum(is.na(x)))
-    vcf$na_count_desc <- apply(vcf[desc], 1, function(x) sum(is.na(x)))
-    vcf$na_count_nondesc <- apply(vcf[nondesc], 1, function(x) sum(is.na(x)))
 
-    REFs<-which(rowSums(vcf[desc], na.rm=T)==0 & rowSums(vcf[nondesc], na.rm=T)==length(nondesc)+vcf$na_count_nondesc)
 
-    ALTs<-which(rowSums(vcf[desc], na.rm=T)==length(desc)+vcf$na_count_desc & rowSums(vcf[nondesc], na.rm=T)==0)
+# cat("starting non missing genos\n\n")
 
-    REFpos[[edge]]<-vcf$POS[REFs]
-    ALTpos[[edge]]<-vcf$POS[ALTs]
-    print(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
-	snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
-	if (length(snp_info)>0){
-		print(snp_info)
-	}
+# #iterates through tree from the root to tips
+# #gets descendants of a given node
+# #tests this set of descendants all have 1s and all remaining have 0s (der)
+# #tests this set of descendants all have 0s and all remaining have 1s (der)
+# #records the positions at each branch which are composed by the ALT (derpos) and REF (ancpos) allele
+
+
+
+for (edge in edges$edge){
+    relevant_node<-edges$pos2[edges$edge==edge]
+    desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
+    nondesc<- samples[!samples %in% desc]
+    vcf_with_missing$na_count_samples <- apply(vcf_with_missing[samples], 1, function(x) sum(is.na(x)))
+    vcf_with_missing$na_count_desc <- apply(vcf_with_missing[desc], 1, function(x) sum(is.na(x)))
+    vcf_with_missing$na_count_nondesc <- apply(vcf_with_missing[nondesc], 1, function(x) sum(is.na(x)))
+    REFs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==0 & rowSums(vcf_with_missing[nondesc], na.rm=T)==length(nondesc)+vcf_with_missing$na_count_nondesc)
+    ALTs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==length(desc)+vcf_with_missing$na_count_desc & rowSums(vcf_with_missing[nondesc], na.rm=T)==0)
+    REFpos[[edge]]<-c(unlist(REFpos[[edge]]),unique(vcf_with_missing$POS[REFs]))
+    ALTpos[[edge]]<-c(unlist(ALTpos[[edge]]),unique(vcf_with_missing$POS[ALTs]))
+	allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
+    cat("\r",allele_count)
+	# snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
+	# if (length(snp_info)>0){
+	# 	print(snp_info)
+	# }
 }
 
 
 
-#iterates through tree from the root to tips
-#gets descendants of a given node
-#tests this set of descendants all have 1s and all remaining have 0s (der)
-#tests this set of descendants all have 0s and all remaining have 1s (der)
-#records the positions at each branch which are composed by the ALT (derpos) and REF (ancpos) allele
 
 
-
-# derpos<-list()
-# ancpos<-list()
-# total <- length(br$branches)
-# pb <- txtProgressBar(min = 0, max = total, style = 3)
-
-# for (branch in br$branches){
-#     #print(branch)
-#     subset1<-br[br$branches==branch,]
-#     nodes<-subset1$pos1[subset1$branches==branch]
-#     for (node in nodes){
-#         subset2<-subset1[subset1$pos1==node,]
-#         ends<-subset2$pos2[subset2$pos1==node]
-#         # print(c(node,ends, branch))
-#         desc<-c(tree$tip.label,tree$node.label)[getDescendants(tree,ends)]
-#         desc<-desc[desc %in% tree$tip.label]
-#         der<- vcf$POS[which(rowSums(genos[desc])==length(desc) & rowSums(genos)==length(desc))]
-#         anc<- vcf$POS[which(rowSums(genos[desc])==0 & rowSums(genos)==length(colnames(genos))-length(desc))]
-#         #print(paste("der",length(der), "|", "anc", length(anc)))
-#     }
-#     derpos[[branch]]<-unique(der)
-#     ancpos[[branch]]<-unique(anc)
-#     cat('\t\t'); setTxtProgressBar(pb, branch)
-#     cat('\r',length(unique(sort(c(unlist(derpos), unlist(ancpos))))))
-# }
-# close(pb)
-# cat('\n')
-
-#save data
 dir.create('tree_data', showWarnings = FALSE)
 
 

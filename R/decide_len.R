@@ -110,9 +110,7 @@ if(length(path_pos_score)>0){
 
 sums<-sapply(pos_score, sum)
 
-print(sums)
 
-print(length(which(sums==max(sums))))
 
 if (length(which(sums==max(sums)))>1){
     best_paths<-which(sums==max(sums))
@@ -163,6 +161,7 @@ anc_at_best<-counts_for_best_path$notsupport[counts_for_best_path$Edge==best_edg
 pos_at_best_edge<-NULL
 if (anc_at_best==0){
     pos_at_best_edge<-0
+    total_len<-tmptree$edge.length[best_edge]
 } else if (anc_at_best>0){
     total_len<-tmptree$edge.length[best_edge]
     total_count<-der_at_best+anc_at_best
@@ -237,15 +236,14 @@ if(pos_at_best_edge==0){
 
 # try(mtext(paste(anchgs$V1[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))],anchgs$V4[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))], sep="___")))
 # try(print(anchgs[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1)),]))
+mtext(paste(gsub(".intree.txt","",sample_name),anchgs$V4[match(gsub(".intree.txt","",sample_name), anchgs$V1)], sep="___"))
+
 dev.off()
 
 
 
-
 best_nodes_table$sample_name<-as.character(best_nodes_table$sample_name)
-
 best_nodes_table<-rbind(best_nodes_table,data.frame(sample_name,best_node1, best_node2,pos_at_best_edge, total_len))
-
 
 closeAllConnections()
 }
@@ -282,7 +280,6 @@ dev.off()
 
 best_nodes_table<-best_nodes_table[order(best_nodes_table$pos_at_best_edge-best_nodes_table$total_len),]
 
-
 newtree<-tmptree
 newtree$edge.length<-tmptree$edge.length
 
@@ -298,12 +295,14 @@ dup_table<-dup_table[dup_table$pos_at_best_edge!=0,]
 
 dup_table$pos_at_best_edge[which(duplicated(dup_table$pos_at_best_edge))]<-dup_table$pos_at_best_edge[which(duplicated(dup_table$pos_at_best_edge))]-0.0000000001
 uniq_entr<-rbind(dup_table,uniq_entr)
-uniq_entr<-uniq_entr[order(uniq_entr$pos_at_best_edge-uniq_entr$total_len),]
+uniq_entr<-unique(uniq_entr[order(uniq_entr$pos_at_best_edge-uniq_entr$total_len),])
 
 
 
+# try(best_nodes_table$hg_label<-paste(gsub(".intree.txt","",best_nodes_table$sample_name),anchgs$V4[match(gsub(".intree.txt","",best_nodes_table$sample_name), anchgs$V1)], sep="___"))
 
 for (i in 1:length(uniq_entr$best_node2)){
+    print(i)
     # Get descendants of final_node in tmptree
     desc<-(getDescendants(tmptree, uniq_entr$best_node2[i]))
     desc_tip_names<-tmptree$tip.label[tmptree$tip.label %in% tmptree$tip.label[desc]]
@@ -316,11 +315,15 @@ for (i in 1:length(uniq_entr$best_node2)){
         final_node_in_new_tree<-(findMRCA(newtree, desc_tip_names))
     }
     if (uniq_entr$pos_at_best_edge[i]==0){
-        (newtree<-bind.tip(tree=newtree, position = 0, edge.length=0.001, where=final_node_in_new_tree,tip.label = substring(as.character(uniq_entr$sample_name[i] ),1,9)))
+        newtree<-bind.tip(tree=newtree, position = 0, edge.length=0.001, where=final_node_in_new_tree,tip.label = paste(gsub(".intree.txt","",uniq_entr$sample_name[i]),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), anchgs$V1)], sep="___"))
     } else if (uniq_entr$pos_at_best_edge[i]>0){
-        (newtree<-bind.tip(tree=newtree, position =(uniq_entr$total_len[i]-uniq_entr$pos_at_best_edge[i]), edge.length=abs(uniq_entr$pos_at_best_edge[i]-uniq_entr$total_len[i]), where=final_node_in_new_tree, tip.label = substring(as.character(uniq_entr$sample_name[i] ),1,9)))
+        try(newtree<-bind.tip(tree=newtree, position =(uniq_entr$total_len[i]-uniq_entr$pos_at_best_edge[i]), edge.length=abs(uniq_entr$pos_at_best_edge[i]-uniq_entr$total_len[i]), where=final_node_in_new_tree, tip.label = paste(gsub(".intree.txt","",uniq_entr$sample_name[i]),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), anchgs$V1)], sep="___")))
     }
 }
+
+
+
+
 
 # plot(ladderize(newtree), cex=0.5, tip.color = ifelse(newtree$tip.label %in% substring(best_nodes_table$sample_name,1,9), yes=2, no=1))
 
@@ -366,10 +369,9 @@ for (i in 1:length(uniq_entr$best_node2)){
 
 write.tree(newtree,file=paste0(args[2],'/added_anc_best_node_location.nwk'))
 
-pdf(file=paste0(args[2],'/added_anc_best_node_location.pdf'), height=10, width=7)
-plot(ladderize(newtree), cex=0.5, tip.color = ifelse(newtree$tip.label %in% substring(best_nodes_table$sample_name,1,9), yes=2, no=1))
+pdf(file=paste0(args[2],'/added_anc_best_node_location.pdf'), height=100, width=20)
+plot(ladderize(newtree), cex=0.5, tip.color = ifelse(newtree$tip.label %in% paste(gsub(".intree.txt","",uniq_entr$sample_name),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name), anchgs$V1)], sep="___"), yes=2, no=1))
 dev.off()
-
 
 
 
