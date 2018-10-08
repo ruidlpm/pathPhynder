@@ -63,6 +63,7 @@ samples<-names(br_sample_tables)
 best_nodes_table<-NULL
 
 
+
 for (samp in 1:length(br_sample_tables)){
 sample_name<-samples[samp]
 print(sample_name)
@@ -107,8 +108,9 @@ if(length(path_pos_score)>0){
 }
 
 
-
 sums<-sapply(pos_score, sum)
+
+print(sums)
 
 print(length(which(sums==max(sums))))
 

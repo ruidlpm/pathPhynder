@@ -68,21 +68,25 @@ cat("\tProcessing",length(samps), "samples", '\n\n\n')
 
 
 read_in<-function(sample_name){
-    ancvcf<-try(read.table(paste0(args[3],"/",sample_name), stringsAsFactors = F))
-    if (inherits(ancvcf, 'try-error')){
-        stop("Something wrong with the intree.txt filenames, not being able to read them.")
+    info <-file.info(paste0(args[3],"/",sample_name))
+    if (info$size==0){
+        cat(paste0(args[3],"/",sample_name), " is empty\n\n")
     } else {
-        if(dim(ancvcf)[2]!=6){
-            stop("Something wrong with the intree.txt files, expected 6 columns. Instead found", dim(ancvcf)[2])
-        } else if(dim(ancvcf)[2]==6){
-            cat(paste0("\tRead ", dim(ancvcf)[1], " positions from file ", sample_name,"\n\n"))
-            colnames(ancvcf)[1]<-"POS"
-            colnames(ancvcf)[6] <-make.names(sample_name)
-            return(ancvcf)
+        ancvcf<-try(read.table(paste0(args[3],"/",sample_name), stringsAsFactors = F))
+        if (inherits(ancvcf, 'try-error')){
+            stop("Something wrong with the intree.txt filenames, not being able to read them.")
+        } else {
+            if(dim(ancvcf)[2]!=6){
+                stop("Something wrong with the intree.txt files, expected 6 columns. Instead found", dim(ancvcf)[2])
+            } else if(dim(ancvcf)[2]==6){
+                cat(paste0("\tRead ", dim(ancvcf)[1], " positions from file ", sample_name,"\n\n"))
+                colnames(ancvcf)[1]<-"POS"
+                colnames(ancvcf)[6] <-make.names(sample_name)
+                return(ancvcf)
+            }
         }
     }
 }
-
 
 
 #annotating tree branches with derived and ancestral alleles observed at each branch
