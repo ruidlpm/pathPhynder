@@ -148,6 +148,7 @@ if (sum(counts_for_best_path$support>0)==0){
     print("OK")
 }
 
+
 best_edge<-NULL
 best_node1<-NULL
 best_node2<-NULL
@@ -161,7 +162,7 @@ anc_at_best<-counts_for_best_path$notsupport[counts_for_best_path$Edge==best_edg
 pos_at_best_edge<-NULL
 if (anc_at_best==0){
     pos_at_best_edge<-0
-    total_len<-tmptree$edge.length[best_edge]
+    total_len<-0
 } else if (anc_at_best>0){
     total_len<-tmptree$edge.length[best_edge]
     total_count<-der_at_best+anc_at_best
