@@ -43,7 +43,7 @@ tree<-read.tree(file=tree_file)
 tree<-ladderize(tree)
 
 #replace - with . to prevent downstream problems withs sample ID
-tree$tip.label<-gsub("-",".",tree$tip.label)
+tree$tip.label<-make.names(tree$tip.label)
 
 #snps.txt was taken from yhaplo's SNP list
 # br<-cbind(data.frame(tree$edge), c(1:length(tree$edge[,1])))

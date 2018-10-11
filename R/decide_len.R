@@ -55,7 +55,7 @@ print(paste0("number of paths = ",length(paths)))
 print(paste0("number of tips = ",length(tree$tip.label)))
 
 
-max_tolerance<-args[3]
+max_tolerance<-as.numeric(args[3])
 
 
 samples<-names(br_sample_tables)
@@ -64,49 +64,65 @@ best_nodes_table<-NULL
 
 
 
+
+
 for (samp in 1:length(br_sample_tables)){
-sample_name<-samples[samp]
-print(sample_name)
 
-countdata<-br_sample_tables[[samp]]
+    test_not_support<-NULL
+    sample_name<-samples[samp]
+    print(sample_name)
 
-pos_score<-list()
-neg_score<-list()
-stopped_edges<-NULL
+    countdata<-br_sample_tables[[samp]]
 
-for (path_index in 1:length(paths)){
-    path<-paths[[path_index]]
-    path_pos_score<-NULL
-    path_neg_score<-NULL
-    stopped_path<-NULL
-    for (pos1_in_path in 1:length(path)){
-        entry<-countdata[which(countdata$Node1==path[pos1_in_path] & countdata$Node2==path[pos1_in_path+1]),]
-        if(dim(entry)[1]!=0){
-        supporting = entry$support
-        notsupporting = entry$notsupport
-        if (notsupporting<max_tolerance){
-            path_pos_score<-c(path_pos_score,supporting)
-            path_neg_score<-c(path_neg_score,notsupporting)
-        } else if (notsupporting>=max_tolerance){
-            path_pos_score<-c(path_pos_score,supporting)
-            path_neg_score<-c(path_neg_score,notsupporting)
-            stopped_edge<-entry$Edge[which(entry$Node1==path[pos1_in_path] & entry$Node2==path[pos1_in_path+1])]
-            if (length(stopped_edge)>0){
-                # print(paste("stop at edge",stopped_edge))
-                stopped_edges<-c(stopped_edges,stopped_edge )
-                break
+    pos_score<-list()
+    neg_score<-list()
+
+    stopped_edges<-NULL
+    stopped_nodes<-NULL
+    for (path_index in 1:length(paths)){
+        path<-paths[[path_index]]
+
+        path_pos_score<-0
+        path_neg_score<-0
+        stopped_node<-NULL
+        stopped_edge<-NULL
+ 
+        for (pos1_in_path in 1:length(path)){
+            if (sum(path[pos1_in_path] %in% stopped_nodes)==0 ){
+                entry<-countdata[which(countdata$Node1==path[pos1_in_path] & countdata$Node2==path[pos1_in_path+1]),]
+
+                if(dim(entry)[1]==1){
+                    supporting<-NULL
+                    notsupporting<-NULL
+                    supporting = entry$support
+                    notsupporting = entry$notsupport
+                    if (notsupporting>=max_tolerance){
+                        test_not_support<-rbind(test_not_support,entry)
+                        stopped_node<-path[pos1_in_path + 1]
+                        # stopped_node<-entry$Node2[which(entry$Node1==path[pos1_in_path] & entry$Node2==path[pos1_in_path+1])]
+                        stopped_nodes<-c(stopped_nodes,stopped_node )
+                        stopped_edge<-entry$Edge[which(entry$Node1==path[pos1_in_path] & entry$Node2==path[pos1_in_path+1])]
+                        # stopped_edge<-entry$Edge[which(entry$Node1==path[pos1_in_path+1])]
+                        stopped_edges<-c(stopped_edges,stopped_edge )
+                        break
+                    } else {
+                        path_pos_score<-c(path_pos_score,supporting)
+                        path_neg_score<-c(path_neg_score,notsupporting)
+ 
+                    }
+
+                }
             }
         }
+        if(length(path_pos_score)>0){
+            pos_score[path_index]<-data.frame(path_pos_score)
+            neg_score[path_index]<-data.frame(path_neg_score)
+        }
     }
-}
 
-
-if(length(path_pos_score)>0){
-    pos_score[path_index]<-data.frame(path_pos_score)
-    neg_score[path_index]<-data.frame(path_neg_score)
-    }
-}
-
+# print("NOTSUPPORTING")
+# print(max_tolerance)
+# print(unique(test_not_support))
 
 sums<-sapply(pos_score, sum)
 
@@ -129,8 +145,11 @@ if (length(which(sums==max(sums)))>1){
 }
 
 
+
 counts_for_best_path<-NULL
 counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
+
+print(counts_for_best_path)
 counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
 counts_for_best_path<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport==0),]
 counts_for_best_path_toplot<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport>0),]
@@ -139,6 +158,10 @@ print(counts_for_best_path)
 
 
 write.table(counts_for_best_path, file=paste0(args[2],'/',sample_name,'.txt'),quote=F, row.names=F, sep="\t")
+
+
+
+print(paste(gsub(".intree.txt","",sample_name),anchgs$V2[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))], sep="___"))
 
 
 if (sum(counts_for_best_path$support>0)==0){
@@ -216,7 +239,8 @@ getphylo_y <- function(tree, node) {
 # stopped_path<-br$branches[match(stopped_path, br$pos1)]
 
 
-pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
+# pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
+pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=40, width=7)
 plot((tmptree), col='darkgrey',cex=0.2, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 1)
 par(new=T)
 plot((tmptree), cex=0.2, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = 1)
@@ -224,7 +248,7 @@ edgelabels(edge=countdata$Edge[countdata$notsupport>0],pch=20, col=alpha("red", 
 edgelabels(edge=countdata$Edge[countdata$support>0],pch=20, col=alpha("darkgreen", 0.7),cex=log((countdata$support[countdata$support>0])+1)/2)
 edgelabels(frame="none",edge=countdata$Edge[countdata$support>0], text=countdata$support[countdata$support>0], cex=0.3)
 edgelabels(frame="none",edge=countdata$Edge[countdata$notsupport>0], text=countdata$notsupport[countdata$notsupport>0], cex=0.3)
-
+# nodelabels(node=stopped_nodes, pch=20, col=1)
 if(pos_at_best_edge==0){
     try(x <- getphylo_x(tmptree, best_node2))
     try(y <- getphylo_y(tmptree, best_node2))
@@ -237,8 +261,9 @@ if(pos_at_best_edge==0){
 
 # try(mtext(paste(anchgs$V1[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))],anchgs$V4[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1))], sep="___")))
 # try(print(anchgs[grep(unlist(strsplit(sample_name, '\\.'))[1], make.names(anchgs$V1)),]))
-mtext(paste(gsub(".intree.txt","",sample_name),anchgs$V4[match(gsub(".intree.txt","",sample_name), anchgs$V1)], sep="___"))
+mtext(paste(gsub(".intree.txt","",sample_name),anchgs$V2[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))], sep="___"))
 
+# nodelabels()
 dev.off()
 
 
@@ -318,9 +343,10 @@ for (i in 1:length(uniq_entr$best_node2)){
     if (uniq_entr$pos_at_best_edge[i]==0){
         newtree<-bind.tip(tree=newtree, position = 0, edge.length=0.001, where=final_node_in_new_tree,tip.label = paste(gsub(".intree.txt","",uniq_entr$sample_name[i]),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), anchgs$V1)], sep="___"))
     } else if (uniq_entr$pos_at_best_edge[i]>0){
-        try(newtree<-bind.tip(tree=newtree, position =(uniq_entr$total_len[i]-uniq_entr$pos_at_best_edge[i]), edge.length=abs(uniq_entr$pos_at_best_edge[i]-uniq_entr$total_len[i]), where=final_node_in_new_tree, tip.label = paste(gsub(".intree.txt","",uniq_entr$sample_name[i]),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), anchgs$V1)], sep="___")))
+        try(newtree<-bind.tip(tree=newtree, position =(uniq_entr$total_len[i]-uniq_entr$pos_at_best_edge[i]), edge.length=abs(uniq_entr$pos_at_best_edge[i]-uniq_entr$total_len[i]), where=final_node_in_new_tree, tip.label = paste(gsub(".intree.txt","",uniq_entr$sample_name[i]),anchgs$V2[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name[i]), make.names(anchgs$V1))], sep="___")))
     }
 }
+
 
 
 
@@ -371,7 +397,7 @@ for (i in 1:length(uniq_entr$best_node2)){
 write.tree(newtree,file=paste0(args[2],'/added_anc_best_node_location.nwk'))
 
 pdf(file=paste0(args[2],'/added_anc_best_node_location.pdf'), height=100, width=20)
-plot(ladderize(newtree), cex=0.5, tip.color = ifelse(newtree$tip.label %in% paste(gsub(".intree.txt","",uniq_entr$sample_name),anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name), anchgs$V1)], sep="___"), yes=2, no=1))
+plot(ladderize(newtree), cex=0.5, tip.color = ifelse(newtree$tip.label %in% paste(gsub(".intree.txt","",uniq_entr$sample_name),anchgs$V3[match(gsub(".intree.txt","",uniq_entr$sample_name), anchgs$V1)],anchgs$V4[match(gsub(".intree.txt","",uniq_entr$sample_name), anchgs$V1)], sep="___"), yes=2, no=1))
 dev.off()
 
 

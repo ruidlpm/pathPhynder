@@ -7,6 +7,7 @@ suppressPackageStartupMessages(library("optparse"))
 # make_option(c("-h", "--help"), action="store_true", default=FALSE, 
 #               help="Show this help message and exit")
 
+# debug(getopt)
 
 
 option_list <- list(
@@ -17,7 +18,7 @@ option_list <- list(
     make_option(c("-p","--prefix"), default="data/test_tree", 
         help = "Prefix for the data files associated with the tree. [default \"%default\"]"),
     make_option(c("-b","--bam_list"), default="data/bam_list.txt", 
-        help = "List with paths to bam files. [default \"%default\"]"),
+        help = "List of paths to bam files. [default \"%default\"]"),
     make_option(c("-r","--reference"), default="data/hg19.fa", 
         help = "Reference genome. Needs to be in fasta format. [default \"%default\"]"),
     make_option(c("-m","--mode"), default="conservative", 
@@ -37,17 +38,18 @@ option_list <- list(
 
 
 wd<-getwd()
-packpwd<-("~/in_development/pathPhynder/R/")
+packpwd<-("~/in_development/pathPhynder/R")
 
 # get command line options, if help option encountered print help and exit,
 opt <- parse_args(OptionParser(option_list=option_list))
+
 
 # do some operations based on user input
 if( opt$step == "all") {
     cat("All steps.\n")
     # system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'chrY'))
 
-    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'chrY'))
+    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'Y'))
 
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
 
@@ -55,7 +57,7 @@ if( opt$step == "all") {
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
     cat("Running pileup_and_filter\n")
-    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'chrY'))
+    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'Y'))
 } else if(opt$step == "ancient_SNPs_to_branches" | opt$step == 2) {
     cat("Running ancient_SNPs_to_branches\n")
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
