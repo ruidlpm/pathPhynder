@@ -214,11 +214,25 @@ cat(paste0("\t",length(not_added)," positions were not added (written to tree_da
 
 
 
+
+# lens<-NULL
+# for (i in a$Edge){
+#     tmp<-a[a$Edge==i,]
+#     lens[i]<-(length(unique(unlist(strsplit(tmp$positions[1], '\\;')))))
+# }
+# write.table(a,"numbers.txt")
+
+#read numbers of snps
+nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
+
+
+
 make_edge_df<-function(der, anc){
 	all_list<-list()
 	for (i in 1:length(der)){
 		all_list[[i]]<-c(der[[i]], anc[[i]])
 	}
+    position_counts<-sapply(all_list, length)
 
 	edge_df<-data.frame(tree$edge)
 	colnames(edge_df)<-c("Node1","Node2")
@@ -234,6 +248,7 @@ make_edge_df<-function(der, anc){
 		known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
 		known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
 		tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
+        snp_count[i]<-position_counts[i]
 	}
 
 
