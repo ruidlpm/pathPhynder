@@ -42,13 +42,21 @@ packpwd<-("~/in_development/pathPhynder/R")
 # get command line options, if help option encountered print help and exit,
 opt <- parse_args(OptionParser(option_list=option_list))
 
+if (length(grep("hg19", opt$reference))>0){
+    chromosome_name<-"chrY"
+} else if (length(grep("hs37d5", opt$reference))>0){
+    chromosome_name<-"Y"
+} else {
+    stop("Your reference genome needs to be named hg19 or hs37d5")
+}
+
 
 # do some operations based on user input
 if( opt$step == "all") {
     cat("All steps.\n")
     # system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'chrY'))
 
-    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'Y'))
+    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name))
 
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
 
@@ -56,7 +64,7 @@ if( opt$step == "all") {
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
     cat("Running pileup_and_filter\n")
-    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, 'Y'))
+    system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name))
 } else if(opt$step == "ancient_SNPs_to_branches" | opt$step == 2) {
     cat("Running ancient_SNPs_to_branches\n")
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
