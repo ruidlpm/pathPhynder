@@ -365,6 +365,32 @@ for (i in 1:length(uniq_entr$best_node2)){
 }
 
 
+new_tree_no_labels<-tree
+
+for (i in 1:length(uniq_entr$best_node2)){
+    print(i)
+    # Get descendants of final_node in tmptree
+    desc<-(getDescendants(tree, uniq_entr$best_node2[i]))
+    desc_tip_names<-tree$tip.label[tree$tip.label %in% tree$tip.label[desc]]
+
+    if(length(desc_tip_names)==1){
+        #if just 1 descendant, then final node is tip
+        final_node_in_new_tree<-which(new_tree_no_labels$tip.label==desc_tip_names)
+    } else if(length(desc_tip_names)>1){
+        #if more than 1 descendant, then need to find MRCA of all descendants
+        final_node_in_new_tree<-(findMRCA(new_tree_no_labels, desc_tip_names))
+    }
+    if (uniq_entr$pos_at_best_edge[i]==0){
+        new_tree_no_labels<-bind.tip(tree=new_tree_no_labels, position = 0, edge.length=0.001, where=final_node_in_new_tree,tip.label = gsub(".intree.txt","",uniq_entr$sample_name[i]))
+    } else if (uniq_entr$pos_at_best_edge[i]>0){
+        try(new_tree_no_labels<-bind.tip(tree=new_tree_no_labels, position =(uniq_entr$total_len[i]-uniq_entr$pos_at_best_edge[i]), edge.length=abs(uniq_entr$pos_at_best_edge[i]-uniq_entr$total_len[i]), where=final_node_in_new_tree, tip.label = gsub(".intree.txt","",uniq_entr$sample_name[i])))
+    }
+}
+
+
+
+write.tree(new_tree_no_labels,file=paste0(args[2],'/added_anc_best_node_location_nolabels.nwk'))
+
 
 
 

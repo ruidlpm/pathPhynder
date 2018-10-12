@@ -41,7 +41,7 @@ for (testfile in c(args[1], sites_var, args[4])){
 	}
 }
 
-bam_list<-read.table(args[1])
+bam_list<-read.table(args[1], stringsAsFactors=F)
 refgen_path<-args[4]
 
 
@@ -49,9 +49,13 @@ refgen_path<-args[4]
 
 
 
-for(samp in bam_list$V1){
-	file_path<-samp
-	sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
+for(samp in 1:length(bam_list$V1)){
+	file_path<-bam_list$V1[samp]
+	if (dim(bam_list)[2]>1){
+		sample_name<-bam_list$V2[samp]
+	} else if (dim(bam_list)[2]==1){
+		sample_name<-unlist(strsplit(bam_list$V1[samp],'\\/'))[as.numeric(length(unlist(strsplit(bam_list$V1[samp],'\\/'))))]
+	}
 	
 	if (!file.exists(file_path)) {
 		print(paste(file_path, "- does this file exist?"))
