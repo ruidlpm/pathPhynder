@@ -27,7 +27,7 @@ if (length(args)!=3) {
 # write.table(a,"numbers.txt")
 
 #read numbers of snps
-nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
+# nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
 
 #read tree
 tree<-read.tree(file=args[1])
@@ -163,7 +163,7 @@ counts_for_best_path<-NULL
 counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
 
 
-counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
+# counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
 
 
 
@@ -172,7 +172,8 @@ counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
 counts_for_best_path_with_missing<-counts_for_best_path
 colnames(counts_for_best_path_with_missing)[5]<-"conflict"
 
-counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
+# counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
+counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','hg')]
 
 write.table(counts_for_best_path_with_missing, file=paste0(args[2],'/',sample_name,'.best_path_all_branches.txt'),quote=F, row.names=F, sep="\t")
 
@@ -257,7 +258,7 @@ getphylo_y <- function(tree, node) {
 
 
 # pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
-pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=15, width=7)
+pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=40, width=15)
 plot((tmptree), col='darkgrey',cex=0.2, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
 par(new=T)
 plot((tmptree), cex=0.2, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")

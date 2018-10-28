@@ -32,13 +32,13 @@ tree$tip.label<-make.names(tree$tip.label)
 
 #read vcf
 get_vcf<-function(vcf_name){
-	all_content = readLines(vcf_name)
-	skip = all_content[-c(grep("CHROM",all_content))]
-	vcf <- read.table(textConnection(skip), stringsAsFactors=F)
-	header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
-	colnames(vcf)<-make.names(header)
-	all_content<-NULL
-	return(vcf)
+    all_content = readLines(vcf_name)
+    skip = all_content[-c(grep("CHROM",all_content))]
+    vcf <- read.table(textConnection(skip), stringsAsFactors=F)
+    header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
+    colnames(vcf)<-make.names(header)
+    all_content<-NULL
+    return(vcf)
 }
 
 vcf<-get_vcf(args[2])
@@ -119,10 +119,10 @@ for (edge in edges$edge){
     ALTpos[[edge]]<-unique(complete_vcf$POS[ALTs])
     allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
     cat("\r",allele_count)
-# 	snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
-# 	if (length(snp_info)>0){
-# 		print(snp_info)
-# 	}
+#   snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
+#   if (length(snp_info)>0){
+#       print(snp_info)
+#   }
 # }
 }
 cat('\n\n\n')
@@ -140,24 +140,51 @@ cat('\n\n\n')
 
 
 for (edge in edges$edge){
-    relevant_node<-edges$pos2[edges$edge==edge]
-    desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
-    nondesc<- samples[!samples %in% desc]
-    vcf_with_missing$na_count_samples <- apply(vcf_with_missing[samples], 1, function(x) sum(is.na(x)))
-    vcf_with_missing$na_count_desc <- apply(vcf_with_missing[desc], 1, function(x) sum(is.na(x)))
-    vcf_with_missing$na_count_nondesc <- apply(vcf_with_missing[nondesc], 1, function(x) sum(is.na(x)))
-    REFs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==0 & rowSums(vcf_with_missing[nondesc], na.rm=T)==length(nondesc)+vcf_with_missing$na_count_nondesc)
-    ALTs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==length(desc)+vcf_with_missing$na_count_desc & rowSums(vcf_with_missing[nondesc], na.rm=T)==0)
-    REFpos[[edge]]<-c(unlist(REFpos[[edge]]),unique(vcf_with_missing$POS[REFs]))
-    ALTpos[[edge]]<-c(unlist(ALTpos[[edge]]),unique(vcf_with_missing$POS[ALTs]))
-	allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
-    cat("\r",allele_count)
-	# snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
-	# if (length(snp_info)>0){
-	# 	print(snp_info)
-	# }
-}
+        relevant_node<-edges$pos2[edges$edge==edge]
 
+desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
+nondesc<- samples[!samples %in% desc]
+
+outer_tip<-tree$tip.label[getDescendants(tree,relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])][1]
+inner_tips<-tree$tip.label[getDescendants(tree,relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
+inner_tips<-inner_tips[!inner_tips %in% outer_tip]
+
+print(outer_tip)
+if (length(desc)>1){
+
+
+
+valid_pos_alt<-which(vcf_with_missing[[outer_tip]]==1)
+valid_pos_ref<-which(vcf_with_missing[[outer_tip]]==0)
+
+
+subset_alt<-vcf_with_missing[valid_pos_alt,]
+subset_ref<-vcf_with_missing[valid_pos_ref,]
+
+    subset_alt$na_count_samples_alt <- apply(subset_alt[samples], 1, function(x) sum(is.na(x)))
+    subset_alt$na_count_inner_alt <- apply(subset_alt[inner_tips], 1, function(x) sum(is.na(x)))
+    subset_alt$na_count_nondesc_alt <- apply(subset_alt[nondesc], 1, function(x) sum(is.na(x)))
+    
+    subset_ref$na_count_samples_alt <- apply(subset_ref[samples], 1, function(x) sum(is.na(x)))
+    subset_ref$na_count_inner_alt <- apply(subset_ref[inner_tips], 1, function(x) sum(is.na(x)))
+    subset_ref$na_count_nondesc_alt <- apply(subset_ref[nondesc], 1, function(x) sum(is.na(x)))
+    
+
+    # if (subset_alt$na_count_inner_alt<subset_alt$na_count_inner_alt)
+
+    # REFs<-which(rowSums(subset_alt[desc], na.rm=T)==0 & rowSums(subset_alt[nondesc], na.rm=T)==length(nondesc)+subset_alt$na_count_nondesc)
+    ALTs<-as.vector(which(rowSums(subset_alt[inner_tips], na.rm=T)==length(inner_tips)-subset_alt$na_count_inner_alt & rowSums(subset_alt[nondesc], na.rm=T)==0))
+    # print(ALTs)
+
+    # REFpos[[edge]]<-c(unlist(REFpos[[edge]]),unique(vcf_with_missing$POS[REFs]))
+    ALTpos[[edge]]<-c(unlist(ALTpos[[edge]]),unique(subset_alt$POS[ALTs]))
+    allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
+    cat("\r",allele_count)
+}
+}
+    cat("\n")
+
+    # print(ALTpos)
 
 
 
@@ -173,44 +200,44 @@ write.table(unlist(ALTpos), file=paste0('tree_data/',args[3],".derpos.txt"), quo
 write.table(unlist(REFpos), file=paste0('tree_data/',args[3],".ancpos.txt"), quote = F, row.names = F, col.names = F, sep='\t')
 
 
-#make positions
-pos_to_call<-as.data.frame(unique(sort(c(unlist(ALTpos), unlist(REFpos)))))
-colnames(pos_to_call)<-"pos_to_call"
+# #make positions
+# pos_to_call<-as.data.frame(unique(sort(c(unlist(ALTpos), unlist(REFpos)))))
+# colnames(pos_to_call)<-"pos_to_call"
 
 
-pos_to_call$chr <- 'Y'
-pos_to_call$pos0<-pos_to_call$pos_to_call-1
-pos_to_call$REF<-vcf$REF[match(pos_to_call$pos_to_call, vcf$POS)]
-pos_to_call$ALT<-vcf$ALT[match(pos_to_call$pos_to_call, vcf$POS)]
-pos_to_call$mut<-paste0(pos_to_call$REF,'->', pos_to_call$ALT)
-pos_to_call$marker<-NA
-pos_to_call$hg<-NA
+# pos_to_call$chr <- 'Y'
+# pos_to_call$pos0<-pos_to_call$pos_to_call-1
+# pos_to_call$REF<-vcf$REF[match(pos_to_call$pos_to_call, vcf$POS)]
+# pos_to_call$ALT<-vcf$ALT[match(pos_to_call$pos_to_call, vcf$POS)]
+# pos_to_call$mut<-paste0(pos_to_call$REF,'->', pos_to_call$ALT)
+# pos_to_call$marker<-NA
+# pos_to_call$hg<-NA
 
-pos_to_call<-pos_to_call[c('chr', "marker","hg", 'pos_to_call', 'mut', 'REF', 'ALT')]
-# chrY    A2607   A00     7029908 C->T    C       T
-
-
-bedfile_data<-data.frame(pos_to_call$chr, pos_to_call$pos_to_call-1,pos_to_call$pos_to_call)
-
-bedfile_data_w_chr<-bedfile_data
-colnames(bedfile_data_w_chr)[1]<-"chr"
-bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
+# pos_to_call<-pos_to_call[c('chr', "marker","hg", 'pos_to_call', 'mut', 'REF', 'ALT')]
+# # chrY    A2607   A00     7029908 C->T    C       T
 
 
-#write these in pos to call format and in bed format
-write.table(file=paste0('tree_data/',args[3],'.sites.txt'),pos_to_call, quote = F, row.names = F, col.names = F, sep='\t')
-write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
-write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
+# bedfile_data<-data.frame(pos_to_call$chr, pos_to_call$pos_to_call-1,pos_to_call$pos_to_call)
 
-cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
-cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for filtering step (written to tree_data/", args[3],".sites.txt)"),'\n\n')
+# bedfile_data_w_chr<-bedfile_data
+# colnames(bedfile_data_w_chr)[1]<-"chr"
+# bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
 
-not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
 
-write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
-cat(paste0("\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
+# #write these in pos to call format and in bed format
+# write.table(file=paste0('tree_data/',args[3],'.sites.txt'),pos_to_call, quote = F, row.names = F, col.names = F, sep='\t')
+# write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
+# write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
 
-#Rscript assign_SNPs_to_phylo.R /Users/rm890/Integrating_Y/karmin_data/RAxML_bestTree.karmin.aln.mGTR.50boot_try2 /Users/rm890/Botai_project/Karmin/try_karmin/karmin_w_changes.vcf 50boot_try2
+# cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
+# cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for filtering step (written to tree_data/", args[3],".sites.txt)"),'\n\n')
+
+# not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
+
+# write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
+# cat(paste0("\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
+
+# #Rscript assign_SNPs_to_phylo.R /Users/rm890/Integrating_Y/karmin_data/RAxML_bestTree.karmin.aln.mGTR.50boot_try2 /Users/rm890/Botai_project/Karmin/try_karmin/karmin_w_changes.vcf 50boot_try2
 
 
 
@@ -231,37 +258,37 @@ cat(paste0("\t",length(not_added)," positions were not added (written to tree_da
 
 snp_count<-NULL
 make_edge_df<-function(der, anc){
-	all_list<-list()
-	for (i in 1:length(der)){
-		all_list[[i]]<-c(der[[i]], anc[[i]])
-	}
+    all_list<-list()
+    for (i in 1:length(der)){
+        all_list[[i]]<-c(der[[i]], anc[[i]])
+    }
     position_counts<-sapply(all_list, length)
 
-	edge_df<-data.frame(tree$edge)
-	colnames(edge_df)<-c("Node1","Node2")
-	edge_df$Edge<-rownames(edge_df)
+    edge_df<-data.frame(tree$edge)
+    colnames(edge_df)<-c("Node1","Node2")
+    edge_df$Edge<-rownames(edge_df)
 
 
-	tmp_desc<-NULL
-	tmp_pos<-NULL
-	known_hg<-NULL
-	known_markers<-NULL
-	for (i in 1:length(all_list)){
-		tmp_pos[i]<-(paste(unique(all_list[[i]]), collapse=";"))
-		known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
-		known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
-		tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
+    tmp_desc<-NULL
+    tmp_pos<-NULL
+    known_hg<-NULL
+    known_markers<-NULL
+    for (i in 1:length(all_list)){
+        tmp_pos[i]<-(paste(unique(all_list[[i]]), collapse=";"))
+        known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
+        known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
+        tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
         snp_count[i]<-position_counts[i]
-	}
+    }
 
 
-	edge_df$positions<-tmp_pos
-	edge_df$hg<-known_hg
-	edge_df$markers<-known_markers
-	edge_df$descendants<-tmp_desc
+    edge_df$positions<-tmp_pos
+    edge_df$hg<-known_hg
+    edge_df$markers<-known_markers
+    edge_df$descendants<-tmp_desc
 
         edge_df<-edge_df[c('Edge','Node1','Node2','positions','hg','markers','descendants')]
-	return(edge_df)
+    return(edge_df)
 
 }
 
