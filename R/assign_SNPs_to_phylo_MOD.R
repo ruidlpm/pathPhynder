@@ -72,10 +72,6 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 
 }
 
-
-# > b<-drop.tip(b, b$tip.label[!(b$tip.label %in% colnames(vcf[10:dim(vcf)[2]]))])
-
-
 #Remove missing data
 #it would be good to fix this to impute missingness in a phylogenetically aware way
 #I have fixed it, missing data is now being accounted for and used
@@ -83,20 +79,14 @@ samples<-colnames(vcf[10:dim(vcf)[2]])
 
 vcf[samples]<-sapply(vcf[samples], as.numeric)
 
-
 complete_vcf<-vcf
 complete_vcf[samples][complete_vcf[samples]=='N']<-NA
 complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
 
 vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 
-
-
 cat(paste0("    Number of SNPs with any missing data: ", dim(vcf)[1]),'\n')
 cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
-
-
-
 
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
@@ -104,7 +94,7 @@ edges$edge<-rownames(edges)
 snps<-read.table("snps.txt")
 
 
-cat("starting non missing genos\n\n")
+# cat("starting non missing genos\n\n")
 
 REFpos<-list()
 ALTpos<-list()
@@ -138,8 +128,6 @@ cat('\n\n\n')
 # #tests this set of descendants all have 0s and all remaining have 1s (der)
 # #records the positions at each branch which are composed by the ALT (derpos) and REF (ancpos) allele
 
-
-
 for (edge in edges$edge){
     relevant_node<-edges$pos2[edges$edge==edge]
     desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
@@ -160,13 +148,7 @@ for (edge in edges$edge){
 }
 
 
-
-
-
 dir.create('tree_data', showWarnings = FALSE)
-
-
-
 
 saveRDS(ALTpos, file=paste0('tree_data/',args[3],".derpos.RData"))
 saveRDS(REFpos, file=paste0('tree_data/',args[3],".ancpos.RData"))
@@ -176,8 +158,6 @@ write.table(unlist(REFpos), file=paste0('tree_data/',args[3],".ancpos.txt"), quo
 
 
 #make positions
-
-
 pos_to_call<-as.data.frame(unique(sort(c(unlist(ALTpos), unlist(REFpos)))))
 colnames(pos_to_call)<-"pos_to_call"
 
@@ -221,21 +201,6 @@ if (dim(pos_to_call)[1]!=0){
         stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements:
              - vcf needs to be haploid and biallelic','\n\n')
 }
-
-
-# lens<-NULL
-# for (i in a$Edge){
-#     tmp<-a[a$Edge==i,]
-#     lens[i]<-(length(unique(unlist(strsplit(tmp$positions[1], '\\;')))))
-# }
-# write.table(a,"numbers.txt")
-
-#read numbers of snps
-# nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
-
-
-# der<-readRDS(file=paste0("testing_anc_vcf",".derpos.RData"))
-# anc<-readRDS(file=paste0("testing_anc_vcf",".ancpos.RData"))
 
 snp_count<-NULL
 make_edge_df<-function(der, anc){
