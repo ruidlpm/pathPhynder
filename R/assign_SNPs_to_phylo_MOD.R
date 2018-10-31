@@ -2,8 +2,6 @@
 # Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 
 require(phytools, quietly = TRUE)
-#require(phangorn, quietly = TRUE)
-suppressPackageStartupMessages(require(svMisc))
 
 
 cat('\n\n',"Assigning SNPs to branches", '\n\n\n')
@@ -36,13 +34,17 @@ get_vcf<-function(vcf_name){
 	skip = all_content[-c(grep("CHROM",all_content))]
 	vcf <- read.table(textConnection(skip), stringsAsFactors=F)
 	header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
-	colnames(vcf)<-make.names(header)
+    colnames(vcf)<-make.names(header)
+    #if T alleles read as TRUE, convert to character T.
+    vcf$REF[vcf$REF==TRUE]<-"T"
+    vcf$ALT[vcf$ALT==TRUE]<-"T"
 	all_content<-NULL
 	return(vcf)
 }
 
 vcf<-get_vcf(args[2])
 
+print(vcf)
 
 #check if any samples are missing and if so, exclude from vcf
 miss<- colnames(vcf)[10:length(vcf)][!(colnames(vcf)[10:length(vcf)] %in% tree$tip.label)]
@@ -107,7 +109,6 @@ cat("starting non missing genos\n\n")
 REFpos<-list()
 ALTpos<-list()
 total <- length(edges$edge)
-# pb <- txtProgressBar(min = 0, max = total, style = 3)
 
 for (edge in edges$edge){
     relevant_node<-edges$pos2[edges$edge==edge]
@@ -166,6 +167,7 @@ dir.create('tree_data', showWarnings = FALSE)
 
 
 
+
 saveRDS(ALTpos, file=paste0('tree_data/',args[3],".derpos.RData"))
 saveRDS(REFpos, file=paste0('tree_data/',args[3],".ancpos.RData"))
 
@@ -174,45 +176,51 @@ write.table(unlist(REFpos), file=paste0('tree_data/',args[3],".ancpos.txt"), quo
 
 
 #make positions
+
+
 pos_to_call<-as.data.frame(unique(sort(c(unlist(ALTpos), unlist(REFpos)))))
 colnames(pos_to_call)<-"pos_to_call"
 
 
-pos_to_call$chr <- 'Y'
-pos_to_call$pos0<-pos_to_call$pos_to_call-1
-pos_to_call$REF<-vcf$REF[match(pos_to_call$pos_to_call, vcf$POS)]
-pos_to_call$ALT<-vcf$ALT[match(pos_to_call$pos_to_call, vcf$POS)]
-pos_to_call$mut<-paste0(pos_to_call$REF,'->', pos_to_call$ALT)
-pos_to_call$marker<-NA
-pos_to_call$hg<-NA
-
-pos_to_call<-pos_to_call[c('chr', "marker","hg", 'pos_to_call', 'mut', 'REF', 'ALT')]
-# chrY    A2607   A00     7029908 C->T    C       T
-
-
-bedfile_data<-data.frame(pos_to_call$chr, pos_to_call$pos_to_call-1,pos_to_call$pos_to_call)
-
-bedfile_data_w_chr<-bedfile_data
-colnames(bedfile_data_w_chr)[1]<-"chr"
-bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
+if (dim(pos_to_call)[1]!=0){
+    pos_to_call$chr <- 'Y'
+    pos_to_call$pos0<-pos_to_call$pos_to_call-1
+    pos_to_call$REF<-vcf$REF[match(pos_to_call$pos_to_call, vcf$POS)]
+    pos_to_call$ALT<-vcf$ALT[match(pos_to_call$pos_to_call, vcf$POS)]
+    pos_to_call$mut<-paste0(pos_to_call$REF,'->', pos_to_call$ALT)
+    pos_to_call$marker<-NA
+    pos_to_call$hg<-NA
+    pos_to_call<-pos_to_call[c('chr', "marker","hg", 'pos_to_call', 'mut', 'REF', 'ALT')]
 
 
-#write these in pos to call format and in bed format
-write.table(file=paste0('tree_data/',args[3],'.sites.txt'),pos_to_call, quote = F, row.names = F, col.names = F, sep='\t')
-write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
-write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
-
-cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
-cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for filtering step (written to tree_data/", args[3],".sites.txt)"),'\n\n')
-
-not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
-
-write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
-cat(paste0("\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
-
-#Rscript assign_SNPs_to_phylo.R /Users/rm890/Integrating_Y/karmin_data/RAxML_bestTree.karmin.aln.mGTR.50boot_try2 /Users/rm890/Botai_project/Karmin/try_karmin/karmin_w_changes.vcf 50boot_try2
-
-
+    bedfile_data<-data.frame(pos_to_call$chr, pos_to_call$pos_to_call-1,pos_to_call$pos_to_call)
+    
+    bedfile_data_w_chr<-bedfile_data
+    colnames(bedfile_data_w_chr)[1]<-"chr"
+    bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
+    
+    #write these in pos to call format and in bed format
+    write.table(file=paste0('tree_data/',args[3],'.sites.txt'),pos_to_call, quote = F, row.names = F, col.names = F, sep='\t')
+    write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
+    write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
+    
+    cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
+    cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for filtering step (written to tree_data/", args[3],".sites.txt)"),'\n\n')
+    
+    not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
+    
+    write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
+    cat(paste0("\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
+    
+    } else {
+        not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
+        if (length(not_added)>0){
+            write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
+            cat(paste0("\n\n\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
+        }
+        stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements:
+             - vcf needs to be haploid and biallelic','\n\n')
+}
 
 
 # lens<-NULL
@@ -264,6 +272,7 @@ make_edge_df<-function(der, anc){
 	return(edge_df)
 
 }
+
 
 edge_df<-make_edge_df(ALTpos, REFpos)
 
