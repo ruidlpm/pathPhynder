@@ -7,8 +7,6 @@ require(phangorn, quietly = TRUE)
 
 cat('\n\n',"Phylogenetically aware imputation", '\n\n\n')
 
-
-
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
@@ -45,7 +43,6 @@ get_vcf<-function(vcf_name){
 
 vcf<-get_vcf(args[2])
 
-# print(vcf)
 
 #check if any samples are missing and if so, exclude from vcf
 miss<- colnames(vcf)[10:length(vcf)][!(colnames(vcf)[10:length(vcf)] %in% tree$tip.label)]
@@ -73,16 +70,15 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 
 }
 
-#Remove missing data
-#it would be good to fix this to impute missingness in a phylogenetically aware way
-#I have fixed it, missing data is now being accounted for and used
 samples<-colnames(vcf[10:dim(vcf)[2]])
 
 vcf[samples]<-sapply(vcf[samples], as.numeric)
 
 complete_vcf<-vcf
 complete_vcf[samples][complete_vcf[samples]=='N']<-NA
+complete_vcf[samples][complete_vcf[samples]=='.']<-NA
 complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
+
 
 vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 
@@ -94,10 +90,6 @@ colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
 
 imputed_pos<-NULL
-# imputed_vcf<-matrix(nrow=0, ncol=dim(vcf_with_missing)[2])
-# imputed_vcf<-data.frame(imputed_vcf)
-# colnames(imputed_vcf)<-colnames(vcf_with_missing)
-# print(imputed_vcf)
 for (edge in edges$edge){
     print(c(edge,'/', length(edges$edge)))
     relevant_node<-edges$pos2[edges$edge==edge]
@@ -115,147 +107,148 @@ for (edge in edges$edge){
     inner_tips<-relevant_tips[which(!relevant_tips %in% tree$tip.label[unlist(Descendants(tree,node=relevant_node, type='children'))])]
            
 
+    if (length(outer_tip)>1){
+        focus_siblings<-outer_tip
+        print("focus_siblings")
+        print(focus_siblings)
+        print("getSisters")
+        print(relevant_node)
+        print(getSisters(tree,relevant_node), mode="label")
+        # print(vcf_with_missing[[outer_tip]])
+        print("outer_tip")
+        print(outer_tip)
+        print("inner_tips")
+        print(inner_tips)
+        print("getMRCA")
+        print(getMRCA(tree,focus_siblings))
+        cat('\n\n')
     #if the length of the outer tip is not 1, pass
-    if (!(length(outer_tip)>1 | length(outer_tip)==0)){
+    } else if (!(length(outer_tip)>1 | length(outer_tip)==0)) {
         # vcf_with_missing<-vcf_with_missing[!vcf_with_missing$POS %in% imputed_pos,]
 
         outerALTvcf<-vcf_with_missing[which(vcf_with_missing[[outer_tip]]==1),]
         outerREFvcf<-vcf_with_missing[which(vcf_with_missing[[outer_tip]]==0),]
 
-    if(sum(outerREFvcf$na_count_desc) >0 | sum(outerALTvcf$na_count_desc) >0){
+        if(sum(outerREFvcf$na_count_desc) >0 | sum(outerALTvcf$na_count_desc) >0){
 
-        genos_inner_ALT<-outerALTvcf[which(colnames(outerALTvcf) %in% inner_tips)]
-        genos_inner_REF<-outerREFvcf[which(colnames(outerREFvcf) %in% inner_tips)]
-        # non_imputable_ALT<-(outerALTvcf$POS[which(genos_inner_ALT == 0)])
+            genos_inner_ALT<-outerALTvcf[which(colnames(outerALTvcf) %in% inner_tips)]
+            genos_inner_REF<-outerREFvcf[which(colnames(outerREFvcf) %in% inner_tips)]
+            # non_imputable_ALT<-(outerALTvcf$POS[which(genos_inner_ALT == 0)])
 
 
-        is_present<-function(data, geno){
-            excl<-NULL
-            for (snp in 1:dim(data)[1]){
-                try(tmpsum<-sum(data[snp,]==geno, na.rm=T))
-                if (tmpsum>0){
-                    excl<-c(excl, snp)
+            is_present<-function(data, geno){
+                excl<-NULL
+                for (snp in 1:dim(data)[1]){
+                    try(tmpsum<-sum(data[snp,]==geno, na.rm=T))
+                    if (tmpsum>0){
+                        excl<-c(excl, snp)
+                    }
+                }
+                return(excl)
+            }
+
+            if (dim(genos_inner_REF)[1]>0){
+                #exclude positions wit outer tip 0 and any inner tips 1
+                    maybe_imputable_REF<-outerREFvcf$POS[!outerREFvcf$POS %in% outerREFvcf$POS[is_present(genos_inner_REF, 1)]]
+            # print(maybe_imputable_REF)
+            } else {
+                maybe_imputable_REF<-NULL
+            }
+            
+            if (dim(genos_inner_ALT)[1]>0){
+                #exclude positions wit outer tip 1 and any inner tips 0
+
+                maybe_imputable_ALT<-outerALTvcf$POS[!outerALTvcf$POS %in% outerALTvcf$POS[is_present(genos_inner_ALT, 0)]]
+            # print(maybe_imputable_ALT)
+            
+            } else {
+                maybe_imputable_ALT<-NULL
+            }
+        
+
+
+
+            # non_imputable_REF<-(outerREFvcf$POS[which(genos_inner_REF == 1)])
+
+            # if(length(maybe_imputable_ALT)>0 & sum(imputed_pos %in% maybe_imputable_ALT)==0 ){
+            if(length(maybe_imputable_ALT)>0){
+                # print('relevant_node')
+                # print(relevant_node)
+                # print('relevant_tips')
+                # print(relevant_tips)
+                # print('outer_tip')
+                # print(outer_tip)
+                # print('inner_tips')
+                # print(inner_tips)
+
+                # print(c('postoimpute',paste(maybe_imputable_ALT)))
+                target<-data.frame(outerALTvcf[outerALTvcf$POS %in% maybe_imputable_ALT,])
+
+                target<-target[which(target$na_count_desc>0),]
+
+
+                for (snp in target$POS ){
+                                    print(snp)
+
+                    tmp<-target[target$POS==snp,]
+                    # print(tmp)
+                    # if(!1 %in% tmp[nondesc]){
+                        tmp[which(colnames(tmp) %in% inner_tips)][which(is.na(tmp[which(colnames(tmp) %in% inner_tips)]))]<-1
+                        target[target$POS==snp,]<-tmp
+                        vcf_with_missing[vcf_with_missing$POS==snp,]<-tmp
+                        imputed_pos<-c(imputed_pos, snp)
+                        # print(tmp[which(colnames(tmp) %in% inner_tips)])
+
+                        # imputed_vcf<-rbind(imputed_vcf, tmp)
+                        # print(tmp)
+                        # if (snp %in% imputed_vcf$POS){
+                        #     imputed_vcf[imputed_vcf$POS==snp,]<-tmp
+                        # } else {
+                        #     imputed_vcf<-rbind(imputed_vcf, tmp)
+                        # }
+                    # }
                 }
             }
-            return(excl)
-        }
-
-        # maybe_imputable_ALT<-(outerALTvcf$POS[which(genos_inner_ALT == 1)])
-        # maybe_imputable_REF<-(outerREFvcf$POS[which(genos_inner_REF == 0)])
-
-        # maybe_imputable_ALT<-(outerALTvcf$POS[which(genos_inner_ALT == 1)])
-        # maybe_imputable_REF<-(outerREFvcf$POS[which(genos_inner_REF == 0)])
-        # print(dim(genos_inner_ALT))
-        # print(dim(genos_inner_REF))
-        #         print((genos_inner_ALT))
-        # print((genos_inner_REF))
-
-        # maybe_imputable_ALT<-outerALTvcf[!outerALTvcf$POS %in% outerALTvcf$POS[is_present(genos_inner_ALT, 0)],]
-        # maybe_imputable_REF<-outerALTvcf[!outerREFvcf$POS %in% outerREFvcf$POS[is_present(outerREFvcf, 1)],]
-
-# print(genos_inner_REF)
-
-    if (dim(genos_inner_REF)[1]>0){
-            maybe_imputable_REF<-outerREFvcf$POS[!outerREFvcf$POS %in% outerREFvcf$POS[is_present(genos_inner_REF, 1)]]
-    # print(maybe_imputable_REF)
-    } else {
-        maybe_imputable_REF<-NULL
-    }
-    
-    if (dim(genos_inner_ALT)[1]>0){
-        maybe_imputable_ALT<-outerALTvcf$POS[!outerALTvcf$POS %in% outerALTvcf$POS[is_present(genos_inner_ALT, 0)]]
-    # print(maybe_imputable_ALT)
-    
-    } else {
-        maybe_imputable_ALT<-NULL
-    }
 
 
+            # if(length(maybe_imputable_REF)>0 & sum(imputed_pos %in% maybe_imputable_REF)==0 ){
+            if(length(maybe_imputable_REF)>0){
+                # print('relevant_node')
+                # print(relevant_node)
+                # print('relevant_tips')
+                # print(relevant_tips)
+                # print('outer_tip')
+                # print(outer_tip)
+                # print('inner_tips')
+                # print(inner_tips)
 
+                # print(c('postoimpute',paste(maybe_imputable_REF)))
+                target<-data.frame(outerREFvcf[outerREFvcf$POS %in% maybe_imputable_REF,])
+                            target<-target[which(target$na_count_desc>0),]
 
-        # non_imputable_REF<-(outerREFvcf$POS[which(genos_inner_REF == 1)])
-
-        # if(length(maybe_imputable_ALT)>0 & sum(imputed_pos %in% maybe_imputable_ALT)==0 ){
-        if(length(maybe_imputable_ALT)>0){
-            # print('relevant_node')
-            # print(relevant_node)
-            # print('relevant_tips')
-            # print(relevant_tips)
-            # print('outer_tip')
-            # print(outer_tip)
-            # print('inner_tips')
-            # print(inner_tips)
-
-            # print(c('postoimpute',paste(maybe_imputable_ALT)))
-            target<-data.frame(outerALTvcf[outerALTvcf$POS %in% maybe_imputable_ALT,])
-
-            target<-target[which(target$na_count_desc>0),]
-
-
-            for (snp in target$POS ){
-                                print(snp)
-
-                tmp<-target[target$POS==snp,]
-                # print(tmp)
-                # if(!1 %in% tmp[nondesc]){
-                    tmp[which(colnames(tmp) %in% inner_tips)][which(is.na(tmp[which(colnames(tmp) %in% inner_tips)]))]<-1
-                    target[target$POS==snp,]<-tmp
-                    vcf_with_missing[vcf_with_missing$POS==snp,]<-tmp
-                    imputed_pos<-c(imputed_pos, snp)
-                    # print(tmp[which(colnames(tmp) %in% inner_tips)])
-
-                    # imputed_vcf<-rbind(imputed_vcf, tmp)
+                for (snp in target$POS ){
+                    print(snp)
+                    tmp<-target[target$POS==snp,]
                     # print(tmp)
-                    # if (snp %in% imputed_vcf$POS){
-                    #     imputed_vcf[imputed_vcf$POS==snp,]<-tmp
-                    # } else {
-                    #     imputed_vcf<-rbind(imputed_vcf, tmp)
+                    # if(!0 %in% tmp[nondesc]){
+                        tmp[which(colnames(tmp) %in% inner_tips)][which(is.na(tmp[which(colnames(tmp) %in% inner_tips)]))]<-0
+                        target[target$POS==snp,]<-tmp
+                        vcf_with_missing[vcf_with_missing$POS==snp,]<-tmp
+                        imputed_pos<-c(imputed_pos, snp)
+                        # print(as.vector(rowSums(tmp[which(colnames(tmp) %in% inner_tips)])))
+
+                        # # print(tmp)
+                        # if (snp %in% imputed_vcf$POS){
+                        #     imputed_vcf[imputed_vcf$POS==snp,]<-tmp
+                        # } else {
+
+                        # imputed_vcf<-rbind(imputed_vcf, tmp)
+                        # }
                     # }
-                # }
+                }
             }
         }
-
-
-        # if(length(maybe_imputable_REF)>0 & sum(imputed_pos %in% maybe_imputable_REF)==0 ){
-        if(length(maybe_imputable_REF)>0){
-            # print('relevant_node')
-            # print(relevant_node)
-            # print('relevant_tips')
-            # print(relevant_tips)
-            # print('outer_tip')
-            # print(outer_tip)
-            # print('inner_tips')
-            # print(inner_tips)
-
-            # print(c('postoimpute',paste(maybe_imputable_REF)))
-            target<-data.frame(outerREFvcf[outerREFvcf$POS %in% maybe_imputable_REF,])
-                        target<-target[which(target$na_count_desc>0),]
-
-            for (snp in target$POS ){
-                print(snp)
-                tmp<-target[target$POS==snp,]
-                # print(tmp)
-                # if(!0 %in% tmp[nondesc]){
-                    tmp[which(colnames(tmp) %in% inner_tips)][which(is.na(tmp[which(colnames(tmp) %in% inner_tips)]))]<-0
-                    target[target$POS==snp,]<-tmp
-                    vcf_with_missing[vcf_with_missing$POS==snp,]<-tmp
-                    imputed_pos<-c(imputed_pos, snp)
-                    # print(as.vector(rowSums(tmp[which(colnames(tmp) %in% inner_tips)])))
-
-                    # # print(tmp)
-                    # if (snp %in% imputed_vcf$POS){
-                    #     imputed_vcf[imputed_vcf$POS==snp,]<-tmp
-                    # } else {
-
-                    # imputed_vcf<-rbind(imputed_vcf, tmp)
-                    # }
-                # }
-            }
-        }
-
-}
-}
-
+    }
 }
 vcf_with_missing[which(vcf_with_missing==NA)]<-'.'
 # vcf_with_missing$na_count_samples<-NULL
