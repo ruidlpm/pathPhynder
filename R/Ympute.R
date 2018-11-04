@@ -1,14 +1,14 @@
 require(phytools)
-# vcf<-read.table("missing_13clade_4.vcf", comment.char="", h=T)
-vcf<-read.table("torm", comment.char="", h=T, stringsAsFactors=F)
+vcf<-read.table("missing_13clade_4.vcf", comment.char="", h=T)
+# vcf<-read.table("torm", comment.char="", h=T, stringsAsFactors=F)
 
 vcf$ALT<-as.character(vcf$ALT)
 vcf$REF<-as.character(vcf$REF)
 vcf$ALT[which(vcf$ALT==TRUE)]<-'T'
 vcf$REF[which(vcf$REF==TRUE)]<-'T'
 
-# a<-read.tree("thirteencladetree.nwk")
-a<-read.tree("/Users/rm890/Integrating_Y/paper_data/Karmin/test.nwk")
+a<-read.tree("thirteencladetree.nwk")
+# a<-read.tree("/Users/rm890/Integrating_Y/paper_data/Karmin/test.nwk")
 a$tip.label<-make.names(a$tip.label)
 colnames(vcf)<-make.names(colnames(vcf))
 root_node<-a$edge[,1][1]
