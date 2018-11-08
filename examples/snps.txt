@@ -1,0 +1,10 @@
+Y:1	hg1	1	A	T
+Y:2	-	2	C	A
+Y:3	hg2	3	C	G
+Y:4	-	4	T	C
+Y:5	hg3	5	C	T
+Y:6	-	6	C	T
+Y:7	hg4	7	T	A
+Y:8	-	8	C	T
+Y:9	hg5	9	G	A
+Y:10	-	10	G	C

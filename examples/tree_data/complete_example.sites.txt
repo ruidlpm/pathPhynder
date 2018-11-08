@@ -1,0 +1,8 @@
+Y	NA	NA	1	A->T	A	T
+Y	NA	NA	2	C->A	C	A
+Y	NA	NA	3	C->G	C	G
+Y	NA	NA	4	T->C	T	C
+Y	NA	NA	6	C->T	C	T
+Y	NA	NA	7	T->A	T	A
+Y	NA	NA	8	C->T	C	T
+Y	NA	NA	9	G->A	G	A

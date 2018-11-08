@@ -1,0 +1,11 @@
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	t13	t12	t11	t10	t9	t8	t7	t6	t5	t4	t3	t2	t1
+Y	1	Y:1	A	T	.	.	.	GT	0	0	0	0	0	1	1	1	1	0	0	0	0
+Y	2	Y:2	C	A	.	.	.	GT	1	1	1	1	1	0	0	0	0	0	0	0	0
+Y	3	Y:3	C	G	.	.	.	GT	1	1	1	1	0	0	0	0	0	0	0	0	0
+Y	4	Y:4	T	C	.	.	.	GT	0	0	0	0	1	0	0	0	0	0	0	0	0
+Y	5	Y:5	C	T	.	.	.	GT	1	1	1	1	0	0	1	0	0	0	0	0	0
+Y	6	Y:6	C	T	.	.	.	GT	1	1	1	1	1	1	1	1	1	0	0	1	1
+Y	7	Y:7	T	A	.	.	.	GT	0	0	0	0	0	0	0	0	0	1	1	1	0
+Y	8	Y:8	C	T	.	.	.	GT	1	1	0	0	1	1	1	1	1	1	1	1	1
+Y	9	Y:9	G	A	.	.	.	GT	1	1	1	1	1	1	1	1	1	0	0	0	0
+Y	10	Y:10	G	C	.	.	.	GT	0	0	0	0	0	1	1	0	0	0	0	1	0
