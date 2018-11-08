@@ -17,31 +17,75 @@ if (length(args)!=3) {
     cat(paste("Ympute.R", args[1], args[2],args[3]), '\n\n')
 }
 
-vcf<-read.table(args[2], comment.char="", h=T, stringsAsFactors=F)
+# vcf<-read.table(args[2], comment.char="", h=T, stringsAsFactors=F)
 # vcf<-read.table("to_imp.vcf", comment.char="", h=T)
 # vcf<-read.table("torm.vcf", comment.char="", h=T, stringsAsFactors=F)
 
-vcf[(is.na(vcf))]<-'.'
+# vcf[(is.na(vcf))]<-'.'
 
-write.table(vcf, file=paste0("in_",args[2]), quote=F, sep='\t', row.names=F)
+# write.table(vcf, file=paste0("in_",args[2]), quote=F, sep='\t', row.names=F)
 
 ##fileformat=VCFv4.1
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 
-vcf$ALT<-as.character(vcf$ALT)
-vcf$REF<-as.character(vcf$REF)
-vcf$ALT[which(vcf$ALT==TRUE)]<-'T'
-vcf$REF[which(vcf$REF==TRUE)]<-'T'
+a<-read.tree(args[1])
+a$tip.label<-make.names(a$tip.label)
+root_node<-a$edge[,1][1]
+
+tree<-a
+
+#read vcf
+get_vcf<-function(vcf_name){
+	all_content = readLines(vcf_name)
+	skip = all_content[-c(grep("CHROM",all_content))]
+	vcf <- read.table(textConnection(skip), stringsAsFactors=F)
+	header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
+    colnames(vcf)<-make.names(header)
+    #if T alleles read as TRUE, convert to character T.
+    vcf$REF[vcf$REF==TRUE]<-"T"
+    vcf$ALT[vcf$ALT==TRUE]<-"T"
+	all_content<-NULL
+	return(vcf)
+}
+
+vcf<-get_vcf(args[2])
+
+
+#check if any samples are missing and if so, exclude from vcf
+miss<- colnames(vcf)[10:length(vcf)][!(colnames(vcf)[10:length(vcf)] %in% tree$tip.label)]
+
+if(length(miss)>0){
+    cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
+    cat(paste0("    Excluded samples in VCF not present in the tree: ", miss),'\n')
+    vcf<-vcf[!(colnames(vcf) %in% miss)]
+    cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
+}
+
+#remove if unnecessary
+#check if any samples are missing and if so, exclude from vcf
+# vcf<-vcf[colnames(genos) %in% tree$tip.label]
+
+
+if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
+    cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
+    cat(paste0("    Excluded ", length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]), " individuals from the tree not in VCF. (See tree_data/", args[3],".indsremoved.txt)"), '\n')
+    write.table(file=paste0("tree_data/", args[3],".indsremoved.txt"),data.frame(tree$tip.label[!(tree$tip.label %in% colnames(vcf[10:dim(vcf)[2]]))]), quote = F, row.names = F, col.names = F, sep='\t')
+    cat(paste0("    WARNING: Wrote new tree to tree_data/tree.", args[3],".indsremoved.txt"), '\n')
+    cat('\n')
+    tree<-drop.tip(tree, tree$tip.label[!(tree$tip.label %in% colnames(vcf))])
+    write.tree(file=paste0("tree_data/tree.", args[3],".indsremoved.txt"),tree)
+
+}
+
+a<-tree
+root_node<-a$edge[,1][1]
 
 # vcf<-vcf[1,]
 
 # vcf[vcf=="."]<-NA
 
 # a<-read.tree("thirteencladetree.nwk")
-a<-read.tree(args[1])
-a$tip.label<-make.names(a$tip.label)
-colnames(vcf)<-make.names(colnames(vcf))
-root_node<-a$edge[,1][1]
+
 
 getAncestors<-phytools:::getAncestors
 
