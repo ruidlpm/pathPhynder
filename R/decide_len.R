@@ -8,23 +8,27 @@ require(scales)
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
-if (length(args)!=3) {
+if (length(args)!=4) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript decide.R <input_phylogeny.nwk> <results_folder> <Maximum Tolarance (int)>
+        \tRscript decide.R <input_phylogeny.nwk> <results_folder> <Maximum Tolarance (int)> <prefix>
         ", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
-    cat(paste("decide.R", args[1], args[2],args[3], '\n\n'))
+    cat(paste("decide.R", args[1],args[2],args[3],args[4], '\n\n'))
 }
 
 
-# lens<-NULL
-# for (i in a$Edge){
-#     tmp<-a[a$Edge==i,]
-#     lens[i]<-(length(unique(unlist(strsplit(tmp$positions[1], '\\;')))))
-# }
-# write.table(a,"numbers.txt")
+edge_df<-read.table(paste0(args[4],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
+
+lens<-NULL
+for (i in edge_df$Edge){
+    tmp<-edge_df[edge_df$Edge==i,]
+    lens[i]<-(length(unique(unlist(strsplit(tmp$positions[1], '\\;')))))
+}
+
+nums<-cbind(edge_df, number_of_positions=lens)
+
 
 #read numbers of snps
 # nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
@@ -163,17 +167,19 @@ counts_for_best_path<-NULL
 counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
 
 
-# counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
+counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
 
 
 
-print(counts_for_best_path)
 counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
 counts_for_best_path_with_missing<-counts_for_best_path
 colnames(counts_for_best_path_with_missing)[5]<-"conflict"
 
-# counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
-counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','hg')]
+
+
+counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
+print(counts_for_best_path_with_missing)
+# counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','hg')]
 
 write.table(counts_for_best_path_with_missing, file=paste0(args[2],'/',sample_name,'.best_path_all_branches.txt'),quote=F, row.names=F, sep="\t")
 
@@ -183,7 +189,6 @@ counts_for_best_path<-counts_for_best_path[!(counts_for_best_path$support==0 &  
 
 counts_for_best_path_toplot<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport>0),]
 
-print(counts_for_best_path)
 
 write.table(counts_for_best_path, file=paste0(args[2],'/',sample_name,'.txt'),quote=F, row.names=F, sep="\t")
 
@@ -258,7 +263,7 @@ getphylo_y <- function(tree, node) {
 
 
 # pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
-pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=8, width=4.75)
+pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=16, width=8)
 plot((tmptree), col='darkgrey',cex=0.15, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
 par(new=T)
 plot((tmptree), cex=0.15, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
@@ -295,7 +300,7 @@ closeAllConnections()
 
 write.table(file=paste0(args[2],'/best_nodes_table.txt'),best_nodes_table, quote=F, row.names=F, sep='\t')
 
-pdf(file=paste0(args[2],'/best_node_location.pdf'), height=10, width=7)
+pdf(file=paste0(args[2],'/best_node_location.pdf'), height=20, width=14)
 
 plot(tmptree, cex=0.3)
 

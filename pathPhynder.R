@@ -59,7 +59,7 @@ if( opt$step == "all") {
 
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
 
-    system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance))
+    system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance, opt$prefix))
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
     cat("Running pileup_and_filter\n")
@@ -69,7 +69,7 @@ if( opt$step == "all") {
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
 } else if(opt$step == "decide" | opt$step == 3) {
     cat("Running decide\n")
-    system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance))
+    system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance, opt$prefix))
 } 
 cat("\n")
 
