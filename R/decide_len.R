@@ -258,10 +258,10 @@ getphylo_y <- function(tree, node) {
 
 
 # pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=10, width=7)
-pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=40, width=15)
-plot((tmptree), col='darkgrey',cex=0.2, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
+pdf(file=paste0(args[2],'/',sample_name,'.decision.pdf'), height=8, width=4.75)
+plot((tmptree), col='darkgrey',cex=0.15, edge.col=ifelse(countdata$Edge %in% unique(stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
 par(new=T)
-plot((tmptree), cex=0.2, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
+plot((tmptree), cex=0.15, edge.col=ifelse(countdata$Edge %in% unlist(counts_for_best_path_toplot$Edge), yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
 edgelabels(edge=countdata$Edge[countdata$notsupport>0],pch=20, col=alpha("red", 0.5), cex=log((countdata$notsupport[countdata$notsupport>0])+1)/2)
 edgelabels(edge=countdata$Edge[countdata$support>0],pch=20, col=alpha("darkgreen", 0.7),cex=log((countdata$support[countdata$support>0])+1)/2)
 edgelabels(frame="none",edge=countdata$Edge[countdata$support>0], text=countdata$support[countdata$support>0], cex=0.3)
