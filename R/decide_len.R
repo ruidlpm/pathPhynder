@@ -19,6 +19,7 @@ if (length(args)!=4) {
 }
 
 
+#add number of positions that define each node
 edge_df<-read.table(paste0(args[4],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
 
 lens<-NULL
@@ -29,9 +30,6 @@ for (i in edge_df$Edge){
 
 nums<-cbind(edge_df, number_of_positions=lens)
 
-
-#read numbers of snps
-# nums<-read.table("numbers.txt", h=T, stringsAsFactors=F)
 
 #read tree
 tree<-read.tree(file=args[1])
@@ -58,12 +56,16 @@ try(tmptree$tip.label<-paste0(hgs$V4[match(make.names(tree$tip.label), make.name
 #make all possible paths
 getAncestors<-phytools:::getAncestors
 
+
+
 #make all possible paths to transverse, including the tip
 paths<-list()
 for(i in 1:length(tree$tip.label)){
     ancestors<-getAncestors(tree, i, type='all')
     paths[i]<-data.frame(c(rev(ancestors), i))
 }
+
+
 # paths
 print(paste0("number of paths = ",length(paths)))
 print(paste0("number of tips = ",length(tree$tip.label)))
@@ -71,12 +73,9 @@ print(paste0("number of tips = ",length(tree$tip.label)))
 
 max_tolerance<-as.numeric(args[3])
 
-
 samples<-names(br_sample_tables)
 
 best_nodes_table<-NULL
-
-
 
 
 #for each sample
@@ -86,8 +85,10 @@ for (samp in 1:length(br_sample_tables)){
     sample_name<-samples[samp]
     print(sample_name)
 
+    # get counts at egdes
     countdata<-br_sample_tables[[samp]]
 
+    # initiate counter of positive score and negative scores for each path to be walked
     pos_score<-list()
     neg_score<-list()
 
@@ -142,91 +143,81 @@ for (samp in 1:length(br_sample_tables)){
 
 
 
-#decide best path - the one containing higher number of derived alleles.
+    #decide best path - the one containing higher number of derived alleles.
+    sums<-sapply(pos_score, sum)
 
-sums<-sapply(pos_score, sum)
 
-
-if (length(which(sums==max(sums)))>1){
-    best_paths<-which(sums==max(sums))
-    tmp_paths<-NULL
-    for (i in 1:length(best_paths)){
-        tmp_paths<-c(paths[[which(sums==max(sums))[i]]])
+    if (length(which(sums==max(sums)))>1){
+        best_paths<-which(sums==max(sums))
+        tmp_paths<-NULL
+        for (i in 1:length(best_paths)){
+            tmp_paths<-c(paths[[which(sums==max(sums))[i]]])
+        }
+        best_path<-unique(tmp_paths)
+    } else if (length(which(sums==max(sums)))==1) {
+        best_path<-paths[[which(sums==max(sums))]]
+    } else if (length(which(sums==max(sums)))==0){
+        cat("insufficient derived alleles")
     }
-    best_path<-unique(tmp_paths)
-    # print(which(sums==max(sums)))
-    # break
-} else if (length(which(sums==max(sums)))==1) {
-    best_path<-paths[[which(sums==max(sums))]]
-} else if (length(which(sums==max(sums)))==0){
-    cat("insufficient derived alleles")
-}
 
 
-counts_for_best_path<-NULL
-counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
+    counts_for_best_path<-NULL
+    counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
+    
+    
+    counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
+    
+    counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
+    counts_for_best_path_with_missing<-counts_for_best_path
+    colnames(counts_for_best_path_with_missing)[5]<-"conflict"
+    counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
+    print(counts_for_best_path_with_missing)
+    
+    write.table(counts_for_best_path_with_missing, file=paste0(args[2],'/',sample_name,'.best_path_all_branches.txt'),quote=F, row.names=F, sep="\t")
+    
+    counts_for_best_path<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport==0),]
+    counts_for_best_path_toplot<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport>0),]
+    
+    write.table(counts_for_best_path, file=paste0(args[2],'/',sample_name,'.txt'),quote=F, row.names=F, sep="\t")
+    
+    print(paste(gsub(".intree.txt","",sample_name),anchgs$V2[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))], sep="___"))
+    
+    if (sum(counts_for_best_path$support>0)==0){
+        print("insufficient data")
+        next
+    } else {
+        print("OK")
+    }
+    
+    
+    best_edge<-NULL
+    best_node1<-NULL
+    best_node2<-NULL
+    best_edge<-counts_for_best_path$Edge[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
+    best_node1<-counts_for_best_path$Node1[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
+    best_node2<-counts_for_best_path$Node2[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
+    
+    der_at_best<-counts_for_best_path$support[counts_for_best_path$Edge==best_edge]
+    anc_at_best<-counts_for_best_path$notsupport[counts_for_best_path$Edge==best_edge]
+    
+    pos_at_best_edge<-NULL
+    if (anc_at_best==0){
+        pos_at_best_edge<-0
+        total_len<-0
+    } else if (anc_at_best>0){
+        total_len<-tmptree$edge.length[best_edge]
+        total_count<-der_at_best+anc_at_best
+        fraction_at_best_edge=der_at_best/total_count
+        pos_at_best_edge=total_len*fraction_at_best_edge
+        print(total_len)
+        print(fraction_at_best_edge)
+        print(pos_at_best_edge)
+    }
 
 
-counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
 
-
-
-counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
-counts_for_best_path_with_missing<-counts_for_best_path
-colnames(counts_for_best_path_with_missing)[5]<-"conflict"
-
-
-
-counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
-print(counts_for_best_path_with_missing)
-# counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','hg')]
-
-write.table(counts_for_best_path_with_missing, file=paste0(args[2],'/',sample_name,'.best_path_all_branches.txt'),quote=F, row.names=F, sep="\t")
-
-counts_for_best_path<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport==0),]
-
-
-
-counts_for_best_path_toplot<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport>0),]
-
-
-write.table(counts_for_best_path, file=paste0(args[2],'/',sample_name,'.txt'),quote=F, row.names=F, sep="\t")
-
-print(paste(gsub(".intree.txt","",sample_name),anchgs$V2[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))], sep="___"))
-
-if (sum(counts_for_best_path$support>0)==0){
-    print("insufficient data")
-    next
-} else {
-    print("OK")
-}
-
-
-best_edge<-NULL
-best_node1<-NULL
-best_node2<-NULL
-best_edge<-counts_for_best_path$Edge[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
-best_node1<-counts_for_best_path$Node1[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
-best_node2<-counts_for_best_path$Node2[counts_for_best_path$support>0][sum(counts_for_best_path$support>0)]
-
-der_at_best<-counts_for_best_path$support[counts_for_best_path$Edge==best_edge]
-anc_at_best<-counts_for_best_path$notsupport[counts_for_best_path$Edge==best_edge]
-
-pos_at_best_edge<-NULL
-if (anc_at_best==0){
-    pos_at_best_edge<-0
-    total_len<-0
-} else if (anc_at_best>0){
-    total_len<-tmptree$edge.length[best_edge]
-    total_count<-der_at_best+anc_at_best
-    fraction_at_best_edge=der_at_best/total_count
-    pos_at_best_edge=total_len*fraction_at_best_edge
-    print(total_len)
-    print(fraction_at_best_edge)
-    print(pos_at_best_edge)
-}
-
-
+#######
+# plotting
 
 getphylo_x <- function(tree, node) {
     if(is.character(node)) {
