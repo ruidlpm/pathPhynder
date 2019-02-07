@@ -11,6 +11,8 @@ To do:
 
 Urgent
  - [ ] currently the python program which filters alleles sets the position as missing in case of mismatches. I'm losing ~7% of variants because of this. It should be straighforward to recover them! 
+ 
+ Basically if p_der<0.5, assign anc, if p_der>0.5, assign der. If p_der==0.5, then leave as missing.
 ________
 
 
