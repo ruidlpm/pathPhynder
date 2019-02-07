@@ -39,6 +39,20 @@ for (testfile in c(tree_file, derpos_file, ancpos_file)){
 }
 
 
+edge_df<-read.table(paste0(args[2],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
+
+lens<-NULL
+for (i in edge_df$Edge){
+    tmp<-edge_df[edge_df$Edge==i,]
+    lens[i]<-(length(unique(unlist(strsplit(tmp$positions[1], '\\;')))))
+}
+
+nums<-cbind(edge_df, number_of_positions=lens)
+
+
+
+
+
 tree<-read.tree(file=tree_file)
 tree<-ladderize(tree)
 
@@ -186,6 +200,9 @@ invisible(sapply(samps, plotAncDerSNPTree))
 writeSampleTables<-function(sample_name){
     samp<-make.names(sample_name)
     countdata<-br_sample_tables[[samp]]
+    countdata$number_of_positions<-nums$number_of_positions[match(countdata$Edge, nums$Edge)]
+    colnames(countdata)[which(colnames(countdata)=='notsupport')]<-'conflict'
+    countdata<-countdata[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
     write.table(countdata, file=paste0(args[4],"/",samp, '.counts_on_branches.txt'),sep='\t', row.names=F, quote=F)
 }
 
