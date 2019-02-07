@@ -8,6 +8,11 @@ ________________________________________________________________________-
 
 
 To do:
+
+Urgent
+ - [ ] currently the python program which filters alleles sets the position as missing in case of mismatches. I'm losing ~7% of variants because of this. It should be straighforward to recover them! 
+
+
  - [ ] fix header in output vcf after imputation
 - [ ] SNP table produced by assign_noNA.R should contain Anc/Derived information
 - [ ] assign_noNA.R should automatically produce "siteschr" files
