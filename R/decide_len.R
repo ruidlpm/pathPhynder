@@ -47,6 +47,10 @@ colnames(br)<-c("pos1", "pos2", "branches")
 #read table with derived and ancestral marker count at each branch
 br_sample_tables<-readRDS(file="results_folder/allele_count_list.RData")
 
+
+
+
+
 samps<-names(br_sample_tables)
 
 try(hgs<-try(read.table("hgs.txt")))
@@ -162,22 +166,17 @@ for (samp in 1:length(br_sample_tables)){
 
 
     counts_for_best_path<-NULL
-    counts_for_best_path<-countdata[match(best_path, countdata$Node2),]
-    
-    
+    counts_for_best_path<-countdata[match(best_path, countdata$Node2),] 
     counts_for_best_path$number_of_positions<-nums$number_of_positions[match(counts_for_best_path$Edge, nums$Edge)]
-    
     counts_for_best_path<-counts_for_best_path[!is.na(counts_for_best_path$Edge),]
     counts_for_best_path_with_missing<-counts_for_best_path
     colnames(counts_for_best_path_with_missing)[5]<-"conflict"
     counts_for_best_path_with_missing<-counts_for_best_path_with_missing[c('Edge','Node1','Node2','support','conflict','number_of_positions','hg')]
     print(counts_for_best_path_with_missing)
-    
     write.table(counts_for_best_path_with_missing, file=paste0(args[2],'/',sample_name,'.best_path_all_branches.txt'),quote=F, row.names=F, sep="\t")
     
     counts_for_best_path<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport==0),]
     counts_for_best_path_toplot<-counts_for_best_path[!(counts_for_best_path$support==0 &  counts_for_best_path$notsupport>0),]
-    
     write.table(counts_for_best_path, file=paste0(args[2],'/',sample_name,'.txt'),quote=F, row.names=F, sep="\t")
     
     print(paste(gsub(".intree.txt","",sample_name),anchgs$V2[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))],anchgs$V4[match(gsub(".intree.txt","",sample_name), make.names(anchgs$V1))], sep="___"))
