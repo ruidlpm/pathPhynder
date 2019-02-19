@@ -1,14 +1,8 @@
- 
+# pathPhynder
+# Author: Rui Martiniano
+# Contact: rm890 [at] cam.ac.uk
+
 suppressPackageStartupMessages(library("optparse"))
-
-
-# specify our desired options in a list
-# by default OptionParser will add an help option equivalent to 
-# make_option(c("-h", "--help"), action="store_true", default=FALSE, 
-#               help="Show this help message and exit")
-
-# debug(getopt)
-
 
 option_list <- list(
     make_option(c("-i","--input_tree"), default="data/test_tree.nwk",
@@ -20,7 +14,7 @@ option_list <- list(
     make_option(c("-b","--bam_list"), default="sample_list.txt", 
         help = "List of paths to bam files. [default \"%default\"]"),
     make_option(c("-r","--reference"), default="data/hg19.fa", 
-        help = "Reference genome. Needs to be in fasta format. [default \"%default\"]"),
+        help = "Reference genome (fasta format). [default \"%default\"]"),
     make_option(c("-m","--mode"), default="conservative", 
         help = "Mode for filtering pileups.  Options: relaxed or conservative. [default \"%default\"]"),
     make_option(c("-t", "--maximumTolerance"), type="integer", default=3, 

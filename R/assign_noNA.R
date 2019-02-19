@@ -1,3 +1,7 @@
+# pathPhynder
+# Author: Rui Martiniano
+# Contact: rm890 [at] cam.ac.uk
+
 # usage:
 # Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 
@@ -13,8 +17,8 @@ args = commandArgs(trailingOnly=TRUE)
 # test if no args are given
 if (length(args)!=3) {
     stop("\tArguments needed.\n
-\tusage:
-\tRscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
+    \tusage:
+    \tRscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("assign_SNPs_to_phylo.R", args[1], args[2],args[3]), '\n\n')
@@ -55,9 +59,6 @@ if(length(miss)>0){
     cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
 }
 
-#remove if unnecessary
-#check if any samples are missing and if so, exclude from vcf
-# vcf<-vcf[colnames(genos) %in% tree$tip.label]
 
 
 if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
@@ -71,9 +72,7 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 
 }
 
-#Remove missing data
-#it would be good to fix this to impute missingness in a phylogenetically aware way
-#I have fixed it, missing data is now being accounted for and used
+
 samples<-colnames(vcf[10:dim(vcf)[2]])
 
 vcf[samples]<-sapply(vcf[samples], as.numeric)
@@ -92,7 +91,6 @@ colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
 snps<-read.table("snps.txt")
 
-# cat("starting non missing genos\n\n")
 
 REFpos<-list()
 ALTpos<-list()
@@ -108,41 +106,9 @@ for (edge in edges$edge){
     ALTpos[[edge]]<-unique(complete_vcf$POS[ALTs])
     allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
     cat("\r",allele_count)
-# 	snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
-# 	if (length(snp_info)>0){
-# 		print(snp_info)
-# 	}
-# }
 }
+
 cat('\n\n\n')
-
-# cat("starting non missing genos\n\n")
-
-# #iterates through tree from the root to tips
-# #gets descendants of a given node
-# #tests this set of descendants all have 1s and all remaining have 0s (der)
-# #tests this set of descendants all have 0s and all remaining have 1s (der)
-# #records the positions at each branch which are composed by the ALT (derpos) and REF (ancpos) allele
-
-# for (edge in edges$edge){
-#     relevant_node<-edges$pos2[edges$edge==edge]
-#     desc<-tree$tip.label[getDescendants(tree, relevant_node)][!is.na(tree$tip.label[getDescendants(tree,relevant_node)])]
-#     nondesc<- samples[!samples %in% desc]
-#     vcf_with_missing$na_count_samples <- apply(vcf_with_missing[samples], 1, function(x) sum(is.na(x)))
-#     vcf_with_missing$na_count_desc <- apply(vcf_with_missing[desc], 1, function(x) sum(is.na(x)))
-#     vcf_with_missing$na_count_nondesc <- apply(vcf_with_missing[nondesc], 1, function(x) sum(is.na(x)))
-#     REFs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==0 & rowSums(vcf_with_missing[nondesc], na.rm=T)==length(nondesc)+vcf_with_missing$na_count_nondesc)
-#     ALTs<-which(rowSums(vcf_with_missing[desc], na.rm=T)==length(desc)+vcf_with_missing$na_count_desc & rowSums(vcf_with_missing[nondesc], na.rm=T)==0)
-#     REFpos[[edge]]<-c(unlist(REFpos[[edge]]),unique(vcf_with_missing$POS[REFs]))
-#     ALTpos[[edge]]<-c(unlist(ALTpos[[edge]]),unique(vcf_with_missing$POS[ALTs]))
-# 	allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
-#     cat("\r",allele_count)
-# 	# snp_info<-sort(as.character(unique(snps$V2[snps$V3 %in% c( unlist(REFpos[[edge]]),unlist(ALTpos[[edge]]) ) ])))
-# 	# if (length(snp_info)>0){
-# 	# 	print(snp_info)
-# 	# }
-# }
-
 
 dir.create('tree_data', showWarnings = FALSE)
 
