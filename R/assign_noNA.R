@@ -170,7 +170,7 @@ writeBed <- function(){
 #' 
 #' @return Long SNP table
 #' @examples
-#' writeBed()
+#' makeReport()
 makeReport<-function(){
     # number of snps not added and why
     # Reasons:
@@ -264,10 +264,7 @@ snps<-read.table("snps.txt")
 
 
 
-
 cat(paste0("\t","Assigning SNPs to branches."),'\n\n')
-
-
 
 
 ref_alleleCountTracker<-0
