@@ -85,26 +85,6 @@ def remove_deamin(A_count, T_count,Derived_match, mut, mode):
 
 
 
-
-#################################################################
-
-
-
-#read in haplogroup determination results
-pileup=[]
-with open(pileup_input, 'r') as in_pileup:
-    for line in in_pileup.readlines():
-        line=line.strip()
-        col=line.split('\t')
-        pileup.append(col)
-    in_pileup.close()
-
-print("read", len(pileup), "calls")
-
-
-
-#################################################################
-
 def chunk_string(s, n):
     return [s[i:i+n] for i in range(len(s)-n+1)]
 
@@ -133,8 +113,7 @@ def get_bases(pileup):
 
         counter = Counter(chunk_string(variant[4], 1))
         REF_allele_count = counter[','] + counter['.']
-    #     if len(variant[4]) != len(variant[5]):
-        #count reference bases
+
         REF_allele = variant[2]
         REF_allele = REF_allele.upper()
 
@@ -158,28 +137,51 @@ def get_bases(pileup):
         parsed_pileup.append([CHR, POS, REF_allele,A_count,T_count,C_count,G_count])
     return(parsed_pileup)
 
+
+
 #this is a good case for deamination
 # if REF_allele=='C' and T_count>0:
 #         print(variant, A_count,T_count,C_count,G_count)
 # ['Y', '16611844', 'C', '2', 't.', 'AF'] 0 1 1 0
 
-with open('test_out.txt','w') as outfile:
-    hdr = ' '.join(['CHR', 'POS', 'REF','A','T','C','G'])
-    outfile.writelines(hdr)
-    outfile.writelines('\n')
-    for line in get_bases(pileup):
-        new_line=''
-        for el in line:
-            if new_line=='':
-                new_line = new_line + str(el)
-            else:
-                new_line = new_line + ' ' + str(el)
-        outfile.writelines(new_line)
-        outfile.writelines('\n')
-    outfile.close()
+
+#################################################################
+
+
+
+#read in haplogroup determination results
+pileup=[]
+with open(pileup_input, 'r') as in_pileup:
+    for line in in_pileup.readlines():
+        line=line.strip()
+        col=line.split('\t')
+        pileup.append(col)
+    in_pileup.close()
+
+print("read", len(pileup), "calls")
+
+
+
+#################################################################
+
+# with open('test_out.txt','w') as outfile:
+#     hdr = ' '.join(['CHR', 'POS', 'REF','A','T','C','G'])
+#     outfile.writelines(hdr)
+#     outfile.writelines('\n')
+#     for line in get_bases(pileup):
+#         new_line=''
+#         for el in line:
+#             if new_line=='':
+#                 new_line = new_line + str(el)
+#             else:
+#                 new_line = new_line + ' ' + str(el)
+#         outfile.writelines(new_line)
+#         outfile.writelines('\n')
+#     outfile.close()
 
 
 base_calls = get_bases(pileup)
+
 #################################################################
 
 pos_dict = {}
@@ -191,10 +193,10 @@ with open(SNP_info) as f:
 
 
 
-
 res_derived=[]
 res_ancestral=[]
 res_mismatch=[]
+res_removed=[]
 
 output_allele_status=[]
 
@@ -217,27 +219,23 @@ for entry in base_calls:
     Derived_match = pos_dict[POS][6].upper()
     if CHR == chr_match or CHR.replace('chr','') == chr_match:
         if POS == pos_match:
-#            if mut_match!='C->T' and Derived_match=='T':
-#                T_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
-#            elif mut_match!='G->A' and Derived_match=='A':
-#                A_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
             if mut_match=='C->T' and Derived_match=='T':
                 T_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
             elif mut_match=='G->A' and Derived_match=='A':
                 A_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
-            #simple evaluation if derived or ancestral alleles. Add also a 1 if derived, 0 if ancestral, -9 if mismatch
-            # note, prob better to add -9 if Anc==Der, and estimate prop Der/Anc for cases where Anc!=Der.
-            #for now only -9
             if eval(Ancestral_match + '_count')>0 and eval(Derived_match + '_count')>0:
                 obs_mismatchAnc = eval(Ancestral_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
                 obs_mismatchDer = eval(Derived_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
                 if obs_mismatchAnc!=obs_mismatchDer:
                     if obs_mismatchAnc>obs_mismatchDer and obs_mismatchAnc>=(1-proportion_of_mismatches_tolerated):
                         output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 0])
+                        res_ancestral.append(hg_match)
                     elif obs_mismatchAnc<obs_mismatchDer and obs_mismatchDer>=(1-proportion_of_mismatches_tolerated):
                         output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 1])
+                        res_derived.append(hg_match)
                     else:
                         output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
+                        res_mismatch.append(hg_match)
                 else:
                     res_mismatch.append(hg_match)
                     output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
@@ -247,6 +245,19 @@ for entry in base_calls:
             elif eval(Ancestral_match + '_count')>0 and eval(Derived_match + '_count')==0:
                 res_ancestral.append(hg_match)
                 output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 0])
+            elif eval(Ancestral_match + '_count')==0 and eval(Derived_match + '_count')==0:
+                res_removed.append(hg_match)
+                output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), '-9'])
+
+
+                
+
+print('total ' + str(len(output_allele_status)))
+print('derived ' + str(len(res_derived)))
+print('ancestral ' + str(len(res_ancestral)))
+print('mismatch ' + str(len(res_mismatch)))
+print('removed ' + str(len(res_removed)))
+
 
 #################################################################
 with open(allele_count_output, 'w') as out_allele:
