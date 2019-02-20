@@ -1,3 +1,26 @@
+get_vcf<-function(vcf_name){
+	all_content = readLines(vcf_name)
+	skip = all_content[-c(grep("CHROM",all_content))]
+	vcf <- read.table(textConnection(skip), stringsAsFactors=F)
+	header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
+    colnames(vcf)<-make.names(header)
+    #if T alleles read as TRUE, convert to character T.
+    vcf$REF[vcf$REF==TRUE]<-"T"
+    vcf$ALT[vcf$ALT==TRUE]<-"T"
+	all_content<-NULL
+	return(vcf)
+}
+
+
+
+
+
+
+
+
+
+
+
 choose_best_node<-function(x){
   return(best_node)
 }

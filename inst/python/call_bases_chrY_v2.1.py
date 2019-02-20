@@ -12,6 +12,7 @@ parser.add_argument('-i', action="store", dest="pileup_input", type=str)
 parser.add_argument('-m', action="store", dest="mode_selected", type=str)
 parser.add_argument('-t', action="store", dest="SNP_info", type=str)
 parser.add_argument('-o', action="store", dest="allele_count_output", type=str)
+parser.add_argument('-p', action="store", dest="proportion_of_mismatches_tolerated", type=float)
 
 
 #test parameters
@@ -25,9 +26,11 @@ pileup_input=options.pileup_input
 mode_selected=options.mode_selected
 SNP_info=options.SNP_info
 allele_count_output=options.allele_count_output
-
-
-print(pileup_input, mode_selected, allele_count_output)
+if options.proportion_of_mismatches_tolerated:
+    proportion_of_mismatches_tolerated=options.proportion_of_mismatches_tolerated
+else:
+    proportion_of_mismatches_tolerated=0.3
+    print(pileup_input, mode_selected, allele_count_output, proportion_of_mismatches_tolerated)
 
 
 
@@ -226,8 +229,18 @@ for entry in base_calls:
             # note, prob better to add -9 if Anc==Der, and estimate prop Der/Anc for cases where Anc!=Der.
             #for now only -9
             if eval(Ancestral_match + '_count')>0 and eval(Derived_match + '_count')>0:
-                res_mismatch.append(hg_match)
-                output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
+                obs_mismatchAnc = eval(Ancestral_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
+                obs_mismatchDer = eval(Derived_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
+                if obs_mismatchAnc!=obs_mismatchDer:
+                    if obs_mismatchAnc>obs_mismatchDer and obs_mismatchAnc>=(1-proportion_of_mismatches_tolerated):
+                        output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 0])
+                    elif obs_mismatchAnc<obs_mismatchDer and obs_mismatchDer>=(1-proportion_of_mismatches_tolerated):
+                        output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 1])
+                    else:
+                        output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
+                else:
+                    res_mismatch.append(hg_match)
+                    output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
             elif eval(Derived_match + '_count')>0 and eval(Ancestral_match + '_count')==0:
                 res_derived.append(hg_match)
                 output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 1])
