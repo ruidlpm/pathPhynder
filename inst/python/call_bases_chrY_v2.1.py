@@ -2,6 +2,7 @@ import argparse
 import sys
 import time
 import re
+from collections import Counter
 
 parser = argparse.ArgumentParser(description="Parses samtools pileup, accounts for deamination and mismatches, outputs allele count")
 
@@ -27,10 +28,64 @@ allele_count_output=options.allele_count_output
 
 
 print(pileup_input, mode_selected, allele_count_output)
+
+
+
+
+
+
+
+#################################################################
+def remove_deamin(A_count, T_count,Derived_match, mut, mode):
+    """
+    remove cases where mismateches can be reliably excluded.
+    mode 'conservative' - if mutation is C->T or G->A, then if T_count or A_count==1 (and allele count is = 1),
+                          then set A_count=0 or T_count=0.
+                          if allele count more than 1, then consider it real,  i.e.
+                          T_count or A_count>1, then consider this as a real nutation
+    mode 'relaxed' - leave C->T or G->A mutations as they are
+    """
+    if mut!='C->T' and mut!='G->A':
+        if Derived_match=='T':
+            if T_count>0:
+                T_count=0
+                return((T_count))
+            else:
+                return((T_count))
+        elif Derived_match=='A':
+            if A_count>0:
+                A_count=0
+                return((A_count))
+            else:
+                return((A_count))
+
+    if mut=='C->T' or mut=='G->A':
+        if mode=='conservative':
+            if mut=='C->T' and Derived_match=='T':
+                if T_count==1:
+                    T_count=0
+                    return((T_count))
+                else:
+                    return((T_count))
+            elif mut=='G->A' and Derived_match=='A':
+                if A_count==1:
+                    A_count=0
+                    return((A_count))
+                else:
+                    return((A_count))
+
+        elif mode=='relaxed':
+            if mut=='C->T' and Derived_match=='T':
+                return(T_count)
+            if mut=='G->A' and Derived_match=='A':
+                return((A_count))
+
+
+
+
 #################################################################
 
 
-from collections import Counter
 
 #read in haplogroup determination results
 pileup=[]
@@ -130,52 +185,10 @@ with open(SNP_info) as f:
         cols=line.split()
         pos, description = cols[3],line.split()
         pos_dict[pos] = description
-#################################################################
-def remove_deamin(A_count, T_count,Derived_match, mut, mode):
-    """
-    remove cases where mismateches can be reliably excluded.
-    mode 'conservative' - if mutation is C->T or G->A, then if T_count or A_count==1 (and allele count is = 1),
-                          then set A_count=0 or T_count=0.
-                          if allele count more than 1, then consider it real,  i.e.
-                          T_count or A_count>1, then consider this as a real nutation
-    mode 'relaxed' - leave C->T or G->A mutations as they are
-    """
-    if mut!='C->T' and mut!='G->A':
-        if Derived_match=='T':
-            if T_count>0:
-                T_count=0
-                return((T_count))
-            else:
-                return((T_count))
-        elif Derived_match=='A':
-            if A_count>0:
-                A_count=0
-                return((A_count))
-            else:
-                return((A_count))
 
-    if mut=='C->T' or mut=='G->A':
-        if mode=='conservative':
-            if mut=='C->T' and Derived_match=='T':
-                if T_count==1:
-                    T_count=0
-                    return((T_count))
-                else:
-                    return((T_count))
-            elif mut=='G->A' and Derived_match=='A':
-                if A_count==1:
-                    A_count=0
-                    return((A_count))
-                else:
-                    return((A_count))
 
-        elif mode=='relaxed':
-            if mut=='C->T' and Derived_match=='T':
-                return(T_count)
-            if mut=='G->A' and Derived_match=='A':
-                return((A_count))
 
-#################################################################
+
 res_derived=[]
 res_ancestral=[]
 res_mismatch=[]

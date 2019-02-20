@@ -27,12 +27,12 @@ if (length(args)!=3) {
 
 
 #read vcf
-get_vcf<-function(vcf_name){
+get_vcf <- function(vcf_name){
     all_content = readLines(vcf_name)
     skip = all_content[-c(grep("CHROM",all_content))]
     vcf <- read.table(textConnection(skip), stringsAsFactors=F)
-    header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
-    colnames(vcf)<-make.names(header)
+    header <- unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
+    colnames(vcf) <- make.names(header)
     #if T alleles read as TRUE, convert to character T.
     vcf$REF[vcf$REF==TRUE]<-"T"
     vcf$ALT[vcf$ALT==TRUE]<-"T"
@@ -42,78 +42,79 @@ get_vcf<-function(vcf_name){
 
 
 
-make_edge_df<-function(der, anc){
-    snp_count<-NULL
-    tmp_desc<-NULL
-    tmp_pos<-NULL
-    known_hg<-NULL
-    known_markers<-NULL
+make_edge_df <- function(der, anc){
+    snp_count <- NULL
+    tmp_desc <- NULL
+    tmp_pos <- NULL
+    known_hg <- NULL
+    known_markers <- NULL
 
-    all_list<-list()
+    all_list <- list()
     for (i in 1:length(der)){
-        all_list[[i]]<-c(der[[i]], anc[[i]])
+        all_list[[i]] <- c(der[[i]], anc[[i]])
     }
-    position_counts<-sapply(all_list, length)
 
-    edge_df<-data.frame(tree$edge)
-    colnames(edge_df)<-c("Node1","Node2")
-    edge_df$Edge<-rownames(edge_df)
+    position_counts <- sapply(all_list, length)
+
+    edge_df <- data.frame(tree$edge)
+    colnames(edge_df) <- c("Node1","Node2")
+    edge_df$Edge <- rownames(edge_df)
 
     for (i in 1:length(all_list)){
-        tmp_pos[i]<-(paste(unique(all_list[[i]]), collapse=";"))
-        known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
-        known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
-        tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
-        snp_count[i]<-position_counts[i]
+        tmp_pos[i] <- (paste(unique(all_list[[i]]), collapse=";"))
+        known_hg[i] <- paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
+        known_markers[i] <- paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
+        tmp_desc[i] <- paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
+        snp_count[i] <- position_counts[i]
     }
 
-    edge_df$positions<-tmp_pos
-    edge_df$hg<-known_hg
-    edge_df$markers<-known_markers
-    edge_df$descendants<-tmp_desc
-    edge_df$snp_count<-snp_count
+    edge_df$positions <- tmp_pos
+    edge_df$hg <- known_hg
+    edge_df$markers <- known_markers
+    edge_df$descendants <- tmp_desc
+    edge_df$snp_count <- snp_count
 
-    edge_df<-edge_df[c('Edge','Node1','Node2','positions','hg','markers','descendants','snp_count')]
+    edge_df <- edge_df[c('Edge','Node1','Node2','positions','hg','markers','descendants','snp_count')]
     return(edge_df)
 
 }
 
 
 
-makeLongSNPtable<-function(der, anc){
+makeLongSNPtable <- function(der, anc){
 
     snp_tab<-data.frame(matrix(ncol=5, nrow=0))
-    colnames(snp_tab)<-c('Edge','position','marker','hg','status')
+    colnames(snp_tab) <- c('Edge','position','marker','hg','status')
 
     for (i in 1:length(der)){
         if (length(unique(der[[i]]))>0){
             for (position in unique(der[[i]])){
-                hg<-as.character(snps$V2[match(position, snps$V3)])
-                marker<-as.character(snps$V1[match(position, snps$V3)])
-                Edge<-as.character(i)
-                status<-'+'
-                snp_tab<- rbind(snp_tab,data.frame(Edge,position,marker,hg, status))
+                Edge <- as.character(i)
+                status <- '+'
+                snp_tab <-  rbind(snp_tab,data.frame(Edge,position, status))
             }
         }
         if (length(unique(anc[[i]]))>0){           
             for (position in unique(anc[[i]])){
-                hg<-as.character(snps$V2[match(position, snps$V3)])
-                marker<-as.character(snps$V1[match(position, snps$V3)])
-                Edge<-as.character(i)
-                status<-'-'
-                snp_tab<- rbind(snp_tab,data.frame(Edge,position,marker,hg, status))
+                Edge <- as.character(i)
+                status <- '-'
+                snp_tab <-  rbind(snp_tab,data.frame(Edge,position, status))
             }
         }
     }
 
-    snp_tab<-(unique(snp_tab))
-    snp_tab$REF<-vcf$REF[match(snp_tab$position, vcf$POS)]
-    snp_tab$ALT<-vcf$ALT[match(snp_tab$position, vcf$POS)]
-    snp_tab$mutation_in_vcf<-paste0(snp_tab$REF,'->', snp_tab$ALT)
+    snp_tab$hg <- as.character(snps$V2[match(snp_tab$position, snps$V3)])
+    snp_tab$marker <- as.character(snps$V1[match(snp_tab$position, snps$V3)])
+
+    snp_tab <- (unique(snp_tab))
+    snp_tab$REF <- vcf$REF[match(snp_tab$position, vcf$POS)]
+    snp_tab$ALT <- vcf$ALT[match(snp_tab$position, vcf$POS)]
+    snp_tab$mutation_in_vcf <- paste0(snp_tab$REF,'->', snp_tab$ALT)
     snp_tab$chr <- 'Y'
 
-    snp_tab<-snp_tab[c('chr', 'marker','hg', 'position', 'mutation_in_vcf', 'REF', 'ALT', 'Edge','status')]
+    snp_tab <- snp_tab[c('chr', 'marker','hg', 'position', 'mutation_in_vcf', 'REF', 'ALT', 'Edge','status')]
     
+
     write.table(file=paste0('tree_data/',args[3],'.sites.txt'),snp_tab, quote = F, row.names = F, col.names = F, sep='\t')
     
     cat(paste0("\t",length(unique(snp_tab$position))," informative positions (auxiliary information written to tree_data/", args[3],".sites.txt)"),'\n\n')
@@ -123,10 +124,9 @@ makeLongSNPtable<-function(der, anc){
 
 
 
-writeBed<-function(){
+writeBed <- function(){
     if (dim(LongSNPtable)[1]==0){
-        stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements:
-                 - vcf needs to be haploid and biallelic','\n\n')
+        stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements: - vcf needs to be haploid and biallelic','\n\n')
     } else {
         bedfile_data<-data.frame(LongSNPtable$chr, LongSNPtable$position-1,LongSNPtable$position)
         colnames(bedfile_data)<-c("chr","pos1", "pos2")
@@ -240,6 +240,9 @@ edges$edge<-rownames(edges)
 snps<-read.table("snps.txt")
 
 
+
+
+cat(paste0("\t","Assigning SNPs to branches."),'\n\n')
 
 
 
