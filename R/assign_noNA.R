@@ -26,7 +26,12 @@ if (length(args)!=3) {
 #####################################
 
 
-#read vcf
+#' Read in VCF file
+#' 
+#' @param vcf_name
+#' @return a vcf table
+#' @examples
+#' get_vcf('example.vcf')
 get_vcf <- function(vcf_name){
     all_content = readLines(vcf_name)
     skip = all_content[-c(grep("CHROM",all_content))]
@@ -42,7 +47,14 @@ get_vcf <- function(vcf_name){
 
 
 
-make_edge_df <- function(der, anc){
+#' Makes a dataframe with SNPs assigned to branches of the tree
+#' 
+#' @param der list with ALT alleles
+#' @param anc list with REF alleles
+#' @return Edges dataframe
+#' @examples
+#' make_edge_df(der, anc)
+make_edge_df <- function(ALTlist, REFlist){
     snp_count <- NULL
     tmp_desc <- NULL
     tmp_pos <- NULL
@@ -80,9 +92,14 @@ make_edge_df <- function(der, anc){
 }
 
 
-
+#' Makes a long format dataframe with information about each SNP assigned
+#' 
+#' @param der list with ALT alleles
+#' @param anc list with REF alleles
+#' @return Long SNP table
+#' @examples
+#' makeLongSNPtable(der, anc)
 makeLongSNPtable <- function(der, anc){
-
     snp_tab<-data.frame(matrix(ncol=5, nrow=0))
     colnames(snp_tab) <- c('Edge','position','marker','hg','status')
 
@@ -123,7 +140,11 @@ makeLongSNPtable <- function(der, anc){
 }
 
 
-
+#' Makes bed files for SNP calling
+#' 
+#' @return Long SNP table
+#' @examples
+#' writeBed()
 writeBed <- function(){
     if (dim(LongSNPtable)[1]==0){
         stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements: - vcf needs to be haploid and biallelic','\n\n')
@@ -145,7 +166,11 @@ writeBed <- function(){
 }
 
 
-
+#' Makes a report of SNPs which were not assigned to branches
+#' 
+#' @return Long SNP table
+#' @examples
+#' writeBed()
 makeReport<-function(){
     # number of snps not added and why
     # Reasons:
@@ -191,8 +216,6 @@ tree<-ladderize(tree)
 
 #fix names prevent downstream problems withs sample ID
 tree$tip.label<-make.names(tree$tip.label)
-
-
 
 vcf<-get_vcf(args[2])
 
