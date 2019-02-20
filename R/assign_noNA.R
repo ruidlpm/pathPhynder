@@ -1,15 +1,11 @@
 # pathPhynder
 # Author: Rui Martiniano
 # Contact: rm890 [at] cam.ac.uk
-
-# usage:
-# Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+# usage: Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 
 require(phytools, quietly = TRUE)
 
-
 cat('\n\n',"Assigning SNPs to branches", '\n\n\n')
-
 
 
 args = commandArgs(trailingOnly=TRUE)
@@ -24,6 +20,171 @@ if (length(args)!=3) {
     cat(paste("assign_SNPs_to_phylo.R", args[1], args[2],args[3]), '\n\n')
 }
 
+
+#####################################
+#           FUNCTIONS
+#####################################
+
+
+#read vcf
+get_vcf<-function(vcf_name){
+    all_content = readLines(vcf_name)
+    skip = all_content[-c(grep("CHROM",all_content))]
+    vcf <- read.table(textConnection(skip), stringsAsFactors=F)
+    header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
+    colnames(vcf)<-make.names(header)
+    #if T alleles read as TRUE, convert to character T.
+    vcf$REF[vcf$REF==TRUE]<-"T"
+    vcf$ALT[vcf$ALT==TRUE]<-"T"
+    all_content<-NULL
+    return(vcf)
+}
+
+
+
+make_edge_df<-function(der, anc){
+    snp_count<-NULL
+    tmp_desc<-NULL
+    tmp_pos<-NULL
+    known_hg<-NULL
+    known_markers<-NULL
+
+    all_list<-list()
+    for (i in 1:length(der)){
+        all_list[[i]]<-c(der[[i]], anc[[i]])
+    }
+    position_counts<-sapply(all_list, length)
+
+    edge_df<-data.frame(tree$edge)
+    colnames(edge_df)<-c("Node1","Node2")
+    edge_df$Edge<-rownames(edge_df)
+
+    for (i in 1:length(all_list)){
+        tmp_pos[i]<-(paste(unique(all_list[[i]]), collapse=";"))
+        known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
+        known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
+        tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
+        snp_count[i]<-position_counts[i]
+    }
+
+    edge_df$positions<-tmp_pos
+    edge_df$hg<-known_hg
+    edge_df$markers<-known_markers
+    edge_df$descendants<-tmp_desc
+    edge_df$snp_count<-snp_count
+
+    edge_df<-edge_df[c('Edge','Node1','Node2','positions','hg','markers','descendants','snp_count')]
+    return(edge_df)
+
+}
+
+
+
+makeLongSNPtable<-function(der, anc){
+
+    snp_tab<-data.frame(matrix(ncol=5, nrow=0))
+    colnames(snp_tab)<-c('Edge','position','marker','hg','status')
+
+    for (i in 1:length(der)){
+        if (length(unique(der[[i]]))>0){
+            for (position in unique(der[[i]])){
+                hg<-as.character(snps$V2[match(position, snps$V3)])
+                marker<-as.character(snps$V1[match(position, snps$V3)])
+                Edge<-as.character(i)
+                status<-'+'
+                snp_tab<- rbind(snp_tab,data.frame(Edge,position,marker,hg, status))
+            }
+        }
+        if (length(unique(anc[[i]]))>0){           
+            for (position in unique(anc[[i]])){
+                hg<-as.character(snps$V2[match(position, snps$V3)])
+                marker<-as.character(snps$V1[match(position, snps$V3)])
+                Edge<-as.character(i)
+                status<-'-'
+                snp_tab<- rbind(snp_tab,data.frame(Edge,position,marker,hg, status))
+            }
+        }
+    }
+
+    snp_tab<-(unique(snp_tab))
+    snp_tab$REF<-vcf$REF[match(snp_tab$position, vcf$POS)]
+    snp_tab$ALT<-vcf$ALT[match(snp_tab$position, vcf$POS)]
+    snp_tab$mutation_in_vcf<-paste0(snp_tab$REF,'->', snp_tab$ALT)
+    snp_tab$chr <- 'Y'
+
+    snp_tab<-snp_tab[c('chr', 'marker','hg', 'position', 'mutation_in_vcf', 'REF', 'ALT', 'Edge','status')]
+    
+    write.table(file=paste0('tree_data/',args[3],'.sites.txt'),snp_tab, quote = F, row.names = F, col.names = F, sep='\t')
+    
+    cat(paste0("\t",length(unique(snp_tab$position))," informative positions (auxiliary information written to tree_data/", args[3],".sites.txt)"),'\n\n')
+
+    return(snp_tab)
+}
+
+
+
+writeBed<-function(){
+    if (dim(LongSNPtable)[1]==0){
+        stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements:
+                 - vcf needs to be haploid and biallelic','\n\n')
+    } else {
+        bedfile_data<-data.frame(LongSNPtable$chr, LongSNPtable$position-1,LongSNPtable$position)
+        colnames(bedfile_data)<-c("chr","pos1", "pos2")
+
+        bedfile_data<-unique(bedfile_data[order(bedfile_data$pos1),])
+
+        bedfile_data_w_chr<-bedfile_data
+        bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
+    
+        write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
+        write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
+
+        cat(paste0("\t",dim(unique(LongSNPtable))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
+
+    }
+}
+
+
+
+makeReport<-function(){
+    # number of snps not added and why
+    # Reasons:
+    # 1) observed alleles are incompatible with tree topology
+    # 2) missing data
+    # 3) SNPs are monomorphic
+
+    snps_not_added<-unique(vcf$POS[!vcf$POS %in% LongSNPtable$position])
+    if (length(snps_not_added)>0){
+
+        monomorphic_snps_ALT<-vcf$POS[which(rowSums(vcf[10:dim(vcf)[2]])==length(colnames(vcf)[10:dim(vcf)[2]]))]
+        monomorphic_snps_REF<-vcf$POS[which(rowSums(vcf[10:dim(vcf)[2]])==0)]
+        monomorphic_snps <- c(monomorphic_snps_ALT, monomorphic_snps_REF)
+
+
+        report_df<-data.frame(position=snps_not_added)
+        report_df$reason<-'incompatible with tree'
+
+        if (length(vcf_with_missing$POS)>0){
+            report_df$reason[report_df$position %in% vcf_with_missing$POS]<-'missing data'
+        }
+
+        if (length(monomorphic_snps)>0){
+            report_df$reason[report_df$position %in% monomorphic_snps]<-'monomorphic snp'
+        }
+
+        write.table(file=paste0('tree_data/',args[3],'.report_not_added_SNPs.txt'),report_df, quote = F, row.names = F, col.names = F, sep='\t')
+        cat(paste0("\t",dim(report_df)[1]," positions were not added (report written to tree_data/", args[3],".report_not_added_SNPs.txt)"),'\n\n')
+    }
+}
+
+
+
+#####################################
+#              MAIN
+#####################################
+
+
+
 #read tree
 tree<-read.tree(file=args[1])
 tree<-ladderize(tree)
@@ -32,22 +193,8 @@ tree<-ladderize(tree)
 tree$tip.label<-make.names(tree$tip.label)
 
 
-#read vcf
-get_vcf<-function(vcf_name){
-	all_content = readLines(vcf_name)
-	skip = all_content[-c(grep("CHROM",all_content))]
-	vcf <- read.table(textConnection(skip), stringsAsFactors=F)
-	header<-unlist(strsplit(all_content[grep("CHROM", all_content)[length(grep("CHROM", all_content))]], '\t'))
-    colnames(vcf)<-make.names(header)
-    #if T alleles read as TRUE, convert to character T.
-    vcf$REF[vcf$REF==TRUE]<-"T"
-    vcf$ALT[vcf$ALT==TRUE]<-"T"
-	all_content<-NULL
-	return(vcf)
-}
 
 vcf<-get_vcf(args[2])
-
 
 #check if any samples are missing and if so, exclude from vcf
 miss<- colnames(vcf)[10:length(vcf)][!(colnames(vcf)[10:length(vcf)] %in% tree$tip.label)]
@@ -58,8 +205,6 @@ if(length(miss)>0){
     vcf<-vcf[!(colnames(vcf) %in% miss)]
     cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
 }
-
-
 
 if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
     cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
@@ -73,18 +218,21 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 }
 
 
+#get rows with complete data only
 samples<-colnames(vcf[10:dim(vcf)[2]])
-
 vcf[samples]<-sapply(vcf[samples], as.numeric)
-
 complete_vcf<-vcf
 complete_vcf[samples][complete_vcf[samples]=='N']<-NA
 complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
 
+#get vcf positions with missing data
 vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 
-cat(paste0("    Number of SNPs with any missing data: ", dim(vcf)[1]),'\n')
+
+cat(paste0("    Number of SNPs with missing data: ", dim(vcf_with_missing)[1]),'\n')
 cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
+
+
 
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
@@ -92,9 +240,15 @@ edges$edge<-rownames(edges)
 snps<-read.table("snps.txt")
 
 
+
+
+
+
+ref_alleleCountTracker<-0
+alt_alleleCountTracker<-0
+
 REFpos<-list()
 ALTpos<-list()
-total <- length(edges$edge)
 
 for (edge in edges$edge){
     relevant_node<-edges$pos2[edges$edge==edge]
@@ -104,8 +258,12 @@ for (edge in edges$edge){
     ALTs<-which(rowSums(complete_vcf[desc])==length(desc) & rowSums(complete_vcf[nondesc])==0)
     REFpos[[edge]]<-unique(complete_vcf$POS[REFs])
     ALTpos[[edge]]<-unique(complete_vcf$POS[ALTs])
-    allele_count<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' ,"REFs=", length(REFs),' / ', "ALTs=", length(ALTs)))
-    cat("\r",allele_count)
+
+    ref_alleleCountTracker<-length(REFs)+ref_alleleCountTracker
+    alt_alleleCountTracker<-length(ALTs)+alt_alleleCountTracker
+    
+    allele_count_update_message<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' , ref_alleleCountTracker+alt_alleleCountTracker, ' branch defining SNPs ' ,'(REFs=', ref_alleleCountTracker,' / ', 'ALTs=', alt_alleleCountTracker,')'))
+    cat("\r",allele_count_update_message)
 }
 
 cat('\n\n\n')
@@ -119,88 +277,22 @@ write.table(unlist(ALTpos), file=paste0('tree_data/',args[3],".derpos.txt"), quo
 write.table(unlist(REFpos), file=paste0('tree_data/',args[3],".ancpos.txt"), quote = F, row.names = F, col.names = F, sep='\t')
 
 
-#make positions
-pos_to_call<-as.data.frame(unique(sort(c(unlist(ALTpos), unlist(REFpos)))))
-colnames(pos_to_call)<-"pos_to_call"
-
-
-if (dim(pos_to_call)[1]!=0){
-    pos_to_call$chr <- 'Y'
-    pos_to_call$pos0<-pos_to_call$pos_to_call-1
-    pos_to_call$REF<-vcf$REF[match(pos_to_call$pos_to_call, vcf$POS)]
-    pos_to_call$ALT<-vcf$ALT[match(pos_to_call$pos_to_call, vcf$POS)]
-    pos_to_call$mut<-paste0(pos_to_call$REF,'->', pos_to_call$ALT)
-    pos_to_call$marker<-NA
-    pos_to_call$hg<-NA
-    pos_to_call<-pos_to_call[c('chr', "marker","hg", 'pos_to_call', 'mut', 'REF', 'ALT')]
-
-
-    bedfile_data<-data.frame(pos_to_call$chr, pos_to_call$pos_to_call-1,pos_to_call$pos_to_call)
-    
-    bedfile_data_w_chr<-bedfile_data
-    colnames(bedfile_data_w_chr)[1]<-"chr"
-    bedfile_data_w_chr$chr<-paste0("chr",bedfile_data_w_chr$chr)
-    
-    #write these in pos to call format and in bed format
-    write.table(file=paste0('tree_data/',args[3],'.sites.txt'),pos_to_call, quote = F, row.names = F, col.names = F, sep='\t')
-    write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
-    write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
-    
-    cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
-    cat(paste0("\t",dim(unique(pos_to_call))[1]," informative positions for filtering step (written to tree_data/", args[3],".sites.txt)"),'\n\n')
-    
-    not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
-    
-    write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
-    cat(paste0("\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
-    
-    } else {
-        not_added<-unique(vcf$POS[!vcf$POS %in% pos_to_call$pos_to_call])
-        if (length(not_added)>0){
-            write.table(file=paste0('tree_data/',args[3],'.not_added.txt'),not_added, quote = F, row.names = F, col.names = F, sep='\t')
-            cat(paste0("\n\n\t",length(not_added)," positions were not added (written to tree_data/", args[3],".not_added.txt)"),'\n\n')
-        }
-        stop('\n\n', '\tNo positions in the VCF were assigned. Confirm that your vcf and tree obey the requirements:
-             - vcf needs to be haploid and biallelic','\n\n')
-}
-
-snp_count<-NULL
-make_edge_df<-function(der, anc){
-	all_list<-list()
-	for (i in 1:length(der)){
-		all_list[[i]]<-c(der[[i]], anc[[i]])
-	}
-    position_counts<-sapply(all_list, length)
-
-	edge_df<-data.frame(tree$edge)
-	colnames(edge_df)<-c("Node1","Node2")
-	edge_df$Edge<-rownames(edge_df)
-
-	tmp_desc<-NULL
-	tmp_pos<-NULL
-	known_hg<-NULL
-	known_markers<-NULL
-	for (i in 1:length(all_list)){
-		tmp_pos[i]<-(paste(unique(all_list[[i]]), collapse=";"))
-		known_hg[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V2)), collapse=';')
-		known_markers[i]<-paste(sort(unique(snps[match(all_list[[i]], snps$V3)[!is.na(match(all_list[[i]], snps$V3))],]$V1)), collapse=',')
-		tmp_desc[i]<-paste(unique(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)][!is.na(tree$tip.label[getDescendants(tree,edge_df[edge_df$Edge==i,]$Node2)])]), collapse=';')
-        snp_count[i]<-position_counts[i]
-	}
-
-	edge_df$positions<-tmp_pos
-	edge_df$hg<-known_hg
-	edge_df$markers<-known_markers
-	edge_df$descendants<-tmp_desc
-
-    edge_df<-edge_df[c('Edge','Node1','Node2','positions','hg','markers','descendants')]
-	return(edge_df)
-
-}
 
 
 edge_df<-make_edge_df(ALTpos, REFpos)
 
 write.table(edge_df,file=paste0("tree_data/",args[3],".edge_df.txt"), quote=F, row.names=F, sep='\t')
 
-cat(paste0("\t","list of markers assigned to each node writtent to written to tree_data/", args[3],".edge_df.txt)"),'\n\n')
+cat(paste0("\t","table with markers assigned to each branch written to tree_data/", args[3],".edge_df.txt)"),'\n\n')
+
+
+LongSNPtable <- makeLongSNPtable(ALTpos, REFpos)
+
+writeBed()
+
+makeReport()
+
+
+
+
+

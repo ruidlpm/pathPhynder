@@ -4,6 +4,7 @@
 
 suppressPackageStartupMessages(library("optparse"))
 
+
 option_list <- list(
     make_option(c("-i","--input_tree"), default="data/test_tree.nwk",
         help = "Input tree in Newick format. [default \"%default\"]"),
