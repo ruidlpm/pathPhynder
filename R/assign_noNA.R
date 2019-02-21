@@ -47,14 +47,15 @@ get_vcf <- function(vcf_name){
 
 
 
+
 #' Makes a dataframe with SNPs assigned to branches of the tree
 #' 
 #' @param der list with ALT alleles
 #' @param anc list with REF alleles
 #' @return Edges dataframe
 #' @examples
-#' make_edge_df(der, anc)
-make_edge_df <- function(ALTlist, REFlist){
+#' make_edge_df(ALTlist, REFlist)
+make_edge_df <- function(der, anc){
     snp_count <- NULL
     tmp_desc <- NULL
     tmp_pos <- NULL
@@ -285,7 +286,7 @@ for (edge in edges$edge){
     ref_alleleCountTracker<-length(REFs)+ref_alleleCountTracker
     alt_alleleCountTracker<-length(ALTs)+alt_alleleCountTracker
     
-    allele_count_update_message<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' , ref_alleleCountTracker+alt_alleleCountTracker, ' branch defining SNPs ' ,'(REFs=', ref_alleleCountTracker,' / ', 'ALTs=', alt_alleleCountTracker,')'))
+    allele_count_update_message<-(paste0(edge,'/', length(edges$edge),' nodes;    found ' , ref_alleleCountTracker+alt_alleleCountTracker, ' branch defining alleles ' ,'(REFs=', ref_alleleCountTracker,' / ', 'ALTs=', alt_alleleCountTracker,')'))
     cat("\r",allele_count_update_message)
 }
 
