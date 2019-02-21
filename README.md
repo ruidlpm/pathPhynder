@@ -4,6 +4,139 @@ Title: A workflow for integrating ancient lineages into present-day Y-chromosome
 Description: Ancient DNA data is characterized by deamination and low-coverage sequencing, which results in a high fraction of missing data and erroneous calls. These factors affect the estimation of phylogenetic trees with modern and ancient DNA, especially in when dealing with many ancient samples sequenced to lower coverage. Furthermore, most ancient DNA analyses usually rely on known markers on the Y-chromosome, but additional variation will continuously emerge as more data is generated. This workflow offers a solution for integrating ancient and present-day Y-chromososome data, first by identifiying informative Y-chromosome markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely clade where it belongs.
 
 
+
+
+
+### Background:
+
+ - Ancient DNA characteristics such as low coverage, post-mortem deamination and contamination make accurate Y-chromosome phylogeny estimation very challenging. Furthermore, the majority of ancient DNA Y-chromosome analysis restricts itself to a set of known SNPs used for the identification of Y-chromosome lineages, however, many more variants exist in present-day datasets which can be used to inform aDNA paternal affinities. 
+ 
+ Aims of this method:
+  - Provide a tool that allows integrating ancient DNA data from multiple sources (target capture and shotgun sequencing) into present-day phylogenies, which is challenging with current available methods;
+  - Use all available Y-chromosomal variants rather than a subset of known SNPs (this provides a greater chance of detecting informative SNPs in low coverage aDNA samples);
+  - Provide a visualization tool for ancestral and derived allele state at each branch of the tree, aiding haplogroup determination;
+  - Generate a database of ancient DNA Y-chromosome variability which allows observing the main trends of Y-chromosome affinity throughout time and geography.
+ 
+
+
+Workflow
+
+![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
+
+
+0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, this method does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals.
+
+
+
+1) Assign informative SNPs to tree branches.
+
+```bash
+#will output Rdata file with information about which SNPs map to branches and a bed file for snp calling
+Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+```
+
+
+2) Call those SNPs in a given dataset of ancient samples.
+
+```bash
+#call positions using samtools mpileup
+samtools mpileup <bam> \
+--ignore-RG \
+--positions <bedfile> \
+-f <refgen> > <out.pileup>
+
+
+#convert to intree format, which contains info about anc der markers
+python call_bases_chrY.py \
+-i <out.pileup>  \
+-m conservative  \
+-o <ancient.out.intree.txt>
+```
+
+
+3) Add and visualize derived and ancestral SNPs at branches of the tree.
+
+```bash
+Rscript ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
+```
+
+
+
+4) Apply decision algorithm (modified from Poznik 2016) for deciding the best node/branch to assing each ancient sample.
+```bash
+Rscript decide.R <input_phylogeny.nwk> <input.vcf> <out prefix> <ancient.out.intree.txt> <results folder> plot=(boolean; T or F)
+```
+
+
+
+5) Add samples to tree and see results with micro
+
+
+    ![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/micro_poster.png)
+
+
+
+Tutorial:
+
+https://github.com/ruidlpm/Integrating_aDNA_Y/tree/master/tutorial/tutorial_data
+
+
+
+
+TODO:
+
+- Add parameters to continue and stop <PRIORITY>
+- Jacknife/Bootstrap procedure
+- Update tree as each ancient sample gets added. (Might be worth it to start with aDNA samples sorted by number of variants overlapping the tree)
+- can we explore at all rare variation on the Y chromosome?
+- HGDP data
+- Haplogroup determination - try Yfull tree?
+  - IMPUTE missing markers in moderns, for example they may have some R1b defining SNPs, but not all. So if derived for some, impute derived for all. Same for ancestral markers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Requirements:
+ - phytools
+ - scales
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ________________________________________________________________________
 
 
