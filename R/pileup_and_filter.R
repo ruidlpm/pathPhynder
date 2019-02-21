@@ -11,7 +11,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=7) {
     stop("  Arguments needed.\n
 	\tusage
-	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>['conservative'/'relaxed']
+	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7]
     	", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
