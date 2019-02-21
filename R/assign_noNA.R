@@ -282,7 +282,7 @@ for (edge in edges$edge){
     ALTs<-which(rowSums(complete_vcf[desc])==length(desc) & rowSums(complete_vcf[nondesc])==0)
     REFpos[[edge]]<-unique(complete_vcf$POS[REFs])
     ALTpos[[edge]]<-unique(complete_vcf$POS[ALTs])
-
+    
     ref_alleleCountTracker<-length(REFs)+ref_alleleCountTracker
     alt_alleleCountTracker<-length(ALTs)+alt_alleleCountTracker
     
