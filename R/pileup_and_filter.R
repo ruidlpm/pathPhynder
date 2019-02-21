@@ -8,14 +8,14 @@ cat('\n\n',"pileup_and_filter", '\n\n\n')
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
-if (length(args)!=6) {
+if (length(args)!=7) {
     stop("  Arguments needed.\n
 	\tusage
-	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y']
+	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>['conservative'/'relaxed']
     	", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
-    cat(paste("pileup_and_filter.R", args[1], args[2],args[3]),args[4],args[5],args[6], '\n\n')
+    cat(paste("pileup_and_filter.R", args[1], args[2],args[3]),args[4],args[5],args[6],args[7], '\n\n')
 }
 
 
@@ -23,6 +23,8 @@ sites_data<-args[2]
 intree_folder<-args[3]
 mode<-args[5]
 chromosome_name<-args[6]
+pileup_read_mismatch_threshold<-args[7]
+
 
 dir.create(intree_folder, showWarnings = FALSE)
 
@@ -79,7 +81,11 @@ for(samp in 1:length(bam_list$V1)){
 			paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 			paste0(" -m ", mode),
 			paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),
-			paste0(" -t ", pos_var))
+			paste0(" -t ", pos_var),
+			paste0(" -c ", pileup_read_mismatch_threshold)
+			)
+
+		
 		
 		print(cmd2)
 		system(cmd2, wait=T)
