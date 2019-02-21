@@ -4,9 +4,9 @@
 
 # Description: reads tree, aDNA intree files in intree_folder, outputs result to results_folder.
 
+suppressPackageStartupMessages(require(phytools))
+suppressPackageStartupMessages(require(scales))
 
-require(phytools)
-require(scales)
 
 cat('\n\n',"ancient_SNPs_to_branches.R", '\n\n\n')
 
@@ -20,10 +20,11 @@ if (length(args)!=4) {
         \tusage
         \tRscript ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
         ", call.=FALSE)
-} else {
-    cat("   Command used:",'\n\n')
-    cat(paste("ancient_SNPs_to_branches.R", args[1], args[2],args[3],args[4], '\n\n'))
 }
+# } else {
+#     cat("   Command used:",'\n\n')
+#     cat(paste("ancient_SNPs_to_branches.R", args[1], args[2],args[3],args[4], '\n\n'))
+# }
 
 
 
@@ -37,6 +38,7 @@ for (testfile in c(tree_file, derpos_file, ancpos_file)){
         stop(paste(testfile, "- does this file exist?"))
     }
 }
+
 
 
 edge_df<-read.table(paste0(args[2],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
@@ -84,14 +86,14 @@ cat("\tProcessing",length(samps), "samples", '\n\n\n')
 read_in<-function(sample_name){
     info <-file.info(paste0(args[3],"/",sample_name))
     if (info$size==0){
-        cat(paste0(args[3],"/",sample_name), " is empty\n\n")
+        cat(paste0(args[3],"/",sample_name), "is empty\n\n")
     } else {
         ancvcf<-try(read.table(paste0(args[3],"/",sample_name), stringsAsFactors = F))
         if (inherits(ancvcf, 'try-error')){
             stop("Something wrong with the intree.txt filenames, not being able to read them.")
         } else {
             if(dim(ancvcf)[2]!=6){
-                stop("Something wrong with the intree.txt files, expected 6 columns. Instead found", dim(ancvcf)[2])
+                stop("Expected 6 columns in intree.txt, instead found", dim(ancvcf)[2])
             } else if(dim(ancvcf)[2]==6){
                 cat(paste0("\tRead ", dim(ancvcf)[1], " positions from file ", sample_name,"\n\n"))
                 colnames(ancvcf)[1]<-"POS"
