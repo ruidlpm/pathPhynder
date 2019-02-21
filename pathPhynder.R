@@ -12,19 +12,19 @@ option_list <- list(
     \t\t\t- 2 or ancient_SNPs_to_branches - adds anc/der alleles to the input tree.
     \t\t\t- 3 or decide - finds the best branch/node of the tree for each sample.
     \t\t\t[default %default]"),
-    
-    make_option(c("-i","--input_tree"), default="data/test_tree.nwk",
-        help = "Input tree in Newick format. [default \"%default\"]"),
+
+    make_option(c("-i","--input_tree"),
+        help = "Input tree in Newick format. [required]"),
     # make_option(c("-v","--input_vcf"), default="data/test_tree.vcf", 
     #     help = "Input vcf. Needs to be haploid. [default \"%default\"]"),
-    make_option(c("-p","--prefix"), default="data/test_tree", 
+    make_option(c("-p","--prefix"),
         help = "Prefix for the data files associated with the tree.
-        \tThese were previously generated in the branch assignment step. [default \"%default\"]"),
+        \tThese were previously generated in the branch assignment step. [required]"),
 
-    make_option(c("-b","--bam_list"), default="sample_list.txt", 
-        help = "List of paths to bam files. [default \"%default\"]"),
+    make_option(c("-b","--bam_list"), 
+        help = "List of paths to bam files. [required]"),
 
-    make_option(c("-r","--reference"), default="data/hg19.fa", 
+    make_option(c("-r","--reference"), default="data/reference_sequences/hs37d5_Y.fa.gz", 
         help = "Reference genome (fasta format). [default \"%default\"]"),
 
     make_option(c("-m","--mode"), default="conservative", 
@@ -37,15 +37,9 @@ option_list <- list(
     make_option(c("-c", "--pileup_read_mismatch_threshold"), type="numeric", default=0.7, 
         help = "Mismatch threshold for accepting a variant (for cases where reads for both alleles are present in pileup).
         \tFor a variant to pass filtering, reads containing the most frequent allele have to occur at least  
-        \tat x proportion of the total reads. [default %default]")
+        \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]")
 
 )
-
-
-
-
-
-
 
 
 
@@ -54,6 +48,8 @@ packpwd<-("~/in_development/pathPhynder/R")
 # get command line options, if help option encountered print help and exit,
 opt <- parse_args(OptionParser(option_list=option_list))
 
+
+#decide whether to use "chrY" or "Y"
 if (length(grep("hg19", opt$reference))>0){
     chromosome_name<-"chrY"
 } else if (length(grep("hs37d5", opt$reference))>0){
@@ -63,7 +59,46 @@ if (length(grep("hg19", opt$reference))>0){
 }
 
 
-print(opt)
+cat("\n\tpathPhynder v.0.0 \n", "\n\tParameters:\n")
+cat("\n\t--input_tree ", opt$input_tree)
+cat("\n\t--prefix ", opt$prefix)
+cat("\n\t--bam_list ", opt$bam_list)
+cat("\n\t--reference ", opt$reference)
+cat("\n\t--mode ", opt$mode)
+cat("\n\t--maximumTolerance ", opt$maximumTolerance)
+cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold,'\n\n')
+
+
+
+
+#test if files exist
+if (file_test("-f", opt$input_tree)==F){
+    stop("Please provide an existing tree Newick file.")
+} else if (file_test("-f", opt$bam_list)==F){
+    stop("Please provide an existing bam list.")
+} else if (file_test("-f", opt$reference)==F){
+    stop("Please provide an existing reference genome fasta file.")
+} else if (file_test("-f", paste0(opt$prefix,'.sites.bed'))==F){
+    stop("Please provide a prefix for existing tree data.")
+} 
+
+
+#test if bam files are bams
+bam_list<-read.table(opt$bam_list)
+for (bam in bam_list$V1){
+    if (file_test("-f", bam)==F){
+        stop(paste0(bam," bam file does not exist. Fix the sample list."))
+    } else {
+        magic = readChar(gzfile(bam, 'r'), 4)
+        if (!identical(magic, 'BAM\1')){
+            stop(paste0(bam," is not a valid bam file."))
+        }
+    }
+}
+
+
+
+
 # do some operations based on user input
 if( opt$step == "all") {
     cat("All steps.\n")
@@ -87,19 +122,4 @@ if( opt$step == "all") {
 cat("\n")
 
 
-# bam_list.txt
 
-
-
-
-
-# input_phylogeny
-# prefix
-# intree_folder
-# results_folder
-# input.vcf
-# bam_list
-# refgen_path
-# mode
-# chromosome_name
-# <Maximum Tolarance (int)>

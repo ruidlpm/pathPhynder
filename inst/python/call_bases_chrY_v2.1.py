@@ -40,8 +40,13 @@ print(pileup_input, mode_selected, allele_count_output, pileup_read_mismatch_thr
 # 0.9 mismatch 132
 # 1 mismatch 406
 
+# mis0.5:7168798 C T 2 1 0
+# mis0.7:7168798 C T 2 1 -9
+# mis0.9:7168798 C T 2 1 -9
 
-
+# mis0.5:7204770 G A 3 1 0
+# mis0.7:7204770 G A 3 1 0
+# mis0.9:7204770 G A 3 1 -9
 
 
 
