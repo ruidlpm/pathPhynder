@@ -1,7 +1,7 @@
 # pileup_and_filter.R
 # runs pileup and filters bases, outputs intree files
 
-cat('\n\n',"pileup_and_filter", '\n\n\n')
+
 
 
 
@@ -13,10 +13,12 @@ if (length(args)!=7) {
 	\tusage
 	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7]
     	", call.=FALSE)
-} else {
-    cat("   Command used:",'\n\n')
-    cat(paste("pileup_and_filter.R", args[1], args[2],args[3]),args[4],args[5],args[6],args[7], '\n\n')
 }
+
+# } else {
+    # cat("Command used:",'\n\n')
+    # cat(paste("pileup_and_filter.R", args[1], args[2],args[3]),args[4],args[5],args[6],args[7], '\n\n')
+# }
 
 
 sites_data<-args[2] 
@@ -73,7 +75,6 @@ for(samp in 1:length(bam_list$V1)){
 			paste0(" -f ",refgen_path),
 			paste0(">", intree_folder,'/',sample_name,".pileup"))
 		
-		print(cmd)
 		system(cmd, wait=T)
 	
 		
@@ -87,7 +88,6 @@ for(samp in 1:length(bam_list$V1)){
 
 		
 		
-		print(cmd2)
 		system(cmd2, wait=T)
 	}	
 }

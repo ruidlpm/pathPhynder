@@ -29,7 +29,7 @@ allele_count_output=options.allele_count_output
 pileup_read_mismatch_threshold=options.pileup_read_mismatch_threshold
 print(pileup_input, mode_selected, allele_count_output, pileup_read_mismatch_threshold)
 
-
+print ("\nProcessing ", pileup_input)
 
 
 # pileup_read_mismatch_threshold and number of mismatches
@@ -170,7 +170,6 @@ with open(pileup_input, 'r') as in_pileup:
         pileup.append(col)
     in_pileup.close()
 
-print("read", len(pileup), "calls")
 
 
 
@@ -262,13 +261,13 @@ for entry in base_calls:
                 output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), '-9'])
 
 
-                
-
-print('total ' + str(len(output_allele_status)))
+print('\n')        
+print("read", len(pileup), "calls")
 print('derived ' + str(len(res_derived)))
 print('ancestral ' + str(len(res_ancestral)))
 print('mismatch ' + str(len(res_mismatch)))
 print('removed ' + str(len(res_removed)))
+print('\n')
 
 
 #################################################################
