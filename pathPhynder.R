@@ -101,6 +101,7 @@ for (bam in bam_list$V1){
 
 # do some operations based on user input
 if( opt$step == "all") {
+    
     cat("All steps.\n")
 
     system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold ))
@@ -110,15 +111,22 @@ if( opt$step == "all") {
     system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance, opt$prefix))
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
-    cat("Running pileup_and_filter\n")
+
+    cat("Running pileup_and_filter\n\n")
     system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_list,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold))
+
 } else if(opt$step == "ancient_SNPs_to_branches" | opt$step == 2) {
+
     cat("Running ancient_SNPs_to_branches\n")
     system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
+
 } else if(opt$step == "decide" | opt$step == 3) {
+
     cat("Running decide\n")
     system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance, opt$prefix))
+
 } 
+
 cat("\n")
 
 
