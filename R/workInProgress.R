@@ -1,0 +1,267 @@
+
+
+#decide best path - the one containing higher number of derived alleles.
+chooseBestPath<-function(path_scores){
+	best_path_number<-path_scores$path[which(path_scores$total_derived==max(path_scores$total_derived))]
+	if (length(best_path_number==1)){
+		best_path<-paths[[best_path_number]]
+	} else if (length(best_path_number>1)){
+		best_path_numbers<-best_path_number
+		as.numeric(names(which(table(unlist(paths[c(best_path_numbers)]))==length(best_path_numbers))))
+		best_path<-paths[[best_path_number[possible_path]]]
+	}
+	return(best_path)
+}
+
+
+
+# plotting
+getphylo_x <- function(tree, node) {
+    if(is.character(node)) {
+        node <- which(c(tree$tip.label, tree$node.label)==node)
+    }
+    pi <- tree$edge[tree$edge[,2]==node, 1]
+    if (length(pi)) {
+        ei<-which(tree$edge[,1]==pi & tree$edge[,2]==node)
+        tree$edge.length[ei] + Recall(tree, pi)
+    } else {
+        if(!is.null(tree$root.edge)) {
+            tree$root.edge
+        } else {
+            0
+        }
+    }
+}
+
+getphylo_y <- function(tree, node) {
+    if(is.character(node)) {
+        node <- which(c(tree$tip.label, tree$node.label)==node)
+    }
+    ci <- tree$edge[tree$edge[,1]==node, 2]
+    if (length(ci)==2) {
+        mean(c(Recall(tree, ci[1]), Recall(tree, ci[2])))
+    } else if (length(ci)==0) {
+        Ntip <- length(tree$tip.label)
+        which(tree$edge[tree$edge[, 2] <= Ntip, 2] == node)
+    } else {
+        stop(paste("error", length(ci)))
+    }
+}
+
+
+
+
+estimatePositionInBranch<-function(best_path){
+	best_path_counts<-getCountsforPath(best_path, branch_counts, "nodes")
+	lastEdgeCounts<-best_path_counts[dim(best_path_counts)[1],]
+	if (lastEdgeCounts$conflict>0 & lastEdgeCounts$support>0){
+		total_counts_obs<-(lastEdgeCounts$support+lastEdgeCounts$conflict)
+		position_in_branch<-lastEdgeCounts$support/total_counts_obs
+	} else if (lastEdgeCounts$conflict==0 & lastEdgeCounts$support>0){
+		position_in_branch<-0
+	}
+	return(position_in_branch)
+}
+
+
+makePaths<-function(tree){
+	paths<-list()
+	for (tip_num in 1:length(tree$tip.label)){
+		paths[[tip_num]]<-c(rev(getAncestors(tree, which(tree$tip.label==tree$tip.label[tip_num]))),tip_num)
+	}
+	return(paths)
+}
+
+
+getCountsforPath<-function(path_vect, branch_counts_df, mode){
+	if (mode=="nodes"){
+		nodes_in_path<-data.frame(Node1=path_vect[1:length(path_vect)-1], Node2=path_vect[2:length(path_vect)])
+		rel_branch_count<-merge(branch_counts_df, nodes_in_path)
+		rel_branch_count<-rel_branch_count[order(rel_branch_count$Edge),]
+	} else if (mode=="edges"){
+		edges<-path_vect
+		rel_branch_count<-branch_counts_df[match(edges,branch_counts_df$Edge),]
+		rel_branch_count<-rel_branch_count[order(rel_branch_count$Edge),]
+	}
+	return(rel_branch_count)
+}
+
+
+
+createPathScoresTab<-function(){
+	path_scores<-matrix(ncol=4,nrow=0)
+	colnames(path_scores)<-c("path","total_derived","total_ancestral", "stopped_edges")
+	path_scores<-data.frame(path_scores)
+}
+
+
+
+
+
+traversePaths<-function(list_of_paths,branch_counts_df, maxThreshold){
+
+	stop_edges<-NULL
+	path_number=0
+	edges_walked<-list()
+
+
+	path_scores<-createPathScoresTab()
+
+	for (path in list_of_paths){
+		path_number=path_number+1
+
+		rel_branch_count<-getCountsforPath(path, branch_counts_df, "nodes")
+		edges<-rel_branch_count$Edge
+		supporting<-rel_branch_count$support
+		conflicting<-rel_branch_count$conflict
+
+		stop_edge<-NULL
+		derived_sum=0
+		ancestral_sum=0
+
+		edges_walked[path_number] <- edges_walked[path_number]
+
+		for (edge_num in 1:length(edges)){
+			edge<-edges[edge_num]
+			edges_walked[[path_number]]<-c(edges_walked[[path_number]],edge)
+			support_count<-supporting[edge_num]
+			conflict_count<-conflicting[edge_num]
+			if (edge %in% stop_edges){
+				derived_sum=derived_sum+support_count
+				ancestral_sum=ancestral_sum+conflict_count
+				stop_edge<-edge
+				stop_edges<-c(stop_edges, stop_edge)
+				break
+			} else if (is.null(stop_edge)){
+				if (conflict_count>maxThreshold){
+					stop_edge<-edge
+					stop_edges<-c(stop_edges, stop_edge)
+					derived_sum=derived_sum+support_count
+					ancestral_sum=ancestral_sum+conflict_count
+					break
+				} else {
+					derived_sum=derived_sum+support_count
+					ancestral_sum=ancestral_sum+conflict_count
+				}
+			}
+		}
+		#if it hasn't stopped yet, then the last edge it's where it stops
+		if (is.null(stop_edge)){
+			stop_edge<-0
+		}
+		currentPathScore<-data.frame(path=path_number, total_derived=derived_sum,total_ancestral=ancestral_sum, stopped_edges=stop_edge)
+		path_scores<-rbind(path_scores, currentPathScore)
+	}
+	return(path_scores)
+}
+
+
+
+
+makeSNPStatusOutput<-function(counts_df){
+	counts_df$derived_allele<-NA
+	counts_df$ancestral_allele<-NA
+	
+	counts_df$derived_allele[counts_df$status=='-']<-as.character(counts_df$REF[counts_df$status=='-'])
+	counts_df$ancestral_allele[counts_df$status=='-']<-as.character(counts_df$ALT[counts_df$status=='-'])
+	counts_df$derived_allele[counts_df$status=='+']<-as.character(counts_df$ALT[counts_df$status=='+'])
+	counts_df$ancestral_allele[counts_df$status=='+']<-as.character(counts_df$REF[counts_df$status=='+'])
+	
+	counts_df$derived_allele_count<-NA
+	counts_df$ancestral_allele_count<-NA
+	counts_df$derived_allele_count[counts_df$status=='-']<-counts_df$REFreads[counts_df$status=='-']
+	counts_df$ancestral_allele_count[counts_df$status=='-']<-counts_df$ALTreads[counts_df$status=='-']
+	counts_df$derived_allele_count[counts_df$status=='+']<-counts_df$ALTreads[counts_df$status=='+']
+	counts_df$ancestral_allele_count[counts_df$status=='+']<-counts_df$REFreads[counts_df$status=='+']
+
+	counts_df<-counts_df[c('chr','pos','marker','hg','branch','derived_allele_count','ancestral_allele','allele_status')]
+	return(counts_df)
+}
+
+
+
+assignAncientCallsToBranch<-function(input_calls, sites_info){
+	#merge pileup_calls with tree site info
+	merged_dfs<-merge(sites_info, input_calls)
+	
+	#exclude missing
+	merged_dfs<-merged_dfs[merged_dfs$geno!=-9,]
+	
+	# make tables of derived and ancestral SNP count
+	# the derived SNPs are those which match the alleles which define a given branch
+	# the ancestral SNPs are those which are in conflict with the alleles which define a given branch
+	derived<-rbind(merged_dfs[merged_dfs$geno==0 & merged_dfs$status=='-',], merged_dfs[merged_dfs$geno==1 & merged_dfs$status=='+',])
+	ancestral<-rbind(merged_dfs[merged_dfs$geno==0 & merged_dfs$status=='+',],merged_dfs[merged_dfs$geno==1 & merged_dfs$status=='-',])
+
+	derived$allele_status<-'Der'
+	ancestral$allele_status<-'Anc'
+
+	calls_on_branches<-list(der=derived, anc=ancestral)
+	return(calls_on_branches)
+}
+
+
+
+makeBranchStatusTable<-function(table_w_derived,table_w_ancestral,edge_table){
+	#summarize counts of derived and ancestral counts
+	der_table<-table(table_w_derived$branch)
+	anc_table<-table(table_w_ancestral$branch)
+	
+	#convert to df
+	der_table<-data.frame(der_table)
+	colnames(der_table)<-c('branch', 'support')
+	anc_table<-data.frame(anc_table)
+	colnames(anc_table)<-c('branch', 'conflict')
+	
+	#merge, including those branches for which there is only either ancestral or derived data
+	counts<-merge(der_table,anc_table, by='branch', all=T)
+	counts$branch<-as.numeric(as.character(counts$branch))
+	counts<-counts[order(counts$branch),]
+	colnames(counts)[1]<-"Edge"
+	
+	#get relevant info for making the branch_count table
+	branch_info<-edge_table[c('Edge','Node1','Node2','hg','snp_count')]
+	
+	#merge, also creating a row for the edges for which no data was obs in the input sample 
+	branch_counts<-(merge(branch_info,counts, all=T, by="Edge"))
+	branch_counts<-branch_counts[c("Edge","Node1","Node2","support","conflict","snp_count","hg")]
+	
+	#replace NAs with 0. No data observed at these branches.
+	branch_counts$conflict[is.na(branch_counts$conflict)]<-0
+	branch_counts$support[is.na(branch_counts$support)]<-0
+	return(branch_counts)
+}
+
+
+
+
+makeHaplogroupStatusOutput<-function(counts_df){
+	derived_hgs<-data.frame(table(counts_df$hg[!is.na(counts_df$hg) & counts_df$allele_status=="Der" ]))
+	colnames(derived_hgs)<-c('hg', 'derived_count')
+	ancestral_hgs<-data.frame(table(counts_df$hg[!is.na(counts_df$hg) & counts_df$allele_status=="Anc" ]))
+	colnames(ancestral_hgs)<-c('hg', 'ancestral_count')
+	
+	merged_hgs<-merge(derived_hgs, ancestral_hgs, by='hg', all=T)
+	merged_hgs$hg<-as.character(merged_hgs$hg)
+	merged_hgs<-merged_hgs[order(merged_hgs$hg),]
+	merged_hgs$derived_count[is.na(merged_hgs$derived_count)]<-0
+	merged_hgs$ancestral_count[is.na(merged_hgs$ancestral_count)]<-0
+	return(merged_hgs)
+}
+
+
+
+
+plotAncDerSNPTree<-function(branch_counts_table){
+	support_branch_counts<-branch_counts_table[branch_counts_table$support>0,]
+	conflict_branch_counts<-branch_counts_table[branch_counts_table$conflict>0,]
+
+  	plot(tree, cex=0.1, edge.col="grey", show.tip.label=F)
+
+    edgelabels(edge=support_branch_counts$Edge,pch=20, col=alpha("darkgreen", 0.7),cex=log((support_branch_counts$support)+1)/2)
+    edgelabels(edge=conflict_branch_counts$Edge,pch=20, col=alpha("red", 0.5), cex=log((conflict_branch_counts$conflict)+1)/2)
+
+    edgelabels(edge=support_branch_counts$Edge, text=support_branch_counts$support,frame = "none", cex=0.3)
+    edgelabels(edge=conflict_branch_counts$Edge, text=conflict_branch_counts$conflict,frame = "none", cex=0.3)
+}
+
