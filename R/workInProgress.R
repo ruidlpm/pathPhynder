@@ -1,17 +1,17 @@
 
-
 #decide best path - the one containing higher number of derived alleles.
 chooseBestPath<-function(path_scores){
 	best_path_number<-path_scores$path[which(path_scores$total_derived==max(path_scores$total_derived))]
-	if (length(best_path_number==1)){
+	if (length(best_path_number)==1){
 		best_path<-paths[[best_path_number]]
-	} else if (length(best_path_number>1)){
+	} else if (length(best_path_number)>1){
 		best_path_numbers<-best_path_number
-		as.numeric(names(which(table(unlist(paths[c(best_path_numbers)]))==length(best_path_numbers))))
-		best_path<-paths[[best_path_number[possible_path]]]
+		best_path<-as.numeric(names(which(table(unlist(paths[c(best_path_numbers)]))==length(best_path_numbers))))
+		# best_path<-paths[[best_path_number[possible_path]]]
 	}
 	return(best_path)
 }
+
 
 
 
