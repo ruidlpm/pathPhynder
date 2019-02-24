@@ -1,4 +1,57 @@
 
+plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df, position_in_branch, best_node,...){
+	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% unique(path_scores_df$stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
+	par(new=T)
+	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% best_path_counts$Edge, yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
+	edgelabels(edge=branch_counts_df$Edge[branch_counts_df$conflict>0],pch=20, col=alpha("red", 0.5), cex=log((branch_counts_df$conflict[branch_counts_df$conflict>0])+1)/2)
+	edgelabels(edge=branch_counts_df$Edge[branch_counts_df$support>0],pch=20, col=alpha("darkgreen", 0.7),cex=log((branch_counts_df$support[branch_counts_df$support>0])+1)/2)
+	edgelabels(col="darkred", frame="none",edge=branch_counts_df$Edge[branch_counts_df$conflict>0], text=branch_counts_df$conflict[branch_counts_df$conflict>0], cex=0.3)
+	edgelabels(col="black", frame="none",edge=branch_counts_df$Edge[branch_counts_df$support>0], text=branch_counts_df$support[branch_counts_df$support>0], cex=0.3)
+	
+	edgeLen<-tree$edge.length[best_path_counts$Edge[best_path_counts$Node2==best_node]]
+	estimated_loc_at_branch=edgeLen*position_in_branch
+
+	if(position_in_branch==0){
+		estimated_loc_at_branch=edgeLen*1/2
+
+	    try(x <- getphylo_x(tree, getAncestors(tree,best_node)[1]))
+	    try(y <- getphylo_y(tree, best_node))
+   		points(x+(edgeLen-estimated_loc_at_branch),y, col="black", bg=alpha("yellow", 0.3), pch=21, cex=1)
+	} else if(position_in_branch>0){
+		estimated_loc_at_branch=edgeLen*position_in_branch
+
+	    # try(x <- getphylo_x(tree, getAncestors(tree,best_node)[1]))
+   	 	try(x <- getphylo_x(tree, best_node))
+   		try(y <- getphylo_y(tree, best_node))
+   		points(x-(edgeLen-estimated_loc_at_branch),y, col="black", bg=alpha("yellow", 0.3), pch=21, cex=1)
+	}
+}
+
+# /Users/rm890/testing_yleaf/Yamnaya.realigned.calmd.bam.chrY.bam
+
+
+
+estimatePlotDimensions<-function(tree){
+	height=dim(tree$edge)[1]/75
+	width=height*(2/3)
+	sizes<-list(height, width)
+	return(sizes)
+}
+
+
+#make full report of counts at every path
+makeCountsEveryPath<-function(paths_list, branch_counts_df){
+	count_all_paths_df<-matrix(ncol=8,nrow=0)
+	colnames(count_all_paths_df) <-c("path",colnames(branch_counts_df))
+	count_all_paths_df<-data.frame(count_all_paths_df)
+	for (path_num in 1:length(paths)){
+		tmp_df<-getCountsforPath(paths_list[[path_num]], branch_counts_df, "nodes")
+		tmp_df$path<-path_num
+		count_all_paths_df<-rbind(count_all_paths_df,tmp_df)
+	}
+	return(count_all_paths_df)
+}
+
 #decide best path - the one containing higher number of derived alleles.
 chooseBestPath<-function(path_scores){
 	best_path_number<-path_scores$path[which(path_scores$total_derived==max(path_scores$total_derived))]
