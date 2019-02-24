@@ -8,31 +8,21 @@ cat('\n\n',"chooseBestPath.R", '\n\n\n')
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
-if (length(args)!=5) {
+if (length(args)!=6) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maxThreshold>
+        \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maxThreshold> <out_prefix>
         ", call.=FALSE)
 }
-# } else {
-#     cat("   Command used:",'\n\n')
-#     cat(paste("ancient_SNPs_to_branches.R", args[1], args[2],args[3],args[4], '\n\n'))
-# }
-
-
-# Rscript chooseBestPath.R ~/HGDP_Y/lifted_HDGP.hap.rooted.nwk tree_data/test_big intree_folder results_folder
-
-
-
-maxThreshold=args[5]
-
-
 
 
 tree_file=args[1]
 sites_info_file<-paste0(args[2],".sites.txt")
 edge_df_file=paste0(args[2],".edge_df.txt")
-calls_file<-args[3]
+calls_file<-paste0("intree_folder/",args[6], '.intree.txt')
+results_folder=args[4]
+maxThreshold=args[5]
+out_prefix=args[6]
 
 for (testfile in c(tree_file, sites_info_file, edge_df_file, calls_file)){
     if (!file.exists(testfile)) {
@@ -116,17 +106,16 @@ best_path_counts<-getCountsforPath(best_path, branch_counts, "nodes")
 
 best_path_report<-getCountsforPath(best_path_counts$Edge,branch_counts, "edges")
 
-write.table(best_path_report, file=paste0(args[4],"/best_path_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+write.table(best_path_report, file=paste0(results_folder,"/",out_prefix,".best_path_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 count_all_paths<-makeCountsEveryPath(paths, branch_counts)
 
-write.table(count_all_paths, file=paste0(args[4],"/all_path_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 
 
 
-pdf(file=paste0(args[4],"/all_path_report.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
-
+pdf(file=paste0(results_folder,"/",out_prefix,".best_path.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
 plotBestPathTree(tree,best_path_counts,branch_counts,path_scores, position_in_branch, best_node)
 dev.off()
 

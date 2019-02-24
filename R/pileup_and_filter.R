@@ -4,10 +4,10 @@
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
-if (length(args)!=8) {
+if (length(args)!=9) {
     stop("  Arguments needed.\n
 	\tusage
-	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7] bam file or list of bams
+	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['conservative'/'relaxed'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7] <bam file> or <list of bams> <out_prefix>
     	", call.=FALSE)
 }
 
@@ -19,10 +19,9 @@ mode<-args[5]
 chromosome_name<-args[6]
 pileup_read_mismatch_threshold<-args[7]
 input_type<-args[8]
+out_prefix<-args[9]
 
 dir.create(intree_folder, showWarnings = FALSE)
-
-
 
 if (chromosome_name=="chrY"){
 	sites_var<-paste0(sites_data,".siteschr.bed")
@@ -40,8 +39,13 @@ for (testfile in c(args[1], sites_var, args[4])){
 
 if (input_type=="bam_file"){
 		file_path<-args[1]
-		sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
 
+		sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
+		if (out_prefix=="bam_file"){
+			sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
+		} else {
+			sample_name<-out_prefix
+		}
 		if (!file.exists(file_path)) {
 			print(paste(file_path, "- does this file exist?"))
 		} else {

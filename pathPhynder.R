@@ -43,7 +43,7 @@ option_list <- list(
         \tFor a variant to pass filtering, reads containing the most frequent allele have to occur at least  
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
-    make_option(c("-o", "--output_prefix"), type="character", default="test", 
+    make_option(c("-o", "--output_prefix"), type="character", default="bam_file", 
         help = "prefix for output, for example, sample name [default %default]")
 
 )
@@ -173,17 +173,17 @@ if( opt$step == "all") {
 
     if (input_type=="bam_file"){
 
-        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' ))
+        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' , opt$output_prefix ))
 
-        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance))
+        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, opt$output_prefix ))
 
     } else if (input_type=="bam_list"){
 
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
         for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' ))
-            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance))
+            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', samp ))
+            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance, samp ))
 
         }
     }
@@ -206,12 +206,12 @@ if( opt$step == "all") {
 
 
     if (input_type=="bam_file"){
-        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' ))
+        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', opt$output_prefix ))
     } else if (input_type=="bam_list"){
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
         for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' ))
+            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', samp ))
         }
     }
 
@@ -220,14 +220,15 @@ if( opt$step == "all") {
     cat("Running chooseBestPath\n")
 
     if (input_type=="bam_file"){
-        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance))
+        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, opt$output_prefix ))
     } else if (input_type=="bam_list"){
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
         for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance))
+            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance, samp ))
         }
     }
+    
 
 
 } else {
