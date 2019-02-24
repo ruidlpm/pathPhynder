@@ -41,9 +41,9 @@ if (input_type=="bam_file"){
 		file_path<-args[1]
 
 		sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
-		if (out_prefix=="bam_file"){
-			sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
-		} else {
+		if (out_prefix!="bam_file"){
+			sample_name<-out_prefix
+			} else {
 			sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
 		}
 		if (!file.exists(file_path)) {
