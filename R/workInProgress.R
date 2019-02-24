@@ -106,7 +106,8 @@ getphylo_y <- function(tree, node) {
 
 estimatePositionInBranch<-function(best_path){
 	best_path_counts<-getCountsforPath(best_path, branch_counts, "nodes")
-	lastEdgeCounts<-best_path_counts[dim(best_path_counts)[1],]
+	lastEdgeCounts<-best_path_counts[which(best_path_counts$support>0)[length(which(best_path_counts$support>0))],]
+	# lastEdgeCounts<-best_path_counts[dim(best_path_counts)[1],]
 	if (lastEdgeCounts$conflict>0 & lastEdgeCounts$support>0){
 		total_counts_obs<-(lastEdgeCounts$support+lastEdgeCounts$conflict)
 		position_in_branch<-lastEdgeCounts$support/total_counts_obs

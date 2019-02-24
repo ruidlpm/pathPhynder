@@ -69,16 +69,6 @@ all_counts<-rbind(derived,ancestral)
 
 
 
-
-
-
-
-
-
-
-
-
-
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
@@ -113,6 +103,7 @@ best_path<-chooseBestPath(path_scores)
 best_node<-best_path[length(best_path)]
 
 
+
 #get position in branch (0 if no conflict markers are seen)
 position_in_branch<-estimatePositionInBranch(best_path)
 
@@ -131,7 +122,12 @@ write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_pat
 
 
 pdf(file=paste0(results_folder,"/",out_prefix,".best_path.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
-plotBestPathTree(tree,best_path_counts,branch_counts,path_scores, position_in_branch, best_node)
+if (is.null(position_in_branch)){
+	plotBestPathTree(tree,best_path_counts,branch_counts,path_scores, 0, best_node)
+} else {
+	plotBestPathTree(tree,best_path_counts,branch_counts,path_scores, position_in_branch, best_node)
+
+}
 dev.off()
 
 
