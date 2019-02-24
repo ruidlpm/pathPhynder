@@ -44,8 +44,7 @@ option_list <- list(
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
     make_option(c("-o", "--output_prefix"), type="character", default="bam_file", 
-        help = "prefix for output, for example, sample name. This only
-        works if a single bam file is used as an input. [default %default]")
+        help = "Sample name. This only works if a single bam file is used as an input. [default %default]")
 
 )
 

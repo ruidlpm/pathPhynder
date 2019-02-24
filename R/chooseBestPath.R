@@ -63,6 +63,22 @@ ancestral<-assignAncientCallsToBranch(calls, sites_info)$anc
 all_counts<-rbind(derived,ancestral)
 
 
+
+# TODO:try catch if no derived alleles, then stop.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
