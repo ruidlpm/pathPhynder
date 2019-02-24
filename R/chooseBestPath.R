@@ -104,6 +104,7 @@ best_path_counts<-getCountsforPath(best_path, branch_counts, "nodes")
 
 
 
+#make reports
 best_path_report<-getCountsforPath(best_path_counts$Edge,branch_counts, "edges")
 
 write.table(best_path_report, file=paste0(results_folder,"/",out_prefix,".best_path_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
@@ -111,8 +112,6 @@ write.table(best_path_report, file=paste0(results_folder,"/",out_prefix,".best_p
 count_all_paths<-makeCountsEveryPath(paths, branch_counts)
 
 write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
-
-
 
 
 pdf(file=paste0(results_folder,"/",out_prefix,".best_path.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])

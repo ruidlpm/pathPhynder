@@ -189,16 +189,7 @@ if( opt$step == "all") {
     }
 
 
-        # \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maxThreshold>
-
-
-
-
-
-
-    # system(paste("Rscript", paste0(packpwd,"/ancient_SNPs_to_branches.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
-
-    # system(paste("Rscript", paste0(packpwd,"/decide_len.R"),opt$input_tree, 'results_folder', opt$maximumTolerance, opt$prefix))
+#add step 3 here
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
 
@@ -229,6 +220,14 @@ if( opt$step == "all") {
         }
     }
     
+#add step 3 here
+
+# else if(opt$step == "addToTree" | opt$step == 2) {
+
+#     cat("Running addToTree\n")
+#     system(paste("Rscript", paste0(packpwd,"/addToTree.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
+
+# }
 
 
 } else {
@@ -239,12 +238,6 @@ if( opt$step == "all") {
         \t- 2 or chooseBestPath - finds the best branch/node of the tree for each sample.
         \t- 3 or addToTree - adds ancients samples to tree.")
 }
-# else if(opt$step == "addToTree" | opt$step == 2) {
-
-#     cat("Running addToTree\n")
-#     system(paste("Rscript", paste0(packpwd,"/addToTree.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
-
-# }
 
 
 
