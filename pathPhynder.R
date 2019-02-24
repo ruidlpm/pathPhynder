@@ -44,7 +44,8 @@ option_list <- list(
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
     make_option(c("-o", "--output_prefix"), type="character", default="bam_file", 
-        help = "prefix for output, for example, sample name [default %default]")
+        help = "prefix for output, for example, sample name. This only
+        works if a single bam file is used as an input. [default %default]")
 
 )
 
@@ -182,8 +183,10 @@ if( opt$step == "all") {
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
         for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', samp ))
-            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance, samp ))
+            sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
+
+            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ))
+            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
 
         }
     }
@@ -202,7 +205,9 @@ if( opt$step == "all") {
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
         for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', samp ))
+            sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
+
+            system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ))
         }
     }
 
@@ -215,8 +220,10 @@ if( opt$step == "all") {
     } else if (input_type=="bam_list"){
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
-        for(samp in bam_list$V1){
-            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',samp,'.intree.txt'), 'results_folder',  opt$maximumTolerance, samp ))
+            for(samp in bam_list$V1){
+            sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
+
+            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
         }
     }
     

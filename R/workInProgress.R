@@ -16,7 +16,7 @@ plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df
 
 	    try(x <- getphylo_x(tree, getAncestors(tree,best_node)[1]))
 	    try(y <- getphylo_y(tree, best_node))
-   		points(x+(edgeLen-estimated_loc_at_branch),y, col="black", bg=alpha("yellow", 0.3), pch=21, cex=1)
+   		points(x+edgeLen,y, col="black", bg=alpha("yellow", 0.3), pch=21, cex=1)
 	} else if(position_in_branch>0){
 		estimated_loc_at_branch=edgeLen*position_in_branch
 
