@@ -43,7 +43,7 @@ option_list <- list(
         \tFor a variant to pass filtering, reads containing the most frequent allele have to occur at least  
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
-    make_option(c("-o", "--output_prefix"), type="character", default="bam_file", 
+    make_option(c("-o", "--output_prefix"), type="character", default="bamFileName", 
         help = "Sample name. This only works if a single bam file is used as an input. [default %default]")
 
 )
@@ -160,27 +160,32 @@ if (input_type=="bam_file"){
 cat("\n\t--reference ", opt$reference)
 cat("\n\t--mode ", opt$mode)
 cat("\n\t--maximumTolerance ", opt$maximumTolerance)
-cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold,'\n\n')
+cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold)
+
+if (input_type=="bam_file"){
+    if (opt$output_prefix=="bamFileName"){
+        sample_name<-unlist(strsplit(opt$bam_file,'\\/'))[as.numeric(length(unlist(strsplit(opt$bam_file,'\\/'))))]
+        cat("\n\t--output_prefix ", sample_name,'\n\n')
+    } else {
+        cat("\n\t--output_prefix ", opt$output_prefix,'\n\n')
+        sample_name<-opt$output_prefix
+    }
+}
 
 
 
 
-# do some operations based on user input
+
 if( opt$step == "all") {
     
     cat("All steps.\n")
 
-    # if (input_type=="bam_file"){
-    #     cat("\n\t--bam_file ", opt$bam_file)
-    # } else if (input_type=="bam_list"){
-    #     cat("\n\t--list_of_bam_files ", opt$list_of_bam_files)
-    # }
 
     if (input_type=="bam_file"){
 
-        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' , opt$output_prefix ))
+        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' , sample_name))
 
-        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, opt$output_prefix ))
+        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
 
     } else if (input_type=="bam_list"){
 
@@ -202,9 +207,8 @@ if( opt$step == "all") {
 
     cat("Running pileup_and_filter\n\n")
 
-
     if (input_type=="bam_file"){
-        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', opt$output_prefix ))
+        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ))
     } else if (input_type=="bam_list"){
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 
@@ -220,7 +224,7 @@ if( opt$step == "all") {
     cat("Running chooseBestPath\n")
 
     if (input_type=="bam_file"){
-        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, opt$output_prefix ))
+        system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
     } else if (input_type=="bam_list"){
         bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
 

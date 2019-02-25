@@ -33,10 +33,12 @@ estimatePlotDimensions<-function(tree){
 	height=dim(tree$edge)[1]/75
 	width=height*(2/3)
 
+	#in case size too small, give a minimum size to prevent issues with plotting
 	if (height<5 | width<5){
 		height<-5
 		width<-5
 	}
+
 	sizes<-list(height, width)
 	return(sizes)
 }
@@ -163,7 +165,6 @@ createPathScoresTab<-function(){
 traversePaths<-function(list_of_paths,branch_counts_df, maximumTolerance){
 
 
-	print(class(maximumTolerance))
 	path_number=0
 	edges_walked<-list()
 	stop_edges<-NULL
@@ -177,7 +178,6 @@ traversePaths<-function(list_of_paths,branch_counts_df, maximumTolerance){
 		edges<-rel_branch_count$Edge
 		supporting<-rel_branch_count$support
 		conflicting<-rel_branch_count$conflict
-print(rel_branch_count)
 
 		max_tol<-maximumTolerance
 
@@ -194,12 +194,10 @@ print(rel_branch_count)
 			if (edge %in% unique(stop_edges)){
 				break
 			} else if (conflict_count>as.numeric(max_tol)){
-				print(c(edge,"conflict", conflict_count))
 				stop_edge<-edge
 				stop_edges<-unique(c(stop_edges, stop_edge))
 				break
 			} else {
-				print(c(edge,"visited"))
 				derived_sum=derived_sum+support_count
 				ancestral_sum=ancestral_sum+conflict_count
 				# edges_walked[[path_number]]<-c(edges_walked[[path_number]],edge)
@@ -208,15 +206,12 @@ print(rel_branch_count)
 		if (is.null(stop_edge)){
 			stop_edge<-NA
 		}
-		print(stop_edges)
 		currentPathScore<-data.frame(path=path_number, total_derived=derived_sum,total_ancestral=ancestral_sum, stopped_edges=stop_edge)
 		path_scores<-rbind(path_scores, currentPathScore)
 	}
 	return(path_scores)
 }
 
-
-					# stop_edges<-c(stop_edges, stop_edge)
 
 
 makeSNPStatusOutput<-function(counts_df){

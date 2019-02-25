@@ -1,5 +1,6 @@
-suppressPackageStartupMessages(require(phytools))
-suppressPackageStartupMessages(require(scales))
+suppressWarnings(suppressPackageStartupMessages(library(scales)))
+suppressWarnings(suppressPackageStartupMessages(library(phytools)))
+
 getAncestors<-phytools:::getAncestors
 
 
@@ -80,7 +81,6 @@ all_counts<-rbind(derived,ancestral)
 
 
 
-# print(all_counts)
 
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
@@ -103,7 +103,6 @@ branch_counts <- makeBranchStatusTable(all_counts,edge_df)
 #make paths
 paths<-makePaths(tree)
 
-print(maximumTolerance)
 
 
 #get scores for each path
