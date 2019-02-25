@@ -32,8 +32,6 @@ for (testfile in c(tree_file, sites_info_file, edge_df_file, calls_file)){
     }
 }
 
-
-
 edge_df<-read.table(paste0(args[2],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
 
 sites_info<-read.table(sites_info_file)
@@ -51,8 +49,6 @@ colnames(sites_info)<-c('chr','marker','hg','pos','mutation','REF','ALT','branch
 colnames(calls)<-c('pos','REF','ALT','REFreads','ALTreads','geno')
 
 
-
-
 #########
 #assigning ancient SNPs to branches
 ########
@@ -65,18 +61,17 @@ ancestral<-assignAncientCallsToBranch(calls, sites_info)$anc
 all_counts<-rbind(derived,ancestral)
 
 
-
-
-
-
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
 table(all_counts$allele_status)
 
 #makeHaplogroupStatusOutput
-# hg_status<-makeHaplogroupStatusOutput(all_counts)
-# write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+hg_status<-makeHaplogroupStatusOutput(all_counts)
+write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+
+hg_status_derived<-hg_status[hg_status$derived_count>0 & hg_status$derived_count<=maximumTolerance,]
+write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_derived_only.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 #makeBranchStatusTable
 branch_counts <- makeBranchStatusTable(all_counts,edge_df)
@@ -89,7 +84,6 @@ branch_counts <- makeBranchStatusTable(all_counts,edge_df)
 
 #make paths
 paths<-makePaths(tree)
-
 
 
 #get scores for each path
@@ -152,100 +146,14 @@ write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,"best_node
 
 
 
+# 	for sample in samples
+# AddAncientToTree<-function(tree, sample){
+# 	read.tree
+# 	res<-read.table
+# 	add(res$node, res$position)
+# 	return(tree)
+# }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # getReadCountForPath<-function(){
-# # #return(height, width)
-# # }
-
-
-
-# # AddAncientToTree<-function(){
-# # #return(height, width)
-# # }
-
-
-
-
-
-# plotAncDerSNPTree(branch_counts)
-# edgelabels(edge=unique(path_scores$stopped_edges),pch="X", col=1,cex=1)
-
-
-# path_scores<-traversePaths(paths,branch_counts,20)
-
-# plotAncDerSNPTree(branch_counts)
-# edgelabels(edge=unique(path_scores$stopped_edges),pch="X", col=1,cex=1)
-
-
-
-
-
-
-
-
-
-
-
-# plotAncDerSNPTree(branch_counts)
-# edgelabels(edge=unique(path_scores$stopped_edges),pch="X", col=1,cex=1)
-# edgelabels(edge=unique(best_path_counts$Edge),pch="B", cex=1, col="green")
-
-
-
-
-
-
-# getCountsforPath(paths[[67]],branch_counts, "nodes")
-
-
-
-# branch_counts[branch_counts$Edge==130,]$conflict<-100
-
-
-
-
-
-
-
-# pdf(file="test.pdf", height=15, width=10)
-# plotAncDerSNPTree(branch_counts)
-# edgelabels(edge=unique(path_scores$stopped_edges),pch="X", col=1,cex=1)
-# dev.off()
-# system("open test.pdf")
-
-
-# # edgelabels(edge=conflict_branch_counts$Edge,pch=20, col=alpha("red", 0.5), cex=log((conflict_branch_counts$conflict)+1)/2)
-
-
-# edgelabels(edge=unique(stop_edges))
-
-# queuePaths
 
 
 
