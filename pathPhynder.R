@@ -34,7 +34,7 @@ option_list <- list(
     make_option(c("-m","--mode"), default="conservative", 
         help = "Mode for filtering pileups.  Options: relaxed or conservative. [default \"%default\"]"),
 
-    make_option(c("-t", "--maximumTolerance"), type="integer", default=3, 
+    make_option(c("-t", "--maximumTolerance"), type="numeric", default=3, 
         help="Maximum number of ALT alleles tolerated while traversing the tree.
                 If exceeded, the algorithm stops and switches to the next path. [default %default]"),
 
@@ -55,10 +55,10 @@ packpwd<-("~/in_development/pathPhynder/R")
 opt <- parse_args(OptionParser(option_list=option_list))
 
 
-# print(opt)
-
-#test if arguments were given
-if (is.null(read.tree(opt$input_tree))){
+# #test if arguments were given
+if (is.null(opt$input_tree)){
+    stop("Please provide the necessary arguments. Pass the -h parameter for help.")
+} else if (is.null(read.tree(opt$input_tree))){
     stop("Please provide valid tree Newick file (-i).")
 } else if (is.null(opt$input_tree)){
     stop("Please provide valid tree Newick file (-i).")
@@ -69,6 +69,11 @@ if (is.null(read.tree(opt$input_tree))){
 } else if (is.null(opt$prefix)){
     stop("Please provide a tree data prefix.")
 }
+
+if (opt$mode!="conservative" & opt$mode!="relaxed"){
+    stop("The --mode parameter needs to be either conservative or relaxed.")
+}
+
 
 
 #test if bam files are bams
