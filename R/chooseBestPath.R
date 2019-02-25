@@ -141,19 +141,7 @@ dev.off()
 
 best_node_info<-data.frame(sample=out_prefix,best_node=best_node,position_in_branch=position_in_branch)
 
-write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,"best_node_info"), sep='\t',row.names=F, col.names=T, quote=F)
-
-
-
-
-# 	for sample in samples
-# AddAncientToTree<-function(tree, sample){
-# 	read.tree
-# 	res<-read.table
-# 	add(res$node, res$position)
-# 	return(tree)
-# }
-
+write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,".best_node_info.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 
 
