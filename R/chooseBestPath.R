@@ -34,19 +34,6 @@ for (testfile in c(tree_file, sites_info_file, edge_df_file, calls_file)){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 edge_df<-read.table(paste0(args[2],".edge_df.txt"), h=T, stringsAsFactors=F, sep='\t')
 
 sites_info<-read.table(sites_info_file)
@@ -158,8 +145,9 @@ if (is.null(position_in_branch)){
 dev.off()
 
 
+best_node_info<-data.frame(sample=out_prefix,best_node=best_node,position_in_branch=position_in_branch)
 
-
+write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,"best_node_info"), sep='\t',row.names=F, col.names=T, quote=F)
 
 
 
