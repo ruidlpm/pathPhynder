@@ -139,7 +139,13 @@ if (is.null(position_in_branch)){
 dev.off()
 
 
-best_node_info<-data.frame(sample=out_prefix,best_node=best_node,position_in_branch=position_in_branch)
+
+edgeLen<-tree$edge.length[best_path_counts$Edge[best_path_counts$Node2==best_node]]
+estimated_loc_at_branch=edgeLen*position_in_branch
+
+
+
+best_node_info<-data.frame(sample=out_prefix,best_node=best_node,position_in_branch=position_in_branch,edgeLen=edgeLen, estimated_loc_at_branch=estimated_loc_at_branch )
 
 write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,".best_node_info.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 

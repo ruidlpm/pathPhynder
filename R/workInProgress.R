@@ -1,4 +1,7 @@
 
+getAncestors<-phytools:::getAncestors
+
+
 plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df, position_in_branch, best_node,...){
 	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% unique(path_scores_df$stopped_edges), yes=2, no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
 	par(new=T)
@@ -13,7 +16,7 @@ plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df
 
 
 	if(position_in_branch==0){
-		estimated_loc_at_branch=edgeLen*1/2
+		estimated_loc_at_branch=edgeLen*0
 
 	    try(x <- getphylo_x(tree, getAncestors(tree,best_node)[1]))
 	    try(y <- getphylo_y(tree, best_node))

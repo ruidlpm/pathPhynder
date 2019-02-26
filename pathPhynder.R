@@ -172,6 +172,7 @@ if (input_type=="bam_file"){
     }
 }
 
+cat("\n")
 
 
 
