@@ -24,7 +24,7 @@ Workflow
 ![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
 
 
-0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, this method does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals.
+0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML or MEGA, for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, pathPhynder does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals, or try imputing your vcf.
 
 
 
@@ -32,11 +32,11 @@ Workflow
 
 ```bash
 #will output Rdata file with information about which SNPs map to branches and a bed file for snp calling
-Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+Rscript assign_SNPs_noNA.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 ```
 
 
-2) Call those SNPs in a given dataset of ancient samples.
+2) Run pathPhynder to call those SNPs in a given dataset of ancient samples and find the best path and branch where these can be mapped in the tree.
 
 ```bash
 #call positions using samtools mpileup
@@ -54,22 +54,9 @@ python call_bases_chrY.py \
 ```
 
 
-3) Add and visualize derived and ancestral SNPs at branches of the tree.
-
-```bash
-Rscript ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
-```
 
 
-
-4) Apply decision algorithm (modified from Poznik 2016) for deciding the best node/branch to assing each ancient sample.
-```bash
-Rscript decide.R <input_phylogeny.nwk> <input.vcf> <out prefix> <ancient.out.intree.txt> <results folder> plot=(boolean; T or F)
-```
-
-
-
-5) Add samples to tree and see results with micro
+3) Add samples to tree and see results with micro
 
 
     ![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/micro_poster.png)
