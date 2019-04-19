@@ -258,10 +258,16 @@ cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\
 
 
 
+
+tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+
+
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
-snps<-read.table("snps.txt")
+snps<-read.table(paste0(packpwd,"/../data/snps.txt"))
 
 
 

@@ -8,7 +8,8 @@ suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
 option_list <- list(
     make_option(c("-s", "--step"), default="all", help="Specifies which step to run. Options:
-    \t\t\t- all - runs all steps of the analysis.
+    \t\t\t- assign - assigns SNPs to branches.
+    \t\t\t- all - runs all steps to map ancient SNPs to branches (1,2,3).
     \t\t\t- 1 or pileup_and_filter - runs pileup in ancient bam files and filters bases.
     \t\t\t- 2 or chooseBestPath - finds the best branch/node of the tree for each sample.
     \t\t\t- 3 or addToTree - adds ancients samples to tree.
@@ -16,8 +17,8 @@ option_list <- list(
 
     make_option(c("-i","--input_tree"),
         help = "Input tree in Newick format. [required]"),
-    # make_option(c("-v","--input_vcf"), default="data/test_tree.vcf", 
-    #     help = "Input vcf. Needs to be haploid. [default \"%default\"]"),
+    make_option(c("-v","--input_vcf"), 
+        help = "Input vcf. Only needed for SNP to branch assignment. Needs to be haploid."),
     make_option(c("-p","--prefix"),
         help = "Prefix for the data files associated with the tree.
         \tThese were previously generated in the branch assignment step. [required]"),
@@ -63,11 +64,9 @@ if (is.null(opt$input_tree)){
     stop("Please provide the necessary arguments. Pass the -h parameter for help.")
 } else if (is.null(read.tree(opt$input_tree))){
     stop("Please provide valid tree Newick file (-i).")
-} else if (is.null(opt$input_tree)){
-    stop("Please provide valid tree Newick file (-i).")
-} else if (is.null(opt$bam_file) & is.null(opt$list_of_bam_files)){
+} else if (opt$step != "assign" & is.null(opt$bam_file) & is.null(opt$list_of_bam_files)){
     stop("Please provide either a bam file (-b) or a list of bam files (-l).")
-} else if (length(opt$bam_file)>0 & length(opt$list_of_bam_files)>0){
+} else if (opt$step != "assign" & length(opt$bam_file)>0 & length(opt$list_of_bam_files)>0){
     stop("Please provide either a bam file (-b) or a list of bam files (-l), not both.")
 } else if (is.null(opt$prefix)){
     stop("Please provide a tree data prefix.")
@@ -110,8 +109,8 @@ checkBamListIntegrity<-function(list_bams){
 #############
 
 #decide on the type of input
-if (is.null(opt$list_of_bam_files)){
-    if (file_test("-f", opt$bam_file)==F){
+if (opt$step != "assign" & is.null(opt$list_of_bam_files)){
+    if (opt$step != "assign" & file_test("-f", opt$bam_file)==F){
         stop("Please provide an existing bam file")
     } else {
         checkBamIntegrity(opt$bam_file)
@@ -119,18 +118,19 @@ if (is.null(opt$list_of_bam_files)){
     input_type="bam_file"
 }
 
-if (is.null(opt$bam_file)){
-    if (file_test("-f", opt$list_of_bam_files)==F){
+if (opt$step != "assign" & is.null(opt$bam_file)){
+    if (opt$step != "assign" & file_test("-f", opt$list_of_bam_files)==F){
         stop("Please provide an existing list of bam files")
     } else {
+
         checkBamListIntegrity(opt$list_of_bam_files)
     }
     input_type="bam_list"
 }
 
-if (file_test("-f", opt$reference)==F){
+if (opt$step != "assign" & file_test("-f", opt$reference)==F){
     stop("Please provide an existing reference genome fasta file.")
-} else if (file_test("-f", paste0(opt$prefix,'.sites.bed'))==F){
+} else if (opt$step != "assign" & file_test("-f", paste0(opt$prefix,'.sites.bed'))==F){
     stop("Please provide a prefix for existing tree data.")
 } 
 
@@ -138,14 +138,15 @@ if (file_test("-f", opt$reference)==F){
 
 
 #decide whether to use "chrY" or "Y"
-if (length(grep("hg19", opt$reference))>0){
+if (opt$step != "assign" & length(grep("hg19", opt$reference))>0){
     chromosome_name<-"chrY"
-} else if (length(grep("hs37d5", opt$reference))>0){
+} else if (opt$step != "assign" & length(grep("hs37d5", opt$reference))>0){
     chromosome_name<-"Y"
 } else {
-    stop("Your reference genome needs to be named hg19 or hs37d5")
+    if (opt$step != "assign") {
+        stop("Your reference genome needs to be named hg19 or hs37d5")
+    }
 }
-
 
 
 
@@ -154,33 +155,46 @@ cat("\n\tpathPhynder v.0.0 \n", "\n\tParameters:\n")
 cat("\n\t--input_tree ", opt$input_tree)
 cat("\n\t--prefix ", opt$prefix)
 
-if (input_type=="bam_file"){
-    cat("\n\t--bam_file ", opt$bam_file)
-} else if (input_type=="bam_list"){
-    cat("\n\t--list_of_bam_files ", opt$list_of_bam_files)
-}
+if (opt$step != "assign") {
+   if (input_type=="bam_file"){
+      cat("\n\t--bam_file ", opt$bam_file)
+    } else if (input_type=="bam_list"){
+      cat("\n\t--list_of_bam_files ", opt$list_of_bam_files)
+    } 
+    cat("\n\t--reference ", opt$reference)
+    cat("\n\t--mode ", opt$mode)
+    cat("\n\t--maximumTolerance ", opt$maximumTolerance)
+    cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold)
 
-cat("\n\t--reference ", opt$reference)
-cat("\n\t--mode ", opt$mode)
-cat("\n\t--maximumTolerance ", opt$maximumTolerance)
-cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold)
 
-if (input_type=="bam_file"){
-    if (opt$output_prefix=="bamFileName"){
-        sample_name<-unlist(strsplit(opt$bam_file,'\\/'))[as.numeric(length(unlist(strsplit(opt$bam_file,'\\/'))))]
-        cat("\n\t--output_prefix ", sample_name,'\n\n')
-    } else {
-        cat("\n\t--output_prefix ", opt$output_prefix,'\n\n')
-        sample_name<-opt$output_prefix
+    if (input_type=="bam_file"){
+        if (opt$output_prefix=="bamFileName"){
+            sample_name<-unlist(strsplit(opt$bam_file,'\\/'))[as.numeric(length(unlist(strsplit(opt$bam_file,'\\/'))))]
+            cat("\n\t--output_prefix ", sample_name,'\n\n')
+        } else {
+            cat("\n\t--output_prefix ", opt$output_prefix,'\n\n')
+            sample_name<-opt$output_prefix
+        }
     }
+
 }
+
+
 
 cat("\n")
 
 
 
 
-if( opt$step == "all") {
+if( opt$step == "assign") {
+    cat("assign SNPs to branches \n")
+
+    cat(paste("Rscript", paste0(packpwd,"/assign_noNA.R"), opt$input_tree, opt$input_vcf, opt$prefix))
+
+    system(paste("Rscript", paste0(packpwd,"/assign_noNA.R"), opt$input_tree, opt$input_vcf, opt$prefix))
+
+
+} else if( opt$step == "all") {
     
     cat("All steps.\n")
 
