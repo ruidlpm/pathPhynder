@@ -188,9 +188,6 @@ cat("\n")
 
 if( opt$step == "assign") {
     cat("assign SNPs to branches \n")
-
-    cat(paste("Rscript", paste0(packpwd,"/assign_noNA.R"), opt$input_tree, opt$input_vcf, opt$prefix))
-
     system(paste("Rscript", paste0(packpwd,"/assign_noNA.R"), opt$input_tree, opt$input_vcf, opt$prefix))
 
 

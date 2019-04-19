@@ -161,7 +161,7 @@ writeBed <- function(){
         write.table(file=paste0('tree_data/',args[3],'.sites.bed'),bedfile_data, quote = F, row.names = F, col.names = F, sep='\t')
         write.table(file=paste0('tree_data/',args[3],'.siteschr.bed'),bedfile_data_w_chr, quote = F, row.names = F, col.names = F, sep='\t')
 
-        cat(paste0("\t",dim(unique(LongSNPtable))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
+        cat(paste0("\t",dim(unique(bedfile_data))[1]," informative positions for variant calling (written to tree_data/", args[3],".sites.bed)"),'\n\n')
 
     }
 }
