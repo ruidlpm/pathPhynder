@@ -16,6 +16,28 @@ Description: Ancient DNA data is characterized by deamination and low-coverage s
   - Use all available Y-chromosomal variants rather than a subset of known SNPs (this provides a greater chance of detecting informative SNPs in low coverage aDNA samples);
   - Provide a visualization tool for ancestral and derived allele state at each branch of the tree, aiding haplogroup determination;
   - Generate a database of ancient DNA Y-chromosome variability which allows observing the main trends of Y-chromosome affinity throughout time and geography.
+
+
+
+Installation
+
+1) Download pathPhynder to your computer.
+
+2) Add this line to your ~/.bash_profile
+
+alias pathPhynder="Rscript <path_to_pathPhynder_folder>"
+
+If you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
+
+alias pathPhynder="Rscript ~/software/pathPhynder/pathPhynder.R"
+
+then:
+
+source ~/.bash_profile
+
+3) test if it works
+
+pathPhynder -h
  
 
 

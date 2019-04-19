@@ -49,7 +49,10 @@ option_list <- list(
 )
 
 
-packpwd<-("~/in_development/pathPhynder/R")
+tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+
 
 # get command line options, if help option encountered print help and exit,
 opt <- parse_args(OptionParser(option_list=option_list))
