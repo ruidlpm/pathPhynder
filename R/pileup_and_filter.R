@@ -12,6 +12,11 @@ if (length(args)!=9) {
 }
 
 
+tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+
+
 sites_data<-args[2] 
 intree_folder<-args[3]
 refgen_path<-args[4]
@@ -58,7 +63,7 @@ if (input_type=="bam_file"){
 			
 			system(cmd, wait=T)
 		
-			cmd2=paste0("python3 ~/in_development/pathPhynder/inst/python/call_bases_chrY_v2.1.py ",
+			cmd2=paste0("python3 ",gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py ",
 				paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 				paste0(" -m ", mode),
 				paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),
