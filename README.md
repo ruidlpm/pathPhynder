@@ -23,23 +23,21 @@ Installation
 
 1) Download pathPhynder to your computer.
 
-2) Add this line to your ~/.bash_profile
+2) Add the following line to your ~/.bash_profile. Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
 
 alias pathPhynder="Rscript <path_to_pathPhynder_folder>"
 
-If you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
+For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
 
 alias pathPhynder="Rscript ~/software/pathPhynder/pathPhynder.R"
 
-then:
+Then:
 
 source ~/.bash_profile
 
-3) test if it works
+3) Test if it works.
 
 pathPhynder -h
- 
-
 
 Workflow
 
@@ -90,59 +88,9 @@ Tutorial:
 https://github.com/ruidlpm/Integrating_aDNA_Y/tree/master/tutorial/tutorial_data
 
 
-
-
-TODO:
-
-- Add parameters to continue and stop <PRIORITY>
-- Jacknife/Bootstrap procedure
-- Update tree as each ancient sample gets added. (Might be worth it to start with aDNA samples sorted by number of variants overlapping the tree)
-- can we explore at all rare variation on the Y chromosome?
-- HGDP data
-- Haplogroup determination - try Yfull tree?
-  - IMPUTE missing markers in moderns, for example they may have some R1b defining SNPs, but not all. So if derived for some, impute derived for all. Same for ancestral markers.
-
-
-
-
-
-
-
-
-
-
-
-
-
 Requirements:
  - phytools
  - scales
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -151,34 +99,22 @@ ________________________________________________________________________
 
 To do:
 
-Urgent
- - [ ] currently the python program which filters alleles sets the position as missing in case of mismatches. I'm losing ~7% of variants because of this. It should be straighforward to recover them! 
- 
- Basically if p_der<0.5, assign anc, if p_der>0.5, assign der. If p_der==0.5, then leave as missing.
-________
-
-
  - [ ] fix header in output vcf after imputation
 - [ ] SNP table produced by assign_noNA.R should contain Anc/Derived information
-- [ ] assign_noNA.R should automatically produce "siteschr" files
 - [ ] need to have a path with gr37 hg19 and gr38 fa and respective indexes
 - [ ] need to have an independent snps.txt file, which does not rely on poznik. Ideally for both ISOGG2016 and 18
-- [ ] the plotting is very fragile. Need a function which can be reused.
-- [ ] pathPhynder can deal with 1000 Genomes type data. But the HGDP has 60 Gb which is not possible at the - [ ]ment. Should implement something to split vcf files and run assign to branches
 - [ ] plotting requires a list of hgs of ancient samples and modern samples. This should be an optional requirement.
 - [ ] The main clades could be added to the plots.
-- [ ] Fix also a problem with sample names and anchgs file.
-			[1] "TV32032extra.chrY.realigned.calmd.bam___NA___NA"
 - [ ] need to add warnings all over the code, if the files are not present, if they do not conform with the specs, etc...
-- [ ] formula to estimate the size of the plot automattically
-- [ ] sample list only works for first step. Need to fix this to allow processing only one sample or a subset
 - [ ] could output a summary for each sample:
  		Read 13044 positions from file M3397.chrY.realigned.calmd.bam.intree.txt
  		SNP count:  381 derived and 11847 ancestral.
-- [ ] output a table with best node for sample, this would allow plotting only a chose subset of ancient individuals.
 - [ ] Ideally, I shouldn't rely on a previous haplogroup assignment, I should produce one myself... Supported by the graph produced.
-- [ ] plotting needs to highlight the chosen path, and not only the branches containing derived alleles.
-- [ ] also input could be a single bam or a list of bams
 - [ ] Instead of neighbour joining, it would be good to have properly calibrated trees. Could use the counts at each branch to estimate coalescence.
 - [ ] My ancient Y chr capture samples could be really useful for improving calibration times.
 
+
+- Jacknife/Bootstrap procedure
+- Update tree as each ancient sample gets added. (Might be worth it to start with aDNA samples sorted by number of variants overlappin$
+- can we explore at all rare variation on the Y chromosome?
+- Haplogroup determination - try Yfull tree?
