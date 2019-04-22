@@ -73,6 +73,7 @@ snp_status<-makeSNPStatusOutput(all_counts)
 table(all_counts$allele_status)
 
 
+if (length(unique(all_counts$hg))==1){
 if (!is.na(unique(all_counts$hg))){
 #makeHaplogroupStatusOutput
 hg_status<-makeHaplogroupStatusOutput(all_counts)
@@ -80,6 +81,7 @@ write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_st
 
 hg_status_derived<-hg_status[hg_status$derived_count>0 & hg_status$derived_count<=maximumTolerance,]
 write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_derived_only.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+}
 }
 
 #makeBranchStatusTable
