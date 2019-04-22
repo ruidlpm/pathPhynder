@@ -51,36 +51,30 @@ Workflow
 1) Assign informative SNPs to tree branches.
 
 ```bash
-#will output Rdata file with information about which SNPs map to branches and a bed file for snp calling
-Rscript assign_SNPs_noNA.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+#will output tables with information about which SNPs map to each branch of the tree and a bed file for snp calling.
+pathPhynder -s assign -i <tree>.nwk -v <tree_data>.vcf -p <prefix_output>
 ```
 
 
 2) Run pathPhynder to call those SNPs in a given dataset of ancient samples and find the best path and branch where these can be mapped in the tree.
 
 ```bash
-#call positions using samtools mpileup
-samtools mpileup <bam> \
---ignore-RG \
---positions <bedfile> \
--f <refgen> > <out.pileup>
+#To run all the steps at once, including variant calling, choosing the best path and adding ancient samples to the tree
+pathPhynder -s all -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
 
-
-#convert to intree format, which contains info about anc der markers
-python call_bases_chrY.py \
--i <out.pileup>  \
--m conservative  \
--o <ancient.out.intree.txt>
+#(Optional) Note that you can also run the analysis on a single bam file
+pathPhynder -s all -i <tree>.nwk -p path_to/<prefix_output> -b <sample.bam>
 ```
 
+If you want to run each step individually:
+
+pathPhynder -s <1 or pileup_and_filter> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
+pathPhynder -s <2 or chooseBestPath> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
+pathPhynder -s <3 or addAncToTree> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
 
 
-
-3) Add samples to tree and see results with micro
-
-
-    ![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/micro_poster.png)
-
+There are also a few parameters that can be adjusted according to the user's needs.
+To see them, type pathPhynder -h.
 
 
 Tutorial:
