@@ -5,6 +5,9 @@
 suppressWarnings(suppressPackageStartupMessages(library("optparse")))
 suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
+tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+
 
 option_list <- list(
     make_option(c("-s", "--step"), default="all", help="Specifies which step to run. Options:
@@ -29,7 +32,7 @@ option_list <- list(
     make_option(c("-l","--list_of_bam_files"), 
         help = "List of paths to bam files. [required]"),
 
-    make_option(c("-r","--reference"), default="~/in_development/pathPhynder/data/reference_sequences/hs37d5_Y.fa.gz", 
+    make_option(c("-r","--reference"), default=paste0(packpwd,"/../data/reference_sequences/hs37d5_Y.fa.gz"),
         help = "Reference genome (fasta format). [default \"%default\"]"),
 
     make_option(c("-m","--mode"), default="conservative", 
