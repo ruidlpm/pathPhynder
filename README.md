@@ -18,19 +18,24 @@ Description: Ancient DNA data is characterized by deamination and low-coverage s
   - Generate a database of ancient DNA Y-chromosome variability which allows observing the main trends of Y-chromosome affinity throughout time and geography.
 
 
-
 Installation
 
-1) Download pathPhynder to your computer.
+1) Download pathPhynder to your computer and install the following packages:
+ - phytools (example:conda install -c bioconda r-phytools)
+ - scales
+ - optparse
 
-2) Add the following line to your ~/.bash_profile. Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+2) For running pathPhynder, you can either specify the whole path:
 
+```
+Rscript ~/<path_to_pathPhynder_folder>/pathPhynder.R
+```
+
+or add the following line to your ~/.bash_profile. Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
 ```
 alias pathPhynder="Rscript <path_to_pathPhynder_folder>"
 ```
-
 For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
-
 ```
 alias pathPhynder="Rscript ~/software/pathPhynder/pathPhynder.R"
 ```
@@ -49,8 +54,6 @@ _________________________________________________
 Workflow
 
 0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML or MEGA, for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, pathPhynder does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals, or try imputing your vcf.
-
-
 
 1) Assign informative SNPs to tree branches.
 
@@ -71,11 +74,13 @@ pathPhynder -s all -i <tree>.nwk -p path_to/<prefix_output> -b <sample.bam>
 ```
 
 If you want to run each step individually:
-
+```
 pathPhynder -s <1 or pileup_and_filter> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
-pathPhynder -s <2 or chooseBestPath> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
-pathPhynder -s <3 or addAncToTree> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
 
+pathPhynder -s <2 or chooseBestPath> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
+
+pathPhynder -s <3 or addAncToTree> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
+```
 
 There are also a few parameters that can be adjusted according to the user's needs.
 To see them, type pathPhynder -h.
@@ -84,11 +89,6 @@ To see them, type pathPhynder -h.
 Tutorial:
 
 https://github.com/ruidlpm/Integrating_aDNA_Y/tree/master/tutorial/tutorial_data
-
-
-Requirements:
- - phytools
- - scales
 
 
 ![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
