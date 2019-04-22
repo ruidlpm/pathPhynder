@@ -12,10 +12,13 @@ step 1 - Assign SNPs to branches of the tree
 #download the Karmin VCF file
 wget http://evolbio.ut.ee/chrY/PLINKandVCF/Karmin_et_al_2015_chrY_454samples_CGplusIlluminaA00_filtered1_noAustralians.vcf
 
+#the tree estimated for this dataset is in the tutorial folder
+karmin.nwk
 
 #assign SNPs to branches of the tree
 time pathPhynder -s assign -i karmin.nwk -v Karmin_et_al_2015_chrY_454samples_CGplusIlluminaA00_filtered1_noAustralians.vcf -p karmin_data
 
+```
 
 
 	table with markers assigned to each branch written to tree_data/karmin_data.edge_df.txt)
@@ -68,5 +71,32 @@ pathPhynder -s all -i karmin.nwk -p tree_data/karmin_data -l sample.list
 real	2m44.761s
 user	2m33.428s
 sys	0m6.820s
+```
+
+
+Description of the output files of step 2.
+
+```
+<sample>.pileup.txt - pileup for a given sample at branch defining SNPs
+Y       2650701 G       2       ..      JJ
+Y       2657214 G       1       ,       J
+Y       2657247 G       1       ,       J
+
+<sample>.intree.txt - status at each marker after filtering
+23973594 G T 0 2 1
+23980238 C A 1 0 0
+23987274 C T 1 0 0
+
+<sample>.best_path.pdf - contains tree and best path for a given sample. Red and green circles indicate ancestral and derived alleles, respectivelly.
+
+<sample>.best_path_report.txt - counts of markers supporting and in conflict with membership to a branch for the best path.
+
+<sample>.all_paths_report.txt - counts of markers supporting and in conflict with membership to a branch for all paths.
+
+<sample>.best_node_info.txt - node where the ancient sample belongs
+
+<sample>.hg_in_tree_status.txt - counts of markers at haplogroup defining branches (markers in the tree data only)
+
+<sample>.hg_in_tree_status_derived_only.txt - counts of derived markers at haplogroup defining branches (markers in the tree data only)
 ```
 
