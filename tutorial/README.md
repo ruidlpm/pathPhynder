@@ -95,5 +95,10 @@ Y       2657247 G       1       ,       J
 <sample>.hg_in_tree_status.txt - counts of markers at haplogroup defining branches (markers in the tree data only)
 
 <sample>.hg_in_tree_status_derived_only.txt - counts of derived markers at haplogroup defining branches (markers in the tree data only)
+
+final_tree.nwk - newick tree with ancient samples added into it.
+
+final_tree.pdf - figure of the tree with ancient samples added into it.
+
 ```
 
