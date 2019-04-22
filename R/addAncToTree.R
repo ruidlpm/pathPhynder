@@ -38,7 +38,7 @@ readBestNodes<-function(){
 		stop("No files with best node info.")
 	} else {
 		for (i in res){
-			tmp<-try(read.table(paste0("results_folder/",i), h=T), silent=T)
+			tmp<-try(read.table(paste0("results_folder/",i), h=T, stringsAsFactors=F), silent=T)
 			if (class(tmp)!="try-error"){
 				if (dim(tmp)[1]==1){
 					df<-rbind(df,tmp)
