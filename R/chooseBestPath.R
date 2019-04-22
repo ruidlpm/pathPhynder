@@ -49,6 +49,7 @@ dir.create(args[4], showWarnings = FALSE)
 
 
 calls<-read.table(calls_file)
+
 colnames(sites_info)<-c('chr','marker','hg','pos','mutation','REF','ALT','branch','status')
 colnames(calls)<-c('pos','REF','ALT','REFreads','ALTreads','geno')
 
@@ -57,7 +58,7 @@ colnames(calls)<-c('pos','REF','ALT','REFreads','ALTreads','geno')
 #assigning ancient SNPs to branches
 ########
 
-source(paste0(packpwd,'/workInProgress.R'))
+source(paste0(packpwd,'/functions_pathPhynder.R'))
 
 #assignAncientCallsToBranch
 derived<-assignAncientCallsToBranch(calls, sites_info)$der
@@ -65,17 +66,21 @@ ancestral<-assignAncientCallsToBranch(calls, sites_info)$anc
 all_counts<-rbind(derived,ancestral)
 
 
+
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
 table(all_counts$allele_status)
 
+
+if (!is.na(unique(all_counts$hg))){
 #makeHaplogroupStatusOutput
 hg_status<-makeHaplogroupStatusOutput(all_counts)
 write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 hg_status_derived<-hg_status[hg_status$derived_count>0 & hg_status$derived_count<=maximumTolerance,]
 write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_derived_only.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+}
 
 #makeBranchStatusTable
 branch_counts <- makeBranchStatusTable(all_counts,edge_df)
