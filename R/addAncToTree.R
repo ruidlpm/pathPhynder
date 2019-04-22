@@ -7,6 +7,7 @@ tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), 
 
 packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
 
+source(paste0(packpwd,'/functions_pathPhynder.R'))
 
 
 args = commandArgs(trailingOnly=TRUE)
@@ -86,16 +87,12 @@ for (i in 1:length(best_nodes_table$best_node)){
 }
 
 
-# , height=20, width=20
-
-
-pdf(file="final_tree.pdf")
-plot(newtree, show.tip.label=T,tip.color=ifelse(newtree$tip.label %in% best_nodes_table$sample, yes=2, no=1), cex=0.7)
+pdf(file=paste0("results_folder","/final_tree.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
+plot(newtree, show.tip.label=T,tip.color=ifelse(newtree$tip.label %in% best_nodes_table$sample, yes=2, no=1), cex=0.15)
 dev.off()
 
 
-
-write.tree(newtree,file=paste0(results_folder,'/final_tree.pdf'))
+write.tree(newtree,file=paste0('results_folder','/final_tree.nwk'))
 
 
 
