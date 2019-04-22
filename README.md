@@ -4,21 +4,19 @@ Title: A workflow for integrating ancient lineages into present-day Y-chromosome
 Description: Ancient DNA data is characterized by deamination and low-coverage sequencing, which results in a high fraction of missing data and erroneous calls. These factors affect the estimation of phylogenetic trees with modern and ancient DNA, especially in when dealing with many ancient samples sequenced to lower coverage. Furthermore, most ancient DNA analyses usually rely on known markers on the Y-chromosome, but additional variation will continuously emerge as more data is generated. This workflow offers a solution for integrating ancient and present-day Y-chromososome data, first by identifiying informative Y-chromosome markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely clade where it belongs.
 
 
-
-
-
 ### Background:
 
  - Ancient DNA characteristics such as low coverage, post-mortem deamination and contamination make accurate Y-chromosome phylogeny estimation very challenging. Furthermore, the majority of ancient DNA Y-chromosome analysis restricts itself to a set of known SNPs used for the identification of Y-chromosome lineages, however, many more variants exist in present-day datasets which can be used to inform aDNA paternal affinities. 
  
- Aims of this method:
+Aims of this method:
   - Provide a tool that allows integrating ancient DNA data from multiple sources (target capture and shotgun sequencing) into present-day phylogenies, which is challenging with current available methods;
   - Use all available Y-chromosomal variants rather than a subset of known SNPs (this provides a greater chance of detecting informative SNPs in low coverage aDNA samples);
   - Provide a visualization tool for ancestral and derived allele state at each branch of the tree, aiding haplogroup determination;
   - Generate a database of ancient DNA Y-chromosome variability which allows observing the main trends of Y-chromosome affinity throughout time and geography.
 
+_________________________________________________
 
-Installation
+### Installation
 
 1) Download pathPhynder to your computer and install the following packages:
  - phytools (example:conda install -c bioconda r-phytools)
@@ -51,7 +49,7 @@ pathPhynder -h
 ```
 _________________________________________________
 
-Workflow
+### Workflow
 
 0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML or MEGA, for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, pathPhynder does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals, or try imputing your vcf.
 
@@ -82,8 +80,56 @@ pathPhynder -s <2 or chooseBestPath> -i <tree>.nwk -p path_to/<prefix_output> -l
 pathPhynder -s <3 or addAncToTree> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
 ```
 
-There are also a few parameters that can be adjusted according to the user's needs.
-To see them, type pathPhynder -h.
+There are also a few additional parameters that can be adjusted according to the user's needs.
+pathPhynder -h.
+```
+Options:
+	-s STEP, --step=STEP
+		Specifies which step to run. Options:
+    			- assign - assigns SNPs to branches.
+    			- all - runs all steps to map ancient SNPs to branches (1,2,3).
+    			- 1 or pileup_and_filter - runs pileup in ancient bam files and filters bases.
+    			- 2 or chooseBestPath - finds the best branch/node of the tree for each sample.
+    			- 3 or addAncToTree - adds ancients samples to tree.
+    			[default all]
+
+	-i INPUT_TREE, --input_tree=INPUT_TREE
+		Input tree in Newick format. [required]
+
+	-v INPUT_VCF, --input_vcf=INPUT_VCF
+		Input vcf. Only needed for SNP to branch assignment. Needs to be haploid.
+
+	-p PREFIX, --prefix=PREFIX
+		Prefix for the data files associated with the tree.
+        	These were previously generated in the branch assignment step. [required]
+
+	-b BAM_FILE, --bam_file=BAM_FILE
+		Input bam file. [required]
+
+	-l LIST_OF_BAM_FILES, --list_of_bam_files=LIST_OF_BAM_FILES
+		List of paths to bam files. [required]
+
+	-r REFERENCE, --reference=REFERENCE
+		Reference genome (fasta format). [default "~/in_development/pathPhynder/data/reference_sequences/hs37d5_Y.fa.gz"]
+
+	-m MODE, --mode=MODE
+		Mode for filtering pileups.  Options: relaxed or conservative. [default "conservative"]
+
+	-t MAXIMUMTOLERANCE, --maximumTolerance=MAXIMUMTOLERANCE
+		Maximum number of ALT alleles tolerated while traversing the tree.
+                If exceeded, the algorithm stops and switches to the next path. [default 3]
+
+	-c PILEUP_READ_MISMATCH_THRESHOLD, --pileup_read_mismatch_threshold=PILEUP_READ_MISMATCH_THRESHOLD
+		Mismatch threshold for accepting a variant (for cases where reads for both alleles are present in pileup).
+        	For a variant to pass filtering, reads containing the most frequent allele have to occur at least
+        	at x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default 0.7]
+
+	-o OUTPUT_PREFIX, --output_prefix=OUTPUT_PREFIX
+		Sample name. This only works if a single bam file is used as an input. [default bamFileName]
+
+	-h, --help
+		Show this help message and exit
+```
 
 
 Tutorial:
