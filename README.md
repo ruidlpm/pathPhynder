@@ -25,24 +25,28 @@ Installation
 
 2) Add the following line to your ~/.bash_profile. Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
 
+```
 alias pathPhynder="Rscript <path_to_pathPhynder_folder>"
+```
 
 For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
 
+```
 alias pathPhynder="Rscript ~/software/pathPhynder/pathPhynder.R"
-
-Then:
-
+```
+and then:
+```
 source ~/.bash_profile
+```
 
 3) Test if it works.
 
+```
 pathPhynder -h
+```
+_________________________________________________
 
 Workflow
-
-![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
-
 
 0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML or MEGA, for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, pathPhynder does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals, or try imputing your vcf.
 
@@ -87,6 +91,7 @@ Requirements:
  - scales
 
 
+![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
 
 ________________________________________________________________________
 
