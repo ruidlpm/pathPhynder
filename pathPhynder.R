@@ -260,6 +260,32 @@ if( opt$step == "assign") {
 # }
 
 
+} else if(opt$step == "addToTree" | opt$step == 2) {
+
+    cat("Running addToTree\n")
+
+    if (input_type=="bam_file"){
+        system(paste("Rscript", paste0(packpwd,"/workInProgres"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
+    } else if (input_type=="bam_list"){
+        bam_list<-read.table(opt$list_of_bam_files, stringsAsFactors=F)
+
+            for(samp in bam_list$V1){
+            sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
+
+            system(paste("Rscript", paste0(packpwd,"/workInProgres"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
+        }
+    }
+    
+#add step 3 here
+
+# else if(opt$step == "addToTree" | opt$step == 2) {
+
+#     cat("Running addToTree\n")
+#     system(paste("Rscript", paste0(packpwd,"/addToTree.R"),opt$input_tree,opt$prefix,'intree_folder', 'results_folder'))
+
+# }
+
+
 } else {
     stop("Choose the step you would like to run.
         Options:
