@@ -89,14 +89,13 @@ for (i in 1:length(best_nodes_table$best_node)){
 # , height=20, width=20
 
 
-pdf(file="testadd2.pdf")
+pdf(file="final_tree.pdf")
 plot(newtree, show.tip.label=T,tip.color=ifelse(newtree$tip.label %in% best_nodes_table$sample, yes=2, no=1), cex=0.7)
 dev.off()
-system("open testadd2.pdf")
 
 
 
-write.tree(newtree,file=paste0(results_folder,'/added_anc_best_node_location_nolabels.nwk'))
+write.tree(newtree,file=paste0(results_folder,'/final_tree.pdf'))
 
 
 
