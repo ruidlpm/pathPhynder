@@ -18,8 +18,6 @@ karmin.nwk
 #assign SNPs to branches of the tree
 time pathPhynder -s assign -i karmin.nwk -v Karmin_et_al_2015_chrY_454samples_CGplusIlluminaA00_filtered1_noAustralians.vcf -p karmin_data
 
-```
-
 
 	table with markers assigned to each branch written to tree_data/karmin_data.edge_df.txt)
 
@@ -29,11 +27,10 @@ time pathPhynder -s assign -i karmin.nwk -v Karmin_et_al_2015_chrY_454samples_CG
 
 	6834 positions were not added (report written to tree_data/karmin_data.report_not_added_SNPs.txt)
 
-
-
 real	5m46.280s
 user	4m54.475s
 sys	0m50.063s
+```
 
 
 Description of the output files of step 1.
