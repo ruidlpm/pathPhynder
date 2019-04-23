@@ -4,10 +4,6 @@ Title: A workflow for integrating ancient lineages into present-day Y-chromosome
 Description: Ancient DNA data is characterized by deamination and low-coverage sequencing, which results in a high fraction of missing data and erroneous calls. These factors affect the estimation of phylogenetic trees with modern and ancient DNA, especially in when dealing with many ancient samples sequenced to lower coverage. Furthermore, most ancient DNA analyses usually rely on known markers on the Y-chromosome, but additional variation will continuously emerge as more data is generated. This workflow offers a solution for integrating ancient and present-day Y-chromososome data, first by identifiying informative Y-chromosome markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely clade where it belongs.
 
 
-### Background:
-
- - Ancient DNA characteristics such as low coverage, post-mortem deamination and contamination make accurate Y-chromosome phylogeny estimation very challenging. Furthermore, the majority of ancient DNA Y-chromosome analysis restricts itself to a set of known SNPs used for the identification of Y-chromosome lineages, however, many more variants exist in present-day datasets which can be used to inform aDNA paternal affinities. 
- 
 Aims of this method:
   - Provide a tool that allows integrating ancient DNA data from multiple sources (target capture and shotgun sequencing) into present-day phylogenies, which is challenging with current available methods;
   - Use all available Y-chromosomal variants rather than a subset of known SNPs (this provides a greater chance of detecting informative SNPs in low coverage aDNA samples);
