@@ -47,9 +47,6 @@ option_list <- list(
         \tFor a variant to pass filtering, reads containing the most frequent allele have to occur at least  
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
-    make_option(c("-a", "--annotations_file"), type="character", default=NULL,
-        help = "Annotations file used to label ancient and modern individuals in the tree. [default %default]"),
-
     make_option(c("-o", "--output_prefix"), type="character", default="bamFileName", 
         help = "Sample name. This only works if a single bam file is used as an input. [default %default]")
 
@@ -154,11 +151,6 @@ if (opt$step != "assign" & length(grep("hg19", opt$reference))>0){
         stop("Your reference genome needs to be named hg19 or hs37d5")
     }
 }
-
-if (!is.NULL(opt$annotations_file)){
-    annotations_file <- opt$annotations_file
-}
-
 
 
 #print parameters into terminal
