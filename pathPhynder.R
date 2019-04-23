@@ -47,6 +47,9 @@ option_list <- list(
         \tFor a variant to pass filtering, reads containing the most frequent allele have to occur at least  
         \tat x proportion of the total reads. 1 is the most stringent, 0.5 is the most relaxed. [default %default]"),
 
+    make_option(c("-a", "--annotations_file"), type="character", default=NULL,
+        help = "Annotations file used to label ancient and modern individuals in the tree. [default %default]"),
+
     make_option(c("-o", "--output_prefix"), type="character", default="bamFileName", 
         help = "Sample name. This only works if a single bam file is used as an input. [default %default]")
 
@@ -107,6 +110,9 @@ checkBamListIntegrity<-function(list_bams){
 }
 
 
+
+
+
 #############
 #test if files exist
 #############
@@ -138,8 +144,6 @@ if (opt$step != "assign" & file_test("-f", opt$reference)==F){
 } 
 
 
-
-
 #decide whether to use "chrY" or "Y"
 if (opt$step != "assign" & length(grep("hg19", opt$reference))>0){
     chromosome_name<-"chrY"
@@ -149,6 +153,10 @@ if (opt$step != "assign" & length(grep("hg19", opt$reference))>0){
     if (opt$step != "assign") {
         stop("Your reference genome needs to be named hg19 or hs37d5")
     }
+}
+
+if (!is.NULL(opt$annotations_file)){
+    annotations_file <- opt$annotations_file
 }
 
 
@@ -265,6 +273,7 @@ if( opt$step == "assign") {
 } else {
     stop("Choose the step you would like to run.
         Options:
+        \t- assign - assigns SNPs to branches.
         \t- all - runs all steps of the analysis.
         \t- 1 or pileup_and_filter - runs pileup in ancient bam files and filters bases.
         \t- 2 or chooseBestPath - finds the best branch/node of the tree for each sample.
