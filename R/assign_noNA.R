@@ -267,7 +267,7 @@ packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpst
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
-snps<-read.table(paste0(packpwd,"/../data/snps.txt"))
+snps<-read.table(paste0(packpwd,"/../data/snps_isogg2018_fixed.txt"))
 
 
 

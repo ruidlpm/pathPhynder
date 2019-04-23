@@ -74,15 +74,21 @@ table(all_counts$allele_status)
 
 
 if (length(unique(all_counts$hg))==1){
-if (!is.na(unique(all_counts$hg))){
+	if (is.na(unique(all_counts$hg))){
+		print("no hgs in data")
+	}
+} else {
 #makeHaplogroupStatusOutput
 hg_status<-makeHaplogroupStatusOutput(all_counts)
+
+print(hg_status)
+
 write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 hg_status_derived<-hg_status[hg_status$derived_count>0 & hg_status$derived_count<=maximumTolerance,]
 write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_derived_only.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 }
-}
+
 
 #makeBranchStatusTable
 branch_counts <- makeBranchStatusTable(all_counts,edge_df)
