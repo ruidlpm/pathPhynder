@@ -130,10 +130,9 @@ Options:
 
 Tutorial:
 
-https://github.com/ruidlpm/Integrating_aDNA_Y/tree/master/tutorial/tutorial_data
+https://github.com/ruidlpm/pathPhynder/tree/master/tutorial
 
 
-![alt text](https://github.com/ruidlpm/Integrating_aDNA_Y/blob/master/figures/workflow_poster.png)
 
 ________________________________________________________________________
 
