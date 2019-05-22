@@ -216,39 +216,7 @@ for (samp in 1:length(br_sample_tables)){
 
 
 #######
-# plotting
 
-getphylo_x <- function(tree, node) {
-    if(is.character(node)) {
-        node <- which(c(tree$tip.label, tree$node.label)==node)
-    }
-    pi <- tree$edge[tree$edge[,2]==node, 1]
-    if (length(pi)) {
-        ei<-which(tree$edge[,1]==pi & tree$edge[,2]==node)
-        tree$edge.length[ei] + Recall(tree, pi)
-    } else {
-        if(!is.null(tree$root.edge)) {
-            tree$root.edge
-        } else {
-            0
-        }
-    }
-}
-
-getphylo_y <- function(tree, node) {
-    if(is.character(node)) {
-        node <- which(c(tree$tip.label, tree$node.label)==node)
-    }
-    ci <- tree$edge[tree$edge[,1]==node, 2]
-    if (length(ci)==2) {
-        mean(c(Recall(tree, ci[1]), Recall(tree, ci[2])))
-    } else if (length(ci)==0) {
-        Ntip <- length(tree$tip.label)
-        which(tree$edge[tree$edge[, 2] <= Ntip, 2] == node)
-    } else {
-        stop(paste("error", length(ci)))
-    }
-}
 
 
 

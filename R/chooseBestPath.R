@@ -81,7 +81,7 @@ if (length(unique(all_counts$hg))==1){
 #makeHaplogroupStatusOutput
 hg_status<-makeHaplogroupStatusOutput(all_counts)
 
-print(hg_status)
+
 
 write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 

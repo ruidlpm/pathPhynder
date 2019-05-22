@@ -19,6 +19,11 @@ _________________________________________________
  - scales
  - optparse
 
+You will also need:
+ - samtools
+ - python3
+
+
 2) For running pathPhynder, you can either specify the whole path:
 
 ```
