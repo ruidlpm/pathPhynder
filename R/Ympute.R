@@ -296,6 +296,7 @@ for (snp in vcf$POS){
 
 		if ( status %in% c("notImputeDerivedAllele - singleton","notImputeDerivedAllele","inconsistent")){
 			print('not Imputing')
+			genos<-genos
 		} else {
 
 
@@ -319,5 +320,10 @@ for (snp in vcf$POS){
 # 	print("here2")
 
 vcf[(is.na(vcf))]<-'.'
+
+vcf<-rbind(vcf, complete_vcf)
+
+vcf<-vcf[order(vcf$POS),]
+
 write.table(vcf, file=args[3], quote=F, sep='\t', row.names=F)
 write.table(report, file="report2.txt", quote=F, sep='\t', row.names=F)
