@@ -87,11 +87,14 @@ checkBamIntegrity<-function(bam_file){
     if (file_test("-f", bam_file)==F){
         stop(paste0(bam_file," bam file does not exist."))
     } else {
-        magic = readChar(gzfile(bam_file, 'r'), 4)
+        con=gzfile(bam_file, 'r')
+        magic = readChar(con, 4)
         if (!identical(magic, 'BAM\1')){
+            close(con)
             stop(paste0(bam_file," is not a valid bam file."))
         }
     }
+    close(con)
 }
 
 
@@ -101,7 +104,7 @@ checkBamListIntegrity<-function(list_bams){
     } else {
         bam_file_list<-read.table(list_bams)
         for (bam in bam_file_list$V1){
-        checkBamIntegrity(bam) 
+            checkBamIntegrity(bam)
         }
     }
 }
@@ -275,6 +278,3 @@ if( opt$step == "assign") {
 
 
 cat("\n")
-
-
-
