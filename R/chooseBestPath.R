@@ -167,26 +167,3 @@ best_node_info<-data.frame(sample=out_prefix,best_node=best_node,position_in_bra
 write.table(best_node_info, file=paste0(results_folder,"/",out_prefix,".best_node_info.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
