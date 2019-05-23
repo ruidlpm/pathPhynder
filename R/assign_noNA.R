@@ -238,9 +238,10 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
     cat(paste0("    Excluded ", length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]), " individuals from the tree not in VCF. (See tree_data/", args[3],".indsremoved.txt)"), '\n')
     write.table(file=paste0("tree_data/", args[3],".indsremoved.txt"),data.frame(tree$tip.label[!(tree$tip.label %in% colnames(vcf[10:dim(vcf)[2]]))]), quote = F, row.names = F, col.names = F, sep='\t')
     cat(paste0("    WARNING: Wrote new tree to tree_data/tree.", args[3],".indsremoved.txt"), '\n')
+    cat(paste0("    Use this new tree for further analyses or fix the input tree."), '\n')
     cat('\n')
     tree<-drop.tip(tree, tree$tip.label[!(tree$tip.label %in% colnames(vcf))])
-    write.tree(file=paste0("tree_data/tree.", args[3],".indsremoved.txt"),tree)
+    write.tree(file=paste0("tree_data/tree.", args[3],".indsremoved.nwk"),tree)
 
 }
 
