@@ -36,7 +36,7 @@ if pileup_read_mismatch_threshold<0.5:
 
 # print(pileup_input, mode_selected, allele_count_output, pileup_read_mismatch_threshold)
 
-# print ("\nProcessing ", pileup_input)
+print ("\nProcessing ", pileup_input)
 
 
 # pileup_read_mismatch_threshold and number of mismatches
