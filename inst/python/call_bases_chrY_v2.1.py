@@ -27,6 +27,13 @@ mode_selected=options.mode_selected
 SNP_info=options.SNP_info
 allele_count_output=options.allele_count_output
 pileup_read_mismatch_threshold=options.pileup_read_mismatch_threshold
+
+
+#if the user specifies a threshold below 0.5, set threshold to 0.5 and print that to screen
+if pileup_read_mismatch_threshold<0.5:
+    pileup_read_mismatch_threshold=0.5
+    print("Using a pileup read mismatch threshold =", str(pileup_read_mismatch_threshold))
+
 # print(pileup_input, mode_selected, allele_count_output, pileup_read_mismatch_threshold)
 
 # print ("\nProcessing ", pileup_input)
@@ -265,7 +272,7 @@ print("read: " + str(len(pileup)) + " calls")
 print("kept: " + str(len(res_derived)+len(res_ancestral)) + " calls ("+ str(len(res_derived)) +
     " ALTs / "+ str(len(res_ancestral)) + " REFs)")
 print("set to missing: " + str(len(res_removed)+len(res_mismatch)) + " calls ("+ str(len(res_removed)) +
-    " with no data / "+ str(len(res_mismatch)) + " mismatches)")
+    " with no data / "+ str(len(res_mismatch)) + " mismatches)\n\n")
 
 # print("excluded ", str(len(res_derived)+len(res_ancestral)), "calls ("+ str(len(res_derived)) +
 #     " ALTs / "+ str(len(res_ancestral)) + " REFs)")
