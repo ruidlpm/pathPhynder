@@ -210,6 +210,9 @@ makeReport<-function(){
 #####################################
 
 
+dir.create('tree_data', showWarnings = FALSE)
+
+
 
 #read tree
 tree<-read.tree(file=args[1])
@@ -248,6 +251,7 @@ vcf[samples]<-sapply(vcf[samples], as.numeric)
 complete_vcf<-vcf
 complete_vcf[samples][complete_vcf[samples]=='N']<-NA
 complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
+
 
 #get vcf positions with missing data
 vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
@@ -298,7 +302,6 @@ for (edge in edges$edge){
 
 cat('\n\n\n')
 
-dir.create('tree_data', showWarnings = FALSE)
 
 saveRDS(ALTpos, file=paste0('tree_data/',args[3],".derpos.RData"))
 saveRDS(REFpos, file=paste0('tree_data/',args[3],".ancpos.RData"))
