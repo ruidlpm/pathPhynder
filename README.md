@@ -76,7 +76,7 @@ pathPhynder -s all -i <tree>.nwk -p path_to/<prefix_output> -b <sample.bam>
 ```
 
 If you want to run each step individually:
-```
+```bash
 #For each ancient sample, run pileup at informative branch-defining sites, filtering for
 # deamination and mismatches. 
 pathPhynder -s <pileup_and_filter> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
