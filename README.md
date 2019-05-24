@@ -50,7 +50,7 @@ pathPhynder -h
 _________________________________________________
 
 
-![alt text](figures/workflow.pdf)
+![alt text](figures/workflow.png)
 
 
 ### Workflow
