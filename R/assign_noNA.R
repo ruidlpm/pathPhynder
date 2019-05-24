@@ -304,6 +304,12 @@ for (edge in edges$edge){
 cat('\n\n\n')
 
 
+if ((ref_alleleCountTracker+alt_alleleCountTracker)==0){
+    stop("There are no informative SNPs in your data. Check your VCF file.\n")
+}
+
+
+
 saveRDS(ALTpos, file=paste0('tree_data/',args[3],".derpos.RData"))
 saveRDS(REFpos, file=paste0('tree_data/',args[3],".ancpos.RData"))
 
