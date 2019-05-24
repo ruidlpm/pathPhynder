@@ -31,7 +31,7 @@ Rscript ~/<path_to_pathPhynder_folder>/pathPhynder.R
 
 or add the following line to your ~/.bash_profile. Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
 ```
-alias pathPhynder="Rscript <path_to_pathPhynder_folder>"
+alias pathPhynder="Rscript <path_to_pathPhynder_folder/pathPhynder.R>"
 ```
 For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
 ```
@@ -48,6 +48,10 @@ source ~/.bash_profile
 pathPhynder -h
 ```
 _________________________________________________
+
+
+![alt text](figures/workflow.pdf)
+
 
 ### Workflow
 
