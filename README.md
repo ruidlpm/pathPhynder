@@ -7,8 +7,7 @@ Description: Ancient DNA data is characterized by deamination and low-coverage s
 Aims of this method:
   - Provide a tool that allows integrating ancient DNA data from multiple sources (target capture and shotgun sequencing) into present-day phylogenies, which is challenging with current available methods;
   - Use all available Y-chromosomal variants rather than a subset of known SNPs (this provides a greater chance of detecting informative SNPs in low coverage aDNA samples);
-  - Provide a visualization tool for ancestral and derived allele state at each branch of the tree, aiding haplogroup determination;
-  - Generate a database of ancient DNA Y-chromosome variability which allows observing the main trends of Y-chromosome affinity throughout time and geography.
+  - Provide a visualization tool for ancestral and derived allele state at each branch of the tree to inform about ancient Y-chromosome lineage affinity with present-day populations;
 
 _________________________________________________
 
@@ -137,29 +136,3 @@ Tutorial:
 
 https://github.com/ruidlpm/pathPhynder/tree/master/tutorial
 
-
-
-________________________________________________________________________
-
-
-To do:
-
- - [ ] fix header in output vcf after imputation
-- [ ] SNP table produced by assign_noNA.R should contain Anc/Derived information
-- [ ] need to have a path with gr37 hg19 and gr38 fa and respective indexes
-- [ ] need to have an independent snps.txt file, which does not rely on poznik. Ideally for both ISOGG2016 and 18
-- [ ] plotting requires a list of hgs of ancient samples and modern samples. This should be an optional requirement.
-- [ ] The main clades could be added to the plots.
-- [ ] need to add warnings all over the code, if the files are not present, if they do not conform with the specs, etc...
-- [ ] could output a summary for each sample:
- 		Read 13044 positions from file M3397.chrY.realigned.calmd.bam.intree.txt
- 		SNP count:  381 derived and 11847 ancestral.
-- [ ] Ideally, I shouldn't rely on a previous haplogroup assignment, I should produce one myself... Supported by the graph produced.
-- [ ] Instead of neighbour joining, it would be good to have properly calibrated trees. Could use the counts at each branch to estimate coalescence.
-- [ ] My ancient Y chr capture samples could be really useful for improving calibration times.
-
-
-- Jacknife/Bootstrap procedure
-- Update tree as each ancient sample gets added. (Might be worth it to start with aDNA samples sorted by number of variants overlappin$
-- can we explore at all rare variation on the Y chromosome?
-- Haplogroup determination - try Yfull tree?
