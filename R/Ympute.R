@@ -186,70 +186,6 @@ impute<-function(genotable, position_in_tree){
 
 
 
-
-
-
-# 			} else {
-# 				sisanc<-getSisters(a,ancestor)
-# 				sisanc<-a$tip.label[sisanc]
-# 				sisanc<-sisanc[!is.na(sisanc)]
-# 				print(c("sisanc", sisanc))
-# 				if(length(sisanc)==0){
-# 					#this means that the sister ancestral is a node, need to check desc
-# 					ancestor<-getAncestors(a,origin_of_derived_allele)[2]
-# 					sisanc<-getSisters(a,ancestor)
-# 					side_desc<-a$tip.label[getDescendants(a,sisanc)]
-# 					side_desc<-side_desc[!is.na(side_desc)]
-# 					print(side_desc)
-# 					if (sample_target %in% side_desc){
-# 						if(sum(is.na(genotable[side_desc]))==length(side_desc)){
-# 							print("do not impute!")
-# 						} else {
-# 							genotable[sample_target]<-ancestral_allele
-# 							report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent1"))
-# 						}
-# 					} else {
-# 						# genotable[sample_target]<-ancestral_allele
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent1"))
-# 					}
-# 					sisanc<-a$tip.label[sisanc]
-# 					sisanc<-sisanc[!is.na(sisanc)]
-# 					print(c("sisanc", sisanc))
-
-# 					# genotable[sample_target]<-ancestral_allele
-# 					# report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent2"))
-# 					# print("here")
-# 				}
-# 				# if (status=="notImputeDerivedAllele - singleton"){
-
-# 				# }
-
-# 				if(length(sisanc)!=0){
-# 					if (sum(sisanc %in% a$tip.label)==length(sisanc) & (sample_target %in% sisanc)){
-# 						if (sum(is.na(genotable[sisanc]))==length(sisanc)){
-# 						print("not imputing this one")
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=F, reason="impossible1"))
-# 						}
-# 					} else if (sample_target %in% sis_desc){
-# 						if (sum(is.na(genotable[sis_desc]))==length(sis_desc)){
-# 							print("all sis near derived_allele are NA, so not imputing those")
-# 							report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=F, reason="impossible2"))
-# 						}
-# 					} else {
-# 						# genotable[sample_target]<-ancestral_allele
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent2"))
-# 					}
-# 				}
-# 			}
-# 		}
-# 	}
-
-# 	return(list(genotable, report))
-# }
-
-
-
-
 for (snp in vcf$POS){
 	cat('\n\n')
 	# print(snp)
@@ -264,7 +200,7 @@ for (snp in vcf$POS){
 		print("snp is not polymorphic, cannot impute singletons, and it is not informative")
 		next
 	} else if(sum(is.na(genos))==0){
-		print("no missing")
+		#print("no missing")
 		next
 	} else {
 		print(snp)
@@ -339,20 +275,18 @@ for (snp in vcf$POS){
 		for (sample_target in miss_samples){
 			# print(c('sample_target', sample_target))
 			if(sample_target %in% desc){
-				genos<-impute(genos,"below")[[1]]
-				report<-impute(genos,"below")[[2]]
+				res_below<-impute(genos,"below")
+				genos<-res_below[[1]]
+				report<-res_below[[2]]
 			} else if (sample_target %in% nondesc){
-				genos<-impute(genos,"above")[[1]]
-				report<-impute(genos,"above")[[2]]
-
-
+				res_above<-impute(genos,"above")
+				genos<-res_above[[1]]
+				report<-res_above[[2]]
 			}
 		}
 	}
 	vcf[vcf$POS==snp,][10:dim(line)[2]]<-genos
 }
-
-# 	print("here2")
 
 vcf[(is.na(vcf))]<-'.'
 write.table(vcf, file=args[3], quote=F, sep='\t', row.names=F)
