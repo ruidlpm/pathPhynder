@@ -77,10 +77,11 @@ pathPhynder -s all -i <tree>.nwk -p path_to/<prefix_output> -b <sample.bam>
 
 If you want to run each step individually:
 ```
-#for each ancient sample, run pileup at informative branch-defining sites, filtering for deamination and mismatches. 
+#For each ancient sample, run pileup at informative branch-defining sites, filtering for
+# deamination and mismatches. 
 pathPhynder -s <pileup_and_filter> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
 
-#for each ancient sample, add derived and ancestral status information at each branch of the tree.
+#For each ancient sample, add derived and ancestral status information at each branch of the tree.
 #Traverse the tree, evaluating the count of ancestral and derived markers at each branch,
 # and identify the best path
 pathPhynder -s <chooseBestPath> -i <tree>.nwk -p path_to/<prefix_output> -l <sample.list>
