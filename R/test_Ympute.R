@@ -3,7 +3,7 @@ require(phytools, quietly = TRUE)
 
 cat('\n\n',"Ympute.R", '\n\n\n')
 
-
+#Rscript ~/in_development/pathPhynder/R/Ympute.R karmin.nwk tmp2 imputed_small_imptest.vcf
 
 
 args = commandArgs(trailingOnly=TRUE)
@@ -62,10 +62,6 @@ if(length(miss)>0){
     cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
 }
 
-#remove if unnecessary
-#check if any samples are missing and if so, exclude from vcf
-# vcf<-vcf[colnames(genos) %in% tree$tip.label]
-
 
 if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
     cat(paste0("    Number of individuals: ", dim(vcf)[2]-10),'\n')
@@ -81,15 +77,28 @@ if (length(tree$tip.label[!(tree$tip.label %in% colnames(vcf))]) >0){
 a<-tree
 root_node<-a$edge[,1][1]
 
-# vcf<-vcf[1,]
-
-# vcf[vcf=="."]<-NA
-
-# a<-read.tree("thirteencladetree.nwk")
-
 
 getAncestors<-phytools:::getAncestors
 
+
+
+
+
+#get rows with complete data only
+samples<-colnames(vcf[10:dim(vcf)[2]])
+# vcf[samples][which(vcf[samples]=="N")]<-NA
+vcf[samples]<-sapply(vcf[samples], as.numeric)
+complete_vcf<-vcf
+complete_vcf<-complete_vcf[complete.cases(complete_vcf[samples]),]
+
+
+#get vcf positions with missing data
+vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
+
+
+vcf <- vcf_with_missing
+
+cat(paste0("    Number of SNPs with missing data: ", dim(vcf)[1]),'\n')
 
 
 report<-data.frame(position=NULL, sample_target=NULL, allele=NULL, imputed=NULL, reason=NULL, stringsAsFactors=F)
@@ -99,7 +108,7 @@ impute<-function(genotable, position_in_tree){
 	if(position_in_tree=="below"){
 		print("imputing below")
 		if(ancestral_allele %in% genotable[desc] | derived_allele %in% genotable[nondesc]){
-			# report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=derived_allele, imputed=F, reason="snp is inconsistent with tree"))
+			report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=derived_allele, imputed=F, reason="snp is inconsistent with tree"))
 		} else if(sum(genotable[desc] %in% derived_allele)>=2){
 			# print(sum(genotable[nondesc] %in% ancestral_allele))
 			genotable[[sample_target]]<-derived_allele
@@ -108,7 +117,7 @@ impute<-function(genotable, position_in_tree){
 			print("cannot impute singletons/doubleton derived alleles")
 			# report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=derived_allele, imputed=F, reason="not imputing doubleton derived allele"))
 		} else {
-			# report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=derived_allele, imputed=F, reason="not possible"))
+			report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=derived_allele, imputed=F, reason="not possible"))
 		}
 	} else if(position_in_tree=="above"){
 		# print("imputing above")
@@ -182,74 +191,6 @@ impute<-function(genotable, position_in_tree){
 }
 
 
-
-
-
-
-
-
-
-# 			} else {
-# 				sisanc<-getSisters(a,ancestor)
-# 				sisanc<-a$tip.label[sisanc]
-# 				sisanc<-sisanc[!is.na(sisanc)]
-# 				print(c("sisanc", sisanc))
-# 				if(length(sisanc)==0){
-# 					#this means that the sister ancestral is a node, need to check desc
-# 					ancestor<-getAncestors(a,origin_of_derived_allele)[2]
-# 					sisanc<-getSisters(a,ancestor)
-# 					side_desc<-a$tip.label[getDescendants(a,sisanc)]
-# 					side_desc<-side_desc[!is.na(side_desc)]
-# 					print(side_desc)
-# 					if (sample_target %in% side_desc){
-# 						if(sum(is.na(genotable[side_desc]))==length(side_desc)){
-# 							print("do not impute!")
-# 						} else {
-# 							genotable[sample_target]<-ancestral_allele
-# 							report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent1"))
-# 						}
-# 					} else {
-# 						# genotable[sample_target]<-ancestral_allele
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent1"))
-# 					}
-# 					sisanc<-a$tip.label[sisanc]
-# 					sisanc<-sisanc[!is.na(sisanc)]
-# 					print(c("sisanc", sisanc))
-
-# 					# genotable[sample_target]<-ancestral_allele
-# 					# report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent2"))
-# 					# print("here")
-# 				}
-# 				# if (status=="notImputeDerivedAllele - singleton"){
-
-# 				# }
-
-# 				if(length(sisanc)!=0){
-# 					if (sum(sisanc %in% a$tip.label)==length(sisanc) & (sample_target %in% sisanc)){
-# 						if (sum(is.na(genotable[sisanc]))==length(sisanc)){
-# 						print("not imputing this one")
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=F, reason="impossible1"))
-# 						}
-# 					} else if (sample_target %in% sis_desc){
-# 						if (sum(is.na(genotable[sis_desc]))==length(sis_desc)){
-# 							print("all sis near derived_allele are NA, so not imputing those")
-# 							report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=F, reason="impossible2"))
-# 						}
-# 					} else {
-# 						# genotable[sample_target]<-ancestral_allele
-# 						report<-rbind(report,data.frame(position=snp, sample_target=sample_target, allele=ancestral_allele, imputed=T, reason="consistent2"))
-# 					}
-# 				}
-# 			}
-# 		}
-# 	}
-
-# 	return(list(genotable, report))
-# }
-
-
-
-
 for (snp in vcf$POS){
 	cat('\n\n')
 	# print(snp)
@@ -272,8 +213,24 @@ for (snp in vcf$POS){
 	#step2 - get origin of derived and ancestral allele
 	# find node of origin of derived allele
 	# find node of origin of ancestral allele (root)
-	origin_of_1<-findMRCA(a,which(a$tip.label %in% colnames(genos)[which(genos==1)]))
-	origin_of_0<-findMRCA(a,which(a$tip.label %in% colnames(genos)[which(genos==0)]))
+
+	samples_geno1<-which(a$tip.label %in% colnames(genos)[which(genos==1)])
+	samples_geno0<-which(a$tip.label %in% colnames(genos)[which(genos==0)])
+
+	# if(length(samples_geno1)>1){
+		origin_of_1<-findMRCA(a,samples_geno1)
+	# } else {
+		# origin_of_1<-getAncestors(a,samples_geno1)
+	# }
+
+	# if(length(samples_geno0)>1){
+		origin_of_0<-findMRCA(a,samples_geno0)
+	# } else {
+		# origin_of_0<-getAncestors(a,samples_geno0)
+	# }
+
+
+	
 	
 	print(c("origin_of_1", origin_of_1))
 	print(c("origin_of_0", origin_of_0))
@@ -336,24 +293,37 @@ for (snp in vcf$POS){
 		# print(c("origin_of_0", origin_of_0))
 
 		miss_samples<-colnames(genos)[which(is.na(genos))]
+
+		if ( status %in% c("notImputeDerivedAllele - singleton","notImputeDerivedAllele","inconsistent")){
+			print('not Imputing')
+			genos<-genos
+		} else {
+
+
 		for (sample_target in miss_samples){
 			# print(c('sample_target', sample_target))
 			if(sample_target %in% desc){
-				genos<-impute(genos,"below")[[1]]
-				report<-impute(genos,"below")[[2]]
+				res_below<-impute(genos,"below")
+				genos<-res_below[[1]]
+				report<-res_below[[2]]
 			} else if (sample_target %in% nondesc){
-				genos<-impute(genos,"above")[[1]]
-				report<-impute(genos,"above")[[2]]
-
-
+				res_above<-impute(genos,"above")
+				genos<-res_above[[1]]
+				report<-res_above[[2]]
 			}
 		}
 	}
+}
 	vcf[vcf$POS==snp,][10:dim(line)[2]]<-genos
 }
 
 # 	print("here2")
 
 vcf[(is.na(vcf))]<-'.'
+
+vcf<-rbind(vcf, complete_vcf)
+
+vcf<-vcf[order(vcf$POS),]
+
 write.table(vcf, file=args[3], quote=F, sep='\t', row.names=F)
 write.table(report, file="report2.txt", quote=F, sep='\t', row.names=F)

@@ -87,6 +87,10 @@ for (i in 1:length(best_nodes_table$best_node)){
 }
 
 
+
+
+newtree<-ladderize(newtree)
+
 pdf(file=paste0("results_folder","/final_tree.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
 plot(newtree, show.tip.label=T,tip.color=ifelse(newtree$tip.label %in% best_nodes_table$sample, yes=2, no=1), cex=0.15)
 dev.off()

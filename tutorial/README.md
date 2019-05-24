@@ -8,7 +8,7 @@ https://genome.cshlp.org/content/25/4/459.full
 
 step 1 - Assign SNPs to branches of the tree
 
-```
+```bash
 #download the Karmin VCF file
 wget http://evolbio.ut.ee/chrY/PLINKandVCF/Karmin_et_al_2015_chrY_454samples_CGplusIlluminaA00_filtered1_noAustralians.vcf
 
@@ -32,10 +32,20 @@ user	4m54.475s
 sys	0m50.063s
 ```
 
+In the branch assignment run, 6834 SNPs were not added, mostly because of missing data.
+We can recover a fraction of these by imputing missing genotypes.
+
+```bash
+#Optional (and slow)
+Rscript R/Ympute.R karmin.nwk Karmin_et_al_2015_chrY_454samples_CGplusIlluminaA00_filtered1_noAustralians.vcf karmin_imputed.vcf
+```
+
+
+
 
 Description of the output files of step 1.
 
-```
+```bash
 karmin_data.edges_df.txt - contains information about SNPs found at each branch.
 
 
