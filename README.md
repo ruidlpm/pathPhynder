@@ -13,7 +13,7 @@ _________________________________________________
 
 ### Installation
 
-1) Download pathPhynder to your computer and install the following packages:
+1) Download pathPhynder to your computer and install the following R packages:
  - phytools (example:conda install -c bioconda r-phytools)
  - scales
  - optparse
