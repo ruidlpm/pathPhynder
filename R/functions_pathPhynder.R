@@ -33,7 +33,7 @@ plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df
 
 
 estimatePlotDimensions<-function(tree){
-	height=dim(tree$edge)[1]/15
+	height=dim(tree$edge)[1]/75
 	width=height*(2/3)
 
 	#in case size too small, give a minimum size to prevent issues with plotting

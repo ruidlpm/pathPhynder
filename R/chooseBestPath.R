@@ -44,6 +44,15 @@ tree<-read.tree(file=tree_file)
 tree<-ladderize(tree)
 tree$tip.label<-make.names(tree$tip.label)
 
+
+
+#if the tree has no edge lengths, then add the SNP count at each branch as the edge.length 
+if (is.null(tree$edge.length)){
+	tree$edge.length<-edge_df$snp_count
+}
+
+
+
 dir.create(args[4], showWarnings = FALSE)
 
 

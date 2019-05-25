@@ -187,7 +187,6 @@ impute<-function(genotable, position_in_tree){
 
 
 for (snp in vcf$POS){
-	cat('\n\n')
 	# print(snp)
 	line<-vcf[vcf$POS==snp,]
 	genos<-line[10:dim(line)[2]]
