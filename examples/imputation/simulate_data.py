@@ -2,8 +2,8 @@ import msprime
 
 
 tree_sequence = msprime.simulate(
-sample_size=10, Ne=1e4, length=1e5, recombination_rate=0,
-mutation_rate=2e-8)
+sample_size=30, Ne=1e4, length=1e6, recombination_rate=0,
+mutation_rate=6e-8)
 #, random_seed=10)
 
 

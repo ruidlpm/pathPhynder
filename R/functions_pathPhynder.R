@@ -5,7 +5,7 @@ getAncestors<-phytools:::getAncestors
 plotBestPathTree<-function(tree,best_path_counts,branch_counts_df,path_scores_df, position_in_branch, best_node,...){
 	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% unique(path_scores_df$stopped_edges), yes="red", no='lightgrey'), show.tip.label = T, edge.width = 1, tip.color = 0)
 	par(new=T)
-	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% best_path_counts$Edge, yes="green", no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
+	plot(tree, cex=0.15, edge.col=ifelse(branch_counts_df$Edge %in% best_path_counts$Edge, yes=3, no=0), show.tip.label = T, edge.width = 1, tip.color = "grey3")
 	edgelabels(edge=branch_counts_df$Edge[branch_counts_df$conflict>0],pch=20, col=alpha("red", 0.5), cex=log((branch_counts_df$conflict[branch_counts_df$conflict>0])+1)/2)
 	edgelabels(edge=branch_counts_df$Edge[branch_counts_df$support>0],pch=20, col=alpha("darkgreen", 0.7),cex=log((branch_counts_df$support[branch_counts_df$support>0])+1)/2)
 	edgelabels(col="darkred", frame="none",edge=branch_counts_df$Edge[branch_counts_df$conflict>0], text=branch_counts_df$conflict[branch_counts_df$conflict>0], cex=0.3)

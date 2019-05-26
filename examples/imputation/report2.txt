@@ -1,0 +1,888 @@
+position	sample_target	allele	imputed	reason
+770	msp_0	0	FALSE	not_imputing_because_there_is_der_in sibs
+2570	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+3498	msp_13	0	FALSE	all_sisanc_NA
+3498	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+3997	msp_26	0	FALSE	all_sisanc_NA
+4392	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+4653	msp_21	0	FALSE	all_sisanc_NA
+5656	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+6392	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+8656	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+8846	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+8850	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+10214	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+10214	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+10949	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+10983	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+11883	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+11890	msp_28	0	FALSE	all_sisanc_NA
+12572	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+14602	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+15937	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+16266	msp_26	0	FALSE	all_sisanc_NA
+16709	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+18864	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+19100	msp_28	0	FALSE	all_sisanc_NA
+19785	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+22790	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+24272	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+24272	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+24272	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+25132	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+27834	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+28671	msp_26	0	FALSE	all_sisanc_NA
+29672	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+30441	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+33964	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+35870	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+36961	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+37121	msp_26	0	FALSE	all_sisanc_NA
+37209	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+39022	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+39092	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+39728	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+40179	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+42181	msp_26	0	FALSE	all_sisanc_NA
+43297	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+44284	msp_2	0	FALSE	not_imputing_because_there_is_der_in sibs
+45117	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+46062	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+46517	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+47206	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+47215	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+48160	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+48517	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+50636	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+50834	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+51881	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+52161	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+52357	msp_28	0	FALSE	all_sisanc_NA
+52384	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+52836	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+52925	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+52929	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+53259	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+55189	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+55295	msp_0	0	FALSE	not_imputing_because_there_is_der_in sibs
+55295	msp_11	0	FALSE	not_imputing_because_there_is_der_in sibs
+56152	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+63628	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+65706	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+66708	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+67248	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+67602	msp_26	0	FALSE	all_sisanc_NA
+69348	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+71308	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+71573	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+71573	msp_23	0	FALSE	all_sisanc_NA
+72479	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+74732	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+76076	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+79563	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+80808	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+82316	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+82748	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+82827	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+84962	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+85701	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+85770	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+88378	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+91062	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+91193	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+92181	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+93050	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+93480	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+94393	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+95471	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+95838	msp_22	0	FALSE	all_sisanc_NA
+96450	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+96463	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+97140	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+97744	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+97756	msp_26	0	FALSE	all_sisanc_NA
+98056	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+102616	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+102908	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+103014	msp_26	0	FALSE	all_sisanc_NA
+104846	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+105786	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+110834	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+112368	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+112563	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+113453	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+115469	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+115627	msp_4	0	FALSE	all_sisanc_NA
+115627	msp_11	0	FALSE	not_imputing_because_there_is_der_in sibs
+119882	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+119925	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+119947	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+120752	msp_26	0	FALSE	all_sisanc_NA
+121824	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+122154	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+122751	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+122853	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+127411	msp_23	0	FALSE	all_sisanc_NA
+128056	msp_26	0	FALSE	all_sisanc_NA
+128591	msp_23	0	FALSE	all_sisanc_NA
+129532	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+130823	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+132987	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+133257	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+134275	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+134480	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+135404	msp_0	0	FALSE	not_imputing_because_there_is_der_in sibs
+135422	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+137082	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+137238	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+138221	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+138401	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+142773	msp_22	0	FALSE	all_sisanc_NA
+143419	msp_23	0	FALSE	all_sisanc_NA
+143545	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+143675	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+144030	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+144030	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+144030	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+144994	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+145030	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+145335	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+147352	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+147572	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+148647	msp_28	0	FALSE	not_imputing_because_there_is_der_in sibs
+149163	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+149446	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+153622	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+153622	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+155862	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+156246	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+156691	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+157297	msp_1	0	FALSE	all_sisanc_NA
+157297	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+158277	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+160284	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+160384	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+162750	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+163090	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+164983	msp_26	0	FALSE	all_sisanc_NA
+166394	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+166705	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+168005	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+168564	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+169244	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+170949	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+170949	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+171710	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+171857	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+172411	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+172846	msp_28	0	FALSE	all_sisanc_NA
+172949	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+173117	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+175111	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+176604	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+176604	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+176885	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+177035	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+177267	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+178226	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+180694	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+181856	msp_19	0	FALSE	not_imputing_because_there_is_der_in sibs
+181983	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+182070	msp_28	0	FALSE	all_sisanc_NA
+182453	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+183978	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+184402	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+185406	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+186113	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+186113	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+187186	msp_18	0	FALSE	all_sisanc_NA
+187186	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+189385	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+190343	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+193724	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+196194	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+196237	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+198104	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+199156	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+204672	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+205341	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+206934	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+208168	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+208915	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+209136	msp_21	0	FALSE	all_sisanc_NA
+209603	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+210171	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+211317	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+211456	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+211560	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+211644	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+212022	msp_22	0	FALSE	all_sisanc_NA
+214617	msp_22	0	FALSE	all_sisanc_NA
+215648	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+215830	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+216298	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+216532	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+216532	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+217471	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+219466	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+220277	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+220382	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+220816	msp_22	0	FALSE	all_sisanc_NA
+221195	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+221524	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+223484	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+224819	msp_18	0	FALSE	all_sisanc_NA
+224819	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+225997	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+228511	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+229163	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+233539	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+235052	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+238390	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+238390	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+238956	msp_26	0	FALSE	all_sisanc_NA
+239410	msp_16	0	FALSE	not_imputing_because_there_is_der_in sibs
+240959	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+244009	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+246192	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+246311	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+246770	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+246964	msp_9	1	FALSE	not_imputing_because_there_is_der_in sibs
+247077	msp_9	1	FALSE	all_sisanc_NA
+247077	msp_27	1	FALSE	all_sisanc_NA
+248654	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+250571	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+250571	msp_23	0	FALSE	all_sisanc_NA
+250772	msp_26	0	FALSE	all_sisanc_NA
+252937	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+253100	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+253407	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+254635	msp_22	0	FALSE	all_sisanc_NA
+257273	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+257345	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+257345	msp_23	0	FALSE	all_sisanc_NA
+257507	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+257957	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+257957	msp_23	0	FALSE	all_sisanc_NA
+259780	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+259853	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+261223	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+262271	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+263498	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+263499	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+265093	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+265182	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+265843	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+271583	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+273259	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+276006	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+277745	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+279695	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+280096	msp_26	0	FALSE	all_sisanc_NA
+280260	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+282340	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+283148	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+283392	msp_26	0	FALSE	all_sisanc_NA
+284671	msp_26	0	FALSE	all_sisanc_NA
+287378	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+289693	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+294314	msp_4	0	FALSE	not_imputing_because_there_is_der_in sibs
+295641	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+296913	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+301183	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+302018	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+304020	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+304030	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+304303	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+304656	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+305140	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+305175	msp_26	0	FALSE	all_sisanc_NA
+305604	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+306101	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+306328	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+306793	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+307995	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+310053	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+311521	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+312054	msp_9	1	FALSE	not_imputing_because_there_is_der_in sibs
+313888	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+315352	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+315376	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+316290	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+316494	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+319569	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+320693	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+320754	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+321669	msp_22	0	FALSE	all_sisanc_NA
+323162	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+326091	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+326474	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+327279	msp_28	0	FALSE	not_imputing_because_there_is_der_in sibs
+328588	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+328917	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+328971	msp_21	0	FALSE	all_sisanc_NA
+328971	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+329223	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+330379	msp_26	0	FALSE	all_sisanc_NA
+330741	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+333455	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+333731	msp_15	0	FALSE	all_sisanc_NA
+334039	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+334585	msp_22	0	FALSE	all_sisanc_NA
+335286	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+335847	msp_26	0	FALSE	all_sisanc_NA
+336598	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+337109	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+337538	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+337645	msp_26	0	FALSE	all_sisanc_NA
+338319	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+339645	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+339999	msp_4	0	FALSE	not_imputing_because_there_is_der_in sibs
+345054	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+346911	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+347276	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+347748	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+347955	msp_22	0	FALSE	all_sisanc_NA
+350727	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+352862	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+352869	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+353008	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+353288	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+354886	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+355352	msp_18	0	FALSE	all_sisanc_NA
+355352	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+355877	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+356798	msp_15	0	FALSE	all_sisanc_NA
+358160	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+358537	msp_26	0	FALSE	all_sisanc_NA
+359534	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+359637	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+360093	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+360878	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+361053	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+362811	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+366022	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+366437	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+368020	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+368547	msp_22	0	FALSE	all_sisanc_NA
+369462	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+369615	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+369965	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+371821	msp_13	0	FALSE	all_sisanc_NA
+371821	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+373727	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+373727	msp_23	0	FALSE	all_sisanc_NA
+373847	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+376873	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+376873	msp_21	0	FALSE	not_imputing_because_there_is_der_in sibs
+376873	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+377319	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+379526	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+379703	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+381613	msp_28	0	FALSE	all_sisanc_NA
+381831	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+385046	msp_9	1	FALSE	all_sisanc_NA
+385046	msp_27	1	FALSE	all_sisanc_NA
+386608	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+387480	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+388612	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+388894	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+390476	msp_26	0	FALSE	all_sisanc_NA
+391454	msp_26	0	FALSE	all_sisanc_NA
+391643	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+392327	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+395187	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+398268	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+399849	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+400687	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+402357	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+403294	msp_4	0	FALSE	all_sisanc_NA
+404552	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+404939	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+405972	msp_26	0	FALSE	all_sisanc_NA
+407061	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+407491	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+407579	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+409437	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+411380	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+412181	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+413174	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+413505	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+413527	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+417313	msp_1	0	FALSE	all_sisanc_NA
+417313	msp_10	0	FALSE	all_sisanc_NA
+417313	msp_12	0	FALSE	all_sisanc_NA
+419714	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+423075	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+423241	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+424975	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+425556	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+427507	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+428257	msp_13	0	FALSE	all_sisanc_NA
+428637	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+429639	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+430353	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+430540	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+430651	msp_23	0	FALSE	all_sisanc_NA
+430769	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+431634	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+431893	msp_26	0	FALSE	all_sisanc_NA
+435661	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+435989	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+436383	msp_4	0	FALSE	all_sisanc_NA
+437036	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+440143	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+440332	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+440637	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+442487	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+445528	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+446970	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+447787	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+453886	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+454370	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+456186	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+456350	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+458691	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+459278	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+462302	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+463864	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+465980	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+467006	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+469053	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+470238	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+470632	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+473338	msp_15	0	FALSE	all_sisanc_NA
+476290	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+479500	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+479658	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+480133	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+480837	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+480929	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+481798	msp_23	0	FALSE	all_sisanc_NA
+481798	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+483674	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+484184	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+485107	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+486192	msp_23	0	FALSE	all_sisanc_NA
+486283	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+488097	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+488177	msp_15	0	FALSE	all_sisanc_NA
+488177	msp_21	0	FALSE	not_imputing_because_there_is_der_in sibs
+489465	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+490619	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+491801	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+493375	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+495730	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+497504	msp_9	1	FALSE	not_imputing_because_there_is_der_in sibs
+498673	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+499271	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+502220	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+502471	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+503851	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+505641	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+506482	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+509485	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+512014	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+512114	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+516537	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+517898	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+517921	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+518073	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+518073	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+518498	msp_26	0	FALSE	all_sisanc_NA
+520010	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+520202	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+521543	msp_22	0	FALSE	all_sisanc_NA
+522776	msp_2	0	FALSE	not_imputing_because_there_is_der_in sibs
+524675	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+526234	msp_28	0	FALSE	all_sisanc_NA
+527246	msp_22	0	FALSE	all_sisanc_NA
+529764	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+531182	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+532133	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+533126	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+533126	msp_13	0	FALSE	all_sisanc_NA
+533349	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+533416	msp_26	0	FALSE	all_sisanc_NA
+533671	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+535897	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+538086	msp_26	0	FALSE	all_sisanc_NA
+539452	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+539693	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+539693	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+542759	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+546330	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+546465	msp_26	0	FALSE	all_sisanc_NA
+550696	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+550745	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+551352	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+553181	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+553333	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+553744	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+553986	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+554739	msp_18	0	FALSE	all_sisanc_NA
+555937	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+556484	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+560543	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+561346	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+562690	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+566908	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+569549	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+569677	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+570167	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+570291	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+570291	msp_21	0	FALSE	all_sisanc_NA
+571012	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+574018	msp_28	0	FALSE	not_imputing_because_there_is_der_in sibs
+574294	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+574731	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+574847	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+577254	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+582704	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+585303	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+585913	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+587519	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+588752	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+588822	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+590158	msp_26	0	FALSE	all_sisanc_NA
+591488	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+593098	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+594335	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+595203	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+596412	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+596624	msp_4	0	FALSE	not_imputing_because_there_is_der_in sibs
+597475	msp_26	0	FALSE	all_sisanc_NA
+597856	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+598291	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+599165	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+599297	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+599752	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+600669	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+600838	msp_23	0	FALSE	all_sisanc_NA
+601341	msp_7	0	FALSE	all_sisanc_NA
+601341	msp_13	0	FALSE	all_sisanc_NA
+601341	msp_20	0	FALSE	all_sisanc_NA
+601441	msp_0	0	FALSE	not_imputing_because_there_is_der_in sibs
+601441	msp_4	0	FALSE	not_imputing_because_there_is_der_in sibs
+601441	msp_11	0	FALSE	not_imputing_because_there_is_der_in sibs
+602058	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+602563	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+602815	msp_22	0	FALSE	all_sisanc_NA
+602948	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+604036	msp_26	0	FALSE	all_sisanc_NA
+604890	msp_26	0	FALSE	all_sisanc_NA
+605550	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+606061	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+607187	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+608067	msp_19	0	FALSE	not_imputing_because_there_is_der_in sibs
+609185	msp_26	0	FALSE	all_sisanc_NA
+609291	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+610137	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+610279	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+610359	msp_26	0	FALSE	all_sisanc_NA
+611175	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+611355	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+611836	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+613888	msp_17	0	FALSE	all_sisanc_NA
+614420	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+615625	msp_18	0	FALSE	all_sisanc_NA
+617643	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+619847	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+620192	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+623012	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+623273	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+623514	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+624480	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+624842	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+626604	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+632390	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+632411	msp_26	0	FALSE	all_sisanc_NA
+633409	msp_26	0	FALSE	all_sisanc_NA
+634059	msp_0	0	FALSE	not_imputing_because_there_is_der_in sibs
+634059	msp_11	0	FALSE	not_imputing_because_there_is_der_in sibs
+634520	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+635993	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+636241	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+636241	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+636241	msp_26	0	FALSE	all_sisanc_NA
+636471	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+637132	msp_13	0	FALSE	all_sisanc_NA
+637132	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+637716	msp_28	0	FALSE	not_imputing_because_there_is_der_in sibs
+638342	msp_22	0	FALSE	all_sisanc_NA
+639297	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+640198	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+641211	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+641211	msp_13	0	FALSE	all_sisanc_NA
+641214	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+641904	msp_18	0	FALSE	all_sisanc_NA
+641904	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+642732	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+645042	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+645524	msp_21	0	FALSE	all_sisanc_NA
+645604	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+649208	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+654153	msp_1	0	FALSE	all_sisanc_NA
+654153	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+654571	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+654850	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+656737	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+661771	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+662076	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+662084	msp_13	0	FALSE	all_sisanc_NA
+662084	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+663072	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+663824	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+664045	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+665255	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+665960	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+667964	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+668267	msp_26	0	FALSE	all_sisanc_NA
+668762	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+668964	msp_26	0	FALSE	all_sisanc_NA
+669091	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+669185	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+670005	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+670748	msp_26	0	FALSE	all_sisanc_NA
+671694	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+674305	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+674593	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+675820	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+678964	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+680211	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+680361	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+680602	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+681726	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+682578	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+684909	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+685727	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+687843	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+692838	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+693797	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+693797	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+694787	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+697426	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+697426	msp_23	0	FALSE	all_sisanc_NA
+697977	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+699085	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+701200	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+702177	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+702721	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+703856	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+705246	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+706413	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+706616	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+709074	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+711534	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+712219	msp_21	0	FALSE	all_sisanc_NA
+713344	msp_26	0	FALSE	all_sisanc_NA
+713530	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+714996	msp_26	0	FALSE	all_sisanc_NA
+719015	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+719762	msp_19	0	FALSE	not_imputing_because_there_is_der_in sibs
+720380	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+721191	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+721813	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+723292	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+723483	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+725129	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+725129	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+725129	msp_26	0	FALSE	all_sisanc_NA
+725384	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+727939	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+728644	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+729768	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+732883	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+733490	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+734544	msp_26	0	FALSE	all_sisanc_NA
+737808	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+741157	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+741174	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+743958	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+744455	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+744726	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+745581	msp_22	0	FALSE	all_sisanc_NA
+747173	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+752270	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+752357	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+754705	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+754705	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+759516	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+759583	msp_23	0	FALSE	all_sisanc_NA
+759583	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+760508	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+760713	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+764339	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+764551	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+767894	msp_26	0	FALSE	all_sisanc_NA
+770483	msp_17	0	FALSE	not_imputing_because_there_is_der_in sibs
+771069	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+772839	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+772839	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+773847	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+776406	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+776828	msp_18	0	FALSE	all_sisanc_NA
+776828	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+779479	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+779568	msp_26	0	FALSE	all_sisanc_NA
+784161	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+785172	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+785336	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+785563	msp_18	0	FALSE	all_sisanc_NA
+786147	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+788680	msp_27	1	FALSE	not_imputing_because_there_is_der_in sibs
+789095	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+789796	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+793687	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+800858	msp_13	0	FALSE	all_sisanc_NA
+800858	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+801194	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+803424	msp_19	0	FALSE	not_imputing_because_there_is_der_in sibs
+804045	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+805113	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+805537	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+806821	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+811630	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+813820	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+815326	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+819468	msp_26	0	FALSE	all_sisanc_NA
+819507	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+821326	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+823755	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+823811	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+825418	msp_14	0	FALSE	not_imputing_because_there_is_der_in sibs
+825418	msp_23	0	FALSE	all_sisanc_NA
+826126	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+828688	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+829489	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+829489	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+829624	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+830934	msp_22	0	FALSE	all_sisanc_NA
+831488	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+832333	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+832528	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+834878	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+835308	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+835573	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+838857	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+841068	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+841384	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+843662	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+844786	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+845287	msp_2	0	FALSE	not_imputing_because_there_is_der_in sibs
+845812	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+846139	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+846939	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+848507	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+848877	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+849751	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+849825	msp_26	0	FALSE	all_sisanc_NA
+850262	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+851666	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+856725	msp_2	0	FALSE	not_imputing_because_there_is_der_in sibs
+859399	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+860417	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+861062	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+861088	msp_26	0	FALSE	all_sisanc_NA
+861168	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+861376	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+862774	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+862851	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+863833	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+863833	msp_13	0	FALSE	all_sisanc_NA
+863887	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+865433	msp_26	0	FALSE	all_sisanc_NA
+870402	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+871407	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+873633	msp_26	0	FALSE	all_sisanc_NA
+875335	msp_26	0	FALSE	all_sisanc_NA
+875363	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+876476	msp_26	0	FALSE	all_sisanc_NA
+877100	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+880723	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+884497	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+885624	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+889089	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+889135	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+889253	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+889992	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+892605	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+894384	msp_26	0	FALSE	all_sisanc_NA
+895871	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+896326	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+897977	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+900615	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+903527	msp_24	0	FALSE	not_imputing_because_there_is_der_in sibs
+903756	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+903797	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+906738	msp_18	0	FALSE	all_sisanc_NA
+906738	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+908832	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+909111	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+909724	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+912075	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+912434	msp_23	0	FALSE	all_sisanc_NA
+912669	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+917128	msp_10	0	FALSE	not_imputing_because_there_is_der_in sibs
+918487	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+918849	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+919881	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+921166	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+921756	msp_26	0	FALSE	all_sisanc_NA
+922415	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+923434	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+926185	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+928000	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+928087	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+929608	msp_1	0	FALSE	all_sisanc_NA
+929608	msp_10	0	FALSE	all_sisanc_NA
+929608	msp_12	0	FALSE	all_sisanc_NA
+929608	msp_15	0	FALSE	not_imputing_because_there_is_der_in sibs
+929717	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+932431	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+936285	msp_26	0	FALSE	all_sisanc_NA
+937336	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+940415	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+941970	msp_26	0	FALSE	all_sisanc_NA
+942526	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+946438	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+950075	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+950125	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+954284	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+954657	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+956183	msp_12	0	FALSE	not_imputing_because_there_is_der_in sibs
+956951	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+957777	msp_13	0	FALSE	all_sisanc_NA
+958718	msp_26	0	FALSE	all_sisanc_NA
+959069	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+960006	msp_13	0	FALSE	all_sisanc_NA
+960006	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+960966	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+961370	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+962483	msp_18	0	FALSE	not_imputing_because_there_is_der_in sibs
+962856	msp_20	0	FALSE	not_imputing_because_there_is_der_in sibs
+963065	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+963191	msp_27	0	FALSE	not_imputing_because_there_is_der_in sibs
+964672	msp_25	0	FALSE	not_imputing_because_there_is_der_in sibs
+965261	msp_9	1	FALSE	not_imputing_because_there_is_der_in sibs
+965338	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+966099	msp_26	0	FALSE	all_sisanc_NA
+968959	msp_29	0	FALSE	not_imputing_because_there_is_der_in sibs
+969477	msp_5	0	FALSE	not_imputing_because_there_is_der_in sibs
+969755	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+970423	msp_9	1	FALSE	all_sisanc_NA
+970423	msp_27	1	FALSE	all_sisanc_NA
+970546	msp_23	0	FALSE	not_imputing_because_there_is_der_in sibs
+971673	msp_13	0	FALSE	not_imputing_because_there_is_der_in sibs
+971983	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+976478	msp_26	0	FALSE	not_imputing_because_there_is_der_in sibs
+976582	msp_1	0	FALSE	not_imputing_because_there_is_der_in sibs
+981468	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+988069	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+990528	msp_8	0	FALSE	not_imputing_because_there_is_der_in sibs
+991389	msp_21	0	FALSE	all_sisanc_NA
+994181	msp_9	0	FALSE	not_imputing_because_there_is_der_in sibs
+996327	msp_3	0	FALSE	not_imputing_because_there_is_der_in sibs
+998734	msp_22	0	FALSE	not_imputing_because_there_is_der_in sibs
+999005	msp_7	0	FALSE	not_imputing_because_there_is_der_in sibs
+999005	msp_13	0	FALSE	all_sisanc_NA
