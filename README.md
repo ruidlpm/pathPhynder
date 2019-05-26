@@ -13,17 +13,22 @@ _________________________________________________
 
 ### Installation
 
-1) Download pathPhynder to your computer and install the following R packages:
+1) Download pathPhynder to your computer
+```
+git clone https://github.com/ruidlpm/pathPhynder
+```
+
+2) Install the following R packages:
  - phytools (example:conda install -c bioconda r-phytools)
  - scales
  - optparse
 
 You will also need:
- - samtools
- - python3
+ - samtools (conda install -c bioconda samtools or http://www.htslib.org/download/)
+ - python3 (https://www.python.org/downloads/)
 
 
-2) For running pathPhynder, you can either specify the whole path:
+3) For running pathPhynder, you can either specify the whole path:
 
 ```
 Rscript ~/<path_to_pathPhynder_folder>/pathPhynder.R
