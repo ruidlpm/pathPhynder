@@ -61,6 +61,12 @@ _________________________________________________
 ### Workflow
 
 0) Generate an accurate Y-chromosome phylogeny from a vcf file (Use raXML or MEGA, for example, running for several iterations). The quality of the tree has a major impact on SNP assignment to branches and therefore all on downstream analyses. At the moment, pathPhynder does not handle well high numbers of missing genotypes in modern samples, so remove poorly genotyped individuals and SNPs with high missingness across individuals, or try imputing your vcf.
+NOTE: The VCF should only contain haploid genotypes and no other annotations. To format it correctly, run:
+```
+# Remove all INFO fields and all FORMAT fields except for GT
+bcftools annotate -x INFO,^FORMAT/GT file.vcf > newfile.vcf
+```
+
 
 1) Assign informative SNPs to tree branches.
 
