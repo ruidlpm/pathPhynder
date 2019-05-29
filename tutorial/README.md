@@ -72,7 +72,8 @@ karmin_data.report_not_added_SNPs.txt
 step 2 - Adding ancient samples to the tree - example with 27 samples from Haak et al. (2015)
 
 ```
-pathPhynder -s all -i karmin.nwk -p tree_data/karmin_data -l sample.list
+#Here, we are using the same tree but with haplogroup labels for visualization purposes
+pathPhynder -s all -i karmin_hgs.txt -p tree_data/karmin_data -l sample.list
 
 
 real	2m44.761s
@@ -80,8 +81,13 @@ user	2m33.428s
 sys	0m6.820s
 ```
 
+Some examples of the output:
 
-Description of the output files of step 2.
+![alt text](figures/tutorial_results.png)
+
+
+
+Description of the  output files of step 2.
 
 ```
 <sample>.pileup.txt - pileup for a given sample at branch defining SNPs
