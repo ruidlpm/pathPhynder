@@ -52,6 +52,13 @@ source ~/.bash_profile
 ```
 pathPhynder -h
 ```
+
+For a quick start see the tutorial:
+
+https://github.com/ruidlpm/pathPhynder/tree/master/tutorial
+
+More information about the workflow below.
+
 _________________________________________________
 
 
