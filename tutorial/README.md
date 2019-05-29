@@ -83,7 +83,7 @@ sys	0m6.820s
 
 Some examples of the output:
 
-![alt text](figures/tutorial_results.png)
+![alt text](tutorial_results.png)
 
 
 
