@@ -59,7 +59,7 @@ pathPhynder -s assign -i karmin.nwk -v karmin_imputed.vcf -p karmin_data_imputed
 
 	867 positions were not added (report written to tree_data/karmin_data_imputed.report_not_added_SNPs.txt)
 
-Now, only 867 mutations were not added. This may be because of missing data which cannot be imputed, or that the SNP patterns 
+Now, only 867 mutations were not added, so imputation allowed recovering around 3000 SNPs. This may be because of missing data which cannot be imputed, or that the SNP patterns 
 observed are incompatible with the tree, or that the SNP is monomorphic.
 
 ```
@@ -92,6 +92,8 @@ karmin_data.report_not_added_SNPs.txt - coordinate of SNP and reason why it was 
 ```
 
 step 2 - Adding ancient samples to the tree - example with 27 samples from Haak et al. (2015)
+You can get them from this link
+https://drive.google.com/open?id=1utVO5pua6dk8eUtW3CiEup5ouomwN6QT
 
 ```
 #Here, we are using the same tree but with haplogroup labels for visualization purposes
