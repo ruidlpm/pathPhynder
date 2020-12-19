@@ -24,7 +24,7 @@ install.packages('scales')
 
 1) Download pathPhynder to your computer
 ```
-wget https://github.com/ruidlpm/pathPhynder/archive/v0.1.tar.gz
+git clone https://github.com/ruidlpm/pathPhynder.git
 ```
 
 2) Add the following line to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
@@ -99,7 +99,7 @@ pathPhynder -s prepare -i tree.nwk -p <prefix_output> -f branches.snp
 #Run pathphynder
 pathPhynder -s all -i tree.nwk -p tree_data/<prefix_output> -b <sample.bam>
 
-#or if analysing multiple bam files
+# OR if analysing multiple bam files
 pathPhynder -s all -i tree.nwk -p tree_data/<prefix_output> -l <bam_list>
 ```
 
