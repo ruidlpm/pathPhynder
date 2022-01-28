@@ -92,7 +92,7 @@ plot_likes<-function(tree, branches, clade, suboptimal_branches,sample_name, res
 
 
 		edgelabels(edge=clade$clade,col=1,bg='blue',pch=21, cex=0.90)
-		edgelabels(edge=clade$clade,text='C', frame='none', cex=0.2,bg='blue')
+		try(edgelabels(edge=clade$clade,text='C', frame='none', cex=0.2,bg='blue'))
 
         print(1)
 

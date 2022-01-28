@@ -14,7 +14,7 @@ phynder -B -o branches.snp ../data/BigTree_Y/bigtree_annotated_V1.nwk ../data/Bi
 
 # 2) Prepare sites (writes bed files for variant calling and other files for phylogenetic placement).
 #The -G parameter is optional and in this case adds ISOGG haplogroup information to each variant.
-pathPhynder -s prepare -i ../data/BigTree_Y/bigtree_annotated_V1.nwk -p BigTree_Y_data -f branches.snp -G ../data/200803.snps_isogg.txt
+pathPhynder -s prepare -i ../data/BigTree_Y/bigtree_annotated_V1.nwk -p BigTree_Y_data -f branches.snp -G ../data/210513.snps_isogg_curated.txt 
 
 # 3) Run pathPhynder best path, call variants, place samples, plot results
 pathPhynder  -i ../data/BigTree_Y/bigtree_annotated_V1.nwk   -p tree_data/BigTree_Y_data -l bam.list -s all -t 100

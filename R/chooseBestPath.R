@@ -7,9 +7,6 @@ tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), 
 
 packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
 
-
-cat('\n\n',"chooseBestPath.R", '\n\n\n')
-
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
@@ -150,7 +147,7 @@ write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_pat
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
-write.table(all_counts, file=paste0(results_folder,"/",out_prefix,"all_counts"), sep='\t',row.names=F, col.names=T, quote=F)
+write.table(all_counts, file=paste0(results_folder,"/",out_prefix,".all_counts"), sep='\t',row.names=F, col.names=T, quote=F)
 
 table(all_counts$allele_status)
 
@@ -192,7 +189,15 @@ if (call_hgs){
 
 	write.table(df, file=paste0(results_folder,"/",out_prefix,".snp_info_along_path"), sep='\t',row.names=F, col.names=T, quote=F)
 
+	isogg_hgs_out<- paste0("intree_folder/",out_prefix,".hgs.txt")
 
+	if(file.exists(isogg_hgs_out)){
+		hg_isogg_status<-determineHG(isogg_hgs_out, best_path_report)
+		write.table(hg_isogg_status, file=paste0(results_folder,"/",out_prefix,".isogg_hg_determination.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+
+	} else {
+		print('for more detailed haplogroup information, run step 1 with with -G <known haplogroups list>, and then rerun step 2')
+	}
 
 	}
 }

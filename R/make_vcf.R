@@ -23,22 +23,24 @@ outfile<-args[3]
 counter=0
 to_excl<-NA
 for (i in files){
-	tmp<-read.table(paste0(args[1],'/', i))
 	sample_name<-gsub('.intree.txt','',i)
 	cat('processing',sample_name,'\n') 
-	if (dim(tmp)[1]>0){
-		colnames(tmp)<-c('POS', 'REF', 'ALT','anc_counts', 'der_counts', sample_name)
-		tmp[[sample_name]][tmp[[sample_name]]=='-9']<-'.'
-		tmp<-tmp[c('POS',sample_name,'REF', 'ALT')]
-		if (counter==0){
-			counter=counter+1
-			main_file<-tmp
-			tmp<-NULL
-		} else if (counter>0) {
-			main_file<-merge(main_file, tmp,all=T)
-			main_file[is.na(main_file)]<-'.'
-		}
+	tmp<-try(read.table(paste0(args[1],'/', i)))
 
+	if(class(tmp)!='try-error') {
+		if (dim(tmp)[1]>0){
+			colnames(tmp)<-c('POS', 'REF', 'ALT','anc_counts', 'der_counts', sample_name)
+			tmp[[sample_name]][tmp[[sample_name]]=='-9']<-'.'
+			tmp<-tmp[c('POS',sample_name,'REF', 'ALT')]
+			if (counter==0){
+				counter=counter+1
+				main_file<-tmp
+				tmp<-NULL
+			} else if (counter>0) {
+				main_file<-merge(main_file, tmp,all=T)
+				main_file[is.na(main_file)]<-'.'
+			}
+		}
 	} else {
 		to_excl<-c(to_excl,sample_name)
 	}

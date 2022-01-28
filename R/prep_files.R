@@ -25,7 +25,6 @@ if (length(args)!=4) {
 
 
 
-tree<-read.tree(args[1])
 
 branches_file<-read.table(args[2], fill=T, stringsAsFactors=F)
 branches_file<-branches_file[which(branches_file$V1=='c'):length(branches_file$V1),]
@@ -79,8 +78,10 @@ make_files<-function(branches_file, call_hgs_table){
         #excluded hgs whose alleles do not match the vcf alleles
         df2<-df[!is.na(df$hg),]
         pos_to_excl_hg<-df2[is.na(df2$hg_strand),]$pos
-                
-        df[df$pos %in% pos_to_excl_hg,]$hg_strand<-'mismatch'
+        
+        if (length(pos_to_excl_hg)!=0){
+            df[df$pos %in% pos_to_excl_hg,]$hg_strand<-'mismatch'
+        }
 
     
         df<-rbind(df[c('chr', 'marker', 'hg', 'pos','mutation','REF', 'ALT', 'branch', 'status', 'hg_anc_allele', 'hg_der_allele', 'hg_strand')])
@@ -125,7 +126,7 @@ make_edge_df<-function(tree, call_hgs_table, sites_df){
     varcount<-as.data.frame(table(sites_df$branch))
     colnames(varcount)<-c('Edge','count')
 
-    edge_df$snp_count<- as.numeric(as.character(varcount$Edge[match(edge_df$Edge, varcount$Edge)]))
+    edge_df$snp_count<- as.numeric(as.character(varcount$count[match(edge_df$Edge, varcount$Edge)]))
     edge_df$snp_count[is.na(edge_df$snp_count)]<-0
 
     if (call_hgs_table!='none'){
