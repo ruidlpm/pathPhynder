@@ -19,7 +19,7 @@ pathPhynder -s prepare -i ../data/BigTree_Y/bigtree_annotated_V1.nwk -p BigTree_
 # 3) Run pathPhynder best path, call variants, place samples, plot results (the -G can be used to identify haplogroups and it is optional)
 pathPhynder  -i ../data/BigTree_Y/bigtree_annotated_V1.nwk   -p tree_data/BigTree_Y_data -l bam.list -s all -t 100 -G ../data/210513.snps_isogg_curated.txt 
 
-
+NOTE: If your bam files are aligned to GRCH38 or if you are working with non-human genomes, then you must pass the appropriate reference genome using the -r option.
 
 ```
 
