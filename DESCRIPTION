@@ -1,6 +1,6 @@
 Package: pathPhynder
 Title: A workflow for integrating ancient lineages into present-day Y-chromosome phylogenies.
-Version: 1
+Version: 1.a
 Authors@R: person("Rui", "Martiniano", email = "rm890@cam.ac.uk", role = c("aut", "cre"))
 Description: This workflow offers a solution for ancient DNA sample placement in reference phylogenies. First by identifiying branch-defining SNPs in a reference dataset (usually high coverage present-day samples), second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely clade where it belongs.
 Depends: R (>= 3.4.2)
