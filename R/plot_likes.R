@@ -432,8 +432,14 @@ dir.create(results_folder, showWarnings = FALSE)
 
 samples<-as.character(query_results[query_results$V1=='I',]$V3)
 
+if (length(samples)==1){
+    df<-data.frame(samples=as.character(query_results[query_results$V1=='I',]$V3), line=which(query_results$V1=='I'), last_line=dim(query_results)[1])
+} else {
+    df<-data.frame(samples=as.character(query_results[query_results$V1=='I',]$V3), line=which(query_results$V1=='I'), last_line=c( which(query_results$V1=='I')[2:length(which(query_results$V1=='I'))]-1,dim(query_results)[1]))
+}
 
-df<-data.frame(samples=as.character(query_results[query_results$V1=='I',]$V3), line=which(query_results$V1=='I'), last_line=c( which(query_results$V1=='I')[2:length(which(query_results$V1=='I'))]-1,dim(query_results)[1]))
+
+
 
 new.tree<-tree
 for(sample_name in samples){

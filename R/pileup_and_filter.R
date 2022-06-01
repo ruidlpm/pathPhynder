@@ -97,7 +97,7 @@ if (input_type=="bam_file"){
 					paste0(">", intree_folder,'/',sample_name,".calls_hgs.pileup"))
 
 				system(cmd, wait=T)
-				system('rm hg_call_df.txt')
+				# system('rm hg_call_df.txt')
 
 			}
 			#for likelihood estimation

@@ -31,7 +31,7 @@ for (i in files){
 		if (dim(tmp)[1]>0){
 			colnames(tmp)<-c('POS', 'REF', 'ALT','anc_counts', 'der_counts', sample_name)
 			tmp[[sample_name]][tmp[[sample_name]]=='-9']<-'.'
-			tmp<-tmp[c('POS',sample_name,'REF', 'ALT')]
+			tmp<-tmp[c('POS','REF', 'ALT',sample_name)]
 			if (counter==0){
 				counter=counter+1
 				main_file<-tmp

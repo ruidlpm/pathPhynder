@@ -556,7 +556,7 @@ if (is.null(hg_unfilt)){
 		# df_out<-df_out[grep(';',df_out$hg, invert=T),]
 		# df_out<-df_out[order(match(gsub('\\+ ','',df_out$hg), ordering$V1)),]
 	
-	# df_out<-df_out[df_out$type!='tree',]
+	df_out<-df_out[df_out$type!='tree',]
 
 	df_out<-df_out[!(df_out$Der==0 & df_out$Anc==0),]
 	df_out<-df_out[df_out$type!="tree",]
