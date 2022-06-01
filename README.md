@@ -186,4 +186,16 @@ https://github.com/ruidlpm/pathPhynder/tree/master/tutorial
 
 Citation:
 
-Placing ancient DNA sequences into reference phylogenies
+Rui Martiniano, Bianca De Sanctis, Pille Hallast, Richard Durbin,
+
+Placing Ancient DNA Sequences into Reference Phylogenies,
+
+Molecular Biology and Evolution, Volume 39, Issue 2, February 2022, msac017
+
+https://doi.org/10.1093/molbev/msac017
+
+
+
+Changes:
+
+01/05/2022 - Fixed bug in the likelihood method R scripts which occurred when processing a single query sample.
