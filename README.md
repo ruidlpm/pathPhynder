@@ -28,20 +28,35 @@ install.packages('this.path')
 git clone https://github.com/ruidlpm/pathPhynder.git
 ```
 
-2) Add the following line to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+2) Ensure that the pathPhynder symbolic link exists.  Recreate it if it does not
 ```
-alias pathPhynder="Rscript <path_to_pathPhynder_folder/pathPhynder.R>"
+cd path_to_pathPhynder_folder
+ls -l pathPhynder
+```
+If this does not show something like
+```
+pathPhynder -> pathPhynder.R
+```
+then recreate the symbolic link.
+```
+rm -f pathPhynder
+ln -s pathPhynder.R pathPhynder
+```
+
+3) Add the following line to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+```
+export PATH="path_to_pathPhynder_folder:$PATH"
 ```
 For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
 ```
-alias pathPhynder="Rscript ~/software/pathPhynder/pathPhynder.R"
+export PATH="~/software/pathPhynder:$PATH"
 ```
 and then:
 ```
 source ~/.bash_profile
 ```
 
-3) Test the installation.
+4) Test the installation.
 
 ```
 pathPhynder -h
