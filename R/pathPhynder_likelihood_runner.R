@@ -2,9 +2,11 @@ suppressWarnings(suppressPackageStartupMessages(library(data.table)))
 suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 suppressWarnings(suppressPackageStartupMessages(library(phangorn)))
 suppressWarnings(suppressPackageStartupMessages(library(pracma)))
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+packpwd <- this.dir()                     # script-path with script name removed
+packpwd.R <- paste0(packpwd, '/R')        # script-path/R
+packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 cat('\n\n',"pathPhynder_likelihood_runner.R", '\n\n\n')
 
@@ -20,7 +22,7 @@ if (length(args)!=5) {
 
 
 
-source(paste0(packpwd,"/pathPhynder_likelihood_functions.R"))
+source(paste0(packpwd.R,"/pathPhynder_likelihood_functions.R"))
 
 tree_file=args[1]
 vcf_name<-args[2]

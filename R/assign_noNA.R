@@ -5,9 +5,12 @@
 
 require(data.table, quietly = TRUE)
 require(phytools, quietly = TRUE)
+require(this.path, quietly = TRUE)
 
 cat('\n\n',"Assigning SNPs to branches", '\n\n\n')
 
+packpwd.R <- paste0(packpwd, '/R')        # script-path/R
+packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -314,15 +317,10 @@ vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 cat(paste0("    Number of SNPs with missing data: ", dim(vcf_with_missing)[1]),'\n')
 cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
-
-
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
-snps<-read.table(paste0(packpwd,"/../data/snps_isogg2019.txt"))
+snps<-read.table(paste0(packpwd.data,"/snps_isogg2019.txt"))
 
 
 

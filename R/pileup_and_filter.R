@@ -1,3 +1,5 @@
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
+
 # pileup_and_filter.R
 # runs pileup and filters bases, outputs intree files
 
@@ -11,10 +13,9 @@ if (length(args)<10) {
     	", call.=FALSE)
 }
 
-
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+packpwd <- this.dir()                     # script-path with script name removed
+packpwd.R <- paste0(packpwd, '/R')        # script-path/R
+packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 
 sites_data<-args[2] 
@@ -103,7 +104,7 @@ if (input_type=="bam_file"){
 			#for likelihood estimation
 			#if 'likes' in names of sites variable, then output with name 'status.txt'
 			if (length(grep('likes', sites_var))>0){
-				cmd_likes=paste0("python3 ",gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py ",
+				cmd_likes=paste0("python3 ",packpwd, "/inst/python/call_bases_chrY_v2.1.py ",
 					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 					paste0(" -m ", mode),
 					paste0(" -o ", intree_folder,'/',sample_name,".status.txt"),
@@ -114,7 +115,7 @@ if (input_type=="bam_file"){
 				system(cmd_likes, wait=T)
 			} else {
 				#for best path estimation
-				cmd_bestpath=paste0("python3 ",gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py ",
+				cmd_bestpath=paste0("python3 ",packpwd, "/inst/python/call_bases_chrY_v2.1.py ",
 					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 					paste0(" -m ", mode),
 					paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),

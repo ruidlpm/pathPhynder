@@ -1,11 +1,12 @@
 suppressWarnings(suppressPackageStartupMessages(library(scales)))
 suppressWarnings(suppressPackageStartupMessages(library(phytools)))
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
 getAncestors<-phytools:::getAncestors
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+packpwd <- this.dir()                     # script-path with script name removed
+packpwd.R <- paste0(packpwd, '/R')        # script-path/R
+packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -72,7 +73,7 @@ colnames(calls)<-c('pos','REF','ALT','REFreads','ALTreads','geno')
 
 
 
-source(paste0(packpwd,'/functions_pathPhynder.R'))
+source(paste0(packpwd.R,'/functions_pathPhynder.R'))
 
 #assignAncientCallsToBranch
 derived<-assignAncientCallsToBranch(calls, sites_info)$der

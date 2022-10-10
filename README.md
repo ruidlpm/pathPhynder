@@ -20,6 +20,7 @@ Install the following R packages:
 install.packages('optparse')
 install.packages('phytools')
 install.packages('scales')
+install.packages('this.path')
 ```
 
 1) Download pathPhynder to your computer
