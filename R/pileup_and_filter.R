@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
 # pileup_and_filter.R
@@ -9,13 +11,9 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)<10) {
     stop("  Arguments needed.\n
 	\tusage
-	\tRscript pileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['default'/'no-filter'/'transversions'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7] <bam file> or <list of bams> <out_prefix> haplogroups basequal
+	\tpileup_and_filter.R <bam_list> <data_prefix> <folder_out> <refgen_path> <mode>['default'/'no-filter'/'transversions'] <chromosome_name>>['chrY'/'Y'] <pileup_read_mismatch_threshold>[default 0.7] <bam file> or <list of bams> <out_prefix> haplogroups basequal
     	", call.=FALSE)
 }
-
-packpwd <- this.dir()                     # script-path with script name removed
-packpwd.R <- paste0(packpwd, '/R')        # script-path/R
-packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 
 sites_data<-args[2] 
@@ -104,7 +102,7 @@ if (input_type=="bam_file"){
 			#for likelihood estimation
 			#if 'likes' in names of sites variable, then output with name 'status.txt'
 			if (length(grep('likes', sites_var))>0){
-				cmd_likes=paste0("python3 ",packpwd, "/inst/python/call_bases_chrY_v2.1.py ",
+				cmd_likes=paste0(this.dir(), "/../inst/python/call_bases_chrY_v2.1.py ",
 					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 					paste0(" -m ", mode),
 					paste0(" -o ", intree_folder,'/',sample_name,".status.txt"),
@@ -115,7 +113,7 @@ if (input_type=="bam_file"){
 				system(cmd_likes, wait=T)
 			} else {
 				#for best path estimation
-				cmd_bestpath=paste0("python3 ",packpwd, "/inst/python/call_bases_chrY_v2.1.py ",
+				cmd_bestpath=paste0(this.dir(), "/../inst/python/call_bases_chrY_v2.1.py ",
 					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
 					paste0(" -m ", mode),
 					paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),

@@ -1,7 +1,9 @@
+#!/usr/bin/env Rscript
+
 # pathPhynder
 # Author: Rui Martiniano
 # Contact: rm890 [at] cam.ac.uk
-# usage: Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+# usage: assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 
 require(data.table, quietly = TRUE)
 require(phytools, quietly = TRUE)
@@ -9,8 +11,8 @@ require(this.path, quietly = TRUE)
 
 cat('\n\n',"Assigning SNPs to branches", '\n\n\n')
 
-packpwd.R <- paste0(packpwd, '/R')        # script-path/R
-packpwd.data <- paste0(packpwd, '/data')  # script-path/data
+if ((packpwd.data <- Sys.getenv('PATHPHYNDER_DATA')) == "")
+    packpwd.data <- paste0(this.dir(), '/../data')  # script-path/data
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -18,7 +20,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
+    \tassign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("assign_SNPs_to_phylo.R", args[1], args[2],args[3]), '\n\n')

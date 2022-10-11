@@ -1,7 +1,9 @@
+#!/usr/bin/env Rscript
+
 suppressWarnings(suppressPackageStartupMessages(library(this.path)))
-packpwd <- this.dir()                     # script-path with script name removed
-packpwd.R <- paste0(packpwd, '/R')        # script-path/R
-packpwd.data <- paste0(packpwd, '/data')  # script-path/data
+
+if ((packpwd.data <- Sys.getenv('PATHPHYNDER_DATA')) == "")
+    packpwd.data <- paste0(this.dir(), '/../data')  # script-path/data
 
 getAncestors<-phytools:::getAncestors
 

@@ -43,20 +43,27 @@ rm -f pathPhynder
 ln -s pathPhynder.R pathPhynder
 ```
 
-3) Add the following line to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+3) Add the following lines to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+This will enable you to find the pathPhynder tool and its accessory scripts.
 ```
-export PATH="path_to_pathPhynder_folder:$PATH"
+export PATH="path_to_pathPhynder_folder:path_to_pathPhynder_folder/R:$PATH"
 ```
 For example, if you have downloaded the folder to your ~/software/ directory, then you would add the following lines to ~/.bash_profile.
 ```
-export PATH="~/software/pathPhynder:$PATH"
+export PATH="~/software/pathPhynder:~/software/pathPhynder/R:$PATH"
 ```
 and then:
 ```
 source ~/.bash_profile
 ```
 
-4) Test the installation.
+4) [optional] Define the `PATHPHYNDER_DATA` environment variable. Default data sources will be found at this location. If this variable is not defined or is empty, then the location `path_to_pathPhynder_folder/data` is used.
+For example, if you have downloaded the pathPhynder folder to your ~/software/ directory, then you would add the following line to ~/.bash_profile.
+```
+export PATHPHYNDER_DATA="~/software/pathPhynder/data"
+```
+
+5) Test the installation.
 
 ```
 pathPhynder -h

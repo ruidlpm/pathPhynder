@@ -1,7 +1,9 @@
+#!/usr/bin/env Rscript
+
 # pathPhynder
 # Author: Rui Martiniano
 # Contact: rm890 [at] cam.ac.uk
-# usage: Rscript prep_files.R <input_phylogeny.nwk> <branches.snp> <out prefix> <haplogroups(optional)>
+# usage: prep_files.R <input_phylogeny.nwk> <branches.snp> <out prefix> <haplogroups(optional)>
 
 require(phytools, quietly = TRUE)
 options(scipen=999)
@@ -17,7 +19,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=4) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript prep_files.R <input_phylogeny.nwk> <branches.snp> <out prefix> <haplogroups(optional)>", call.=FALSE)
+    \tprep_files.R <input_phylogeny.nwk> <branches.snp> <out prefix> <haplogroups(optional)>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("prep_files.R", args[1], args[2],args[3]), '\n\n')

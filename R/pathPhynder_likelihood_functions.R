@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 # nov 14 2019
 # felsenstein likelihood calculator and edge placement optimizer for pathphynder
 # bianca de sanctis

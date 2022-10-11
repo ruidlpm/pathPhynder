@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 require(phytools, quietly = TRUE)
 
 
@@ -12,7 +14,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("\tArguments needed.\n
 \tusage:
-\tRscript Ympute.R <input_phylogeny.nwk> <input.vcf> <output.vcf>", call.=FALSE)
+\tYmpute.R <input_phylogeny.nwk> <input.vcf> <output.vcf>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("Ympute.R", args[1], args[2],args[3]), '\n\n')

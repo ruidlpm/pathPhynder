@@ -4,18 +4,14 @@
 # Author: Rui Martiniano
 # Contact: ruidlpm [at] gmail.com
 
-suppressWarnings(suppressPackageStartupMessages(library("optparse")))
-suppressWarnings(suppressPackageStartupMessages(library("phytools")))
-suppressWarnings(suppressPackageStartupMessages(library("this.path")))
+suppressWarnings(suppressPackageStartupMessages(library(optparse)))
+suppressWarnings(suppressPackageStartupMessages(library(phytools)))
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
 current_version<-'1.a'
 
-packpwd <- this.dir()                     # script-path with script name removed
-packpwd.R <- paste0(packpwd, '/R')        # script-path/R
-packpwd.data <- paste0(packpwd, '/data')  # script-path/data
-#cat('packpwd.R     ', packpwd.R, '\n')
-#cat('packpwd.data  ', packpwd.data, '\n')
-#quit(status=1)
+if ((packpwd.data <- Sys.getenv('PATHPHYNDER_DATA')) == "") 
+    packpwd.data <- paste0(this.dir(), '/data')  # script-path/data
 
 option_list <- list(
     
@@ -233,7 +229,7 @@ if(opt$step == "prepare") {
         stop('Please provide branches.snp file created with phynder.')
     }
     
-    system(paste("Rscript", paste0(packpwd.R,"/prep_files.R"), opt$input_tree, opt$branches_file, opt$prefix, opt$haplogroups))
+    system(paste("prep_files.R", opt$input_tree, opt$branches_file, opt$prefix, opt$haplogroups))
 
 
 
@@ -247,9 +243,9 @@ if(opt$step == "prepare") {
 
         cat(paste0('Sample name:', opt$bam_file, '\n'))
 
-        system(paste("Rscript", paste0(packpwd.R,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' , sample_name, opt$haplogroups,base_qual))
+        system(paste("pileup_and_filter.R", opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file' , sample_name, opt$haplogroups,base_qual))
 
-        system(paste("Rscript", paste0(packpwd.R,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name, opt$haplogroups ))
+        system(paste("chooseBestPath.R", opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name, opt$haplogroups ))
 
     } else if (input_type=="bam_list"){
 
@@ -260,14 +256,14 @@ if(opt$step == "prepare") {
             sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
             cat(paste0('Sample name: ', sample_name, '\n'))
 
-            system(paste("Rscript", paste0(packpwd.R,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ,opt$haplogroups,base_qual))
+            system(paste("pileup_and_filter.R", samp,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ,opt$haplogroups,base_qual))
             
-            system(paste("Rscript", paste0(packpwd.R,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
+            system(paste("chooseBestPath.R", opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
       
         }
     }
 
-    system(paste("Rscript", paste0(packpwd.R,"/addAncToTree.R"),opt$input_tree, 'results_folder',opt$prefix))
+    system(paste("addAncToTree.R", opt$input_tree, 'results_folder',opt$prefix))
 
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
@@ -277,7 +273,7 @@ if(opt$step == "prepare") {
     if (input_type=="bam_file"){
         cat(paste0('Sample name:', opt$bam_file, '\n'))
 
-        system(paste("Rscript", paste0(packpwd.R,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name, opt$haplogroups,base_qual ))
+        system(paste("pileup_and_filter.R", opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name, opt$haplogroups,base_qual ))
     
     } else if (input_type=="bam_list"){
 
@@ -288,7 +284,7 @@ if(opt$step == "prepare") {
             sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
             cat(paste0('Sample name: ', sample_name, '\n'))
 
-            system(paste("Rscript", paste0(packpwd.R,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ,opt$haplogroups,base_qual))
+            system(paste("pileup_and_filter.R", samp,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ,opt$haplogroups,base_qual))
         
         }
     }
@@ -300,7 +296,7 @@ if(opt$step == "prepare") {
     if (input_type=="bam_file"){
         cat(paste0('Sample name:', opt$bam_file, '\n'))
 
-        system(paste("Rscript", paste0(packpwd.R,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
+        system(paste("chooseBestPath.R", opt$input_tree,opt$prefix,paste0('intree_folder/',opt$bam_file,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
     
     } else if (input_type=="bam_list"){
 
@@ -311,7 +307,7 @@ if(opt$step == "prepare") {
             sample_name<-unlist(strsplit(samp,'\\/'))[as.numeric(length(unlist(strsplit(samp,'\\/'))))]
             cat(paste0('Sample name: ', sample_name, '\n'))
 
-            system(paste("Rscript", paste0(packpwd.R,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
+            system(paste("chooseBestPath.R", opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
       
         }
     }
@@ -319,7 +315,7 @@ if(opt$step == "prepare") {
 } else if(opt$step == "addAncToTree" | opt$step == 3) {
 
     cat("Running addAncToTree\n")
-    system(paste("Rscript", paste0(packpwd.R,"/addAncToTree.R"),opt$input_tree, 'results_folder',opt$prefix))
+    system(paste("addAncToTree.R", opt$input_tree, 'results_folder',opt$prefix))
 
 } else {
     

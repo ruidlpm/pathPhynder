@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 ######################################################
 # plotting functions for phynder sample placement output
 # (Rui Martiniano; Bianca de Sanctis 2019/2020)
@@ -14,7 +16,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript plot_likes.R <input_phylogeny.nwk> <query.phy> <results_folder> ", call.=FALSE)
+    \tplot_likes.R <input_phylogeny.nwk> <query.phy> <results_folder> ", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("plot_likes.R", args[1], args[2],args[3]), '\n\n')

@@ -1,12 +1,10 @@
+#!/usr/bin/env Rscript
+
 suppressWarnings(suppressPackageStartupMessages(library(data.table)))
 suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 suppressWarnings(suppressPackageStartupMessages(library(phangorn)))
 suppressWarnings(suppressPackageStartupMessages(library(pracma)))
 suppressWarnings(suppressPackageStartupMessages(library(this.path)))
-
-packpwd <- this.dir()                     # script-path with script name removed
-packpwd.R <- paste0(packpwd, '/R')        # script-path/R
-packpwd.data <- paste0(packpwd, '/data')  # script-path/data
 
 cat('\n\n',"pathPhynder_likelihood_runner.R", '\n\n\n')
 
@@ -16,13 +14,13 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=5) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript pathPhynder_likelihood_runner.R <input_phylogeny.nwk> <input.vcf> status.txt <results_folder> <prior> <out_prefix>
+        \tpathPhynder_likelihood_runner.R <input_phylogeny.nwk> <input.vcf> status.txt <results_folder> <prior> <out_prefix>
         ", call.=FALSE)
 }
 
 
 
-source(paste0(packpwd.R,"/pathPhynder_likelihood_functions.R"))
+source(paste0(this.dir(),"/pathPhynder_likelihood_functions.R"))
 
 tree_file=args[1]
 vcf_name<-args[2]

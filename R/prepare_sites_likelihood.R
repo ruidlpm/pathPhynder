@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 
 require(data.table, quietly = TRUE)
 require(phytools, quietly = TRUE)
@@ -11,7 +13,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=2) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript prepare_sites_likelihood.R <input.vcf> <out prefix>", call.=FALSE)
+    \tprepare_sites_likelihood.R <input.vcf> <out prefix>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("prepare_sites_likelihood.R", args[1], args[2]), '\n\n')
