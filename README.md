@@ -28,22 +28,8 @@ install.packages('this.path')
 git clone https://github.com/ruidlpm/pathPhynder.git
 ```
 
-2) Ensure that the pathPhynder symbolic link exists.  Recreate it if it does not
-```
-cd path_to_pathPhynder_folder
-ls -l pathPhynder
-```
-If this does not show something like
-```
-pathPhynder -> pathPhynder.R
-```
-then recreate the symbolic link.
-```
-rm -f pathPhynder
-ln -s pathPhynder.R pathPhynder
-```
 
-3) Add the following lines to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
+2) Add the following lines to your ~/.bash_profile (create one if necessary). Replace <path_to_pathPhynder_folder> with the location of the pathPhynder folder in your system.
 This will enable you to find the pathPhynder tool and its accessory scripts.
 ```
 export PATH="path_to_pathPhynder_folder:path_to_pathPhynder_folder/R:$PATH"
@@ -57,13 +43,15 @@ and then:
 source ~/.bash_profile
 ```
 
-4) [optional] Define the `PATHPHYNDER_DATA` environment variable. Default data sources will be found at this location. If this variable is not defined or is empty, then the location `path_to_pathPhynder_folder/data` is used.
+
+3) [optional] Define the `PATHPHYNDER_DATA` environment variable. Default data sources will be found at this location. If this variable is not defined or is empty, then the location `path_to_pathPhynder_folder/data` is used.
 For example, if you have downloaded the pathPhynder folder to your ~/software/ directory, then you would add the following line to ~/.bash_profile.
 ```
 export PATHPHYNDER_DATA="~/software/pathPhynder/data"
 ```
 
-5) Test the installation.
+
+4) Test the installation.
 
 ```
 pathPhynder -h
