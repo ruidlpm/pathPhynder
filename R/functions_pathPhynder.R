@@ -1,7 +1,9 @@
+#!/usr/bin/env Rscript
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+if ((packpwd.data <- Sys.getenv('PATHPHYNDER_DATA')) == "")
+    packpwd.data <- paste0(this.dir(), '/../data')  # script-path/data
 
 getAncestors<-phytools:::getAncestors
 
@@ -500,7 +502,7 @@ if (is.null(hg_unfilt)){
 
 	likely_assignment_table<-ders[!ders$hg %in% unlikely_table$hg,]
 
-	ordering_file=paste0(gsub("R$","",packpwd), "data/hap_order.txt")
+	ordering_file=paste0(packpwd.data, "/hap_order.txt")
 
 	ordering<-read.table(ordering_file)
 	likely_assignment_table<-likely_assignment_table[order(match(likely_assignment_table$hg, ordering$V1)),]

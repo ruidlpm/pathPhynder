@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 
 cat('\n\n',"Preparing files for sample placement", '\n\n\n')
 
@@ -8,7 +10,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript make_vcf.R <folder with intree files> <chromosome name> <output name>", call.=FALSE)
+    \tmake_vcf.R <folder with intree files> <chromosome name> <output name>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("make_vcf", args[1], args[2],args[3]), '\n\n')

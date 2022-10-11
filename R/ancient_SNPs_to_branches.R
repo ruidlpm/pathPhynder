@@ -1,6 +1,7 @@
+#!/usr/bin/env Rscript
 
 # usage:
-# Rscript ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
+# ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
 
 # Description: reads tree, aDNA intree files in intree_folder, outputs result to results_folder.
 
@@ -15,7 +16,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=4) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript ancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
+        \tancient_SNPs_to_branches.R <input_phylogeny.nwk> <prefix>.Rdata <intree_folder> <results_folder>
         ", call.=FALSE)
 }
 

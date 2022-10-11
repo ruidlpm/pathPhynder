@@ -1,11 +1,11 @@
-suppressWarnings(suppressPackageStartupMessages(library("phytools")))
+#!/usr/bin/env Rscript
+
+suppressWarnings(suppressPackageStartupMessages(library(phytools)))
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
 cat('\n\n',"addAncToTree.R", '\n\n\n')
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
-
-source(paste0(packpwd,'/functions_pathPhynder.R'))
+source(paste0(this.dir(),'/functions_pathPhynder.R'))
 getAncestors<-phytools:::getAncestors
 
 args = commandArgs(trailingOnly=TRUE)
@@ -14,7 +14,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript addAncToTree.R <input_phylogeny.nwk> <results_folder> prefix
+        \taddAncToTree.R <input_phylogeny.nwk> <results_folder> prefix
         ", call.=FALSE)
 }
 

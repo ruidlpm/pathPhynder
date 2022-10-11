@@ -1,13 +1,18 @@
+#!/usr/bin/env Rscript
+
 # pathPhynder
 # Author: Rui Martiniano
 # Contact: rm890 [at] cam.ac.uk
-# usage: Rscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
+# usage: assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>
 
 require(data.table, quietly = TRUE)
 require(phytools, quietly = TRUE)
+require(this.path, quietly = TRUE)
 
 cat('\n\n',"Assigning SNPs to branches", '\n\n\n')
 
+if ((packpwd.data <- Sys.getenv('PATHPHYNDER_DATA')) == "")
+    packpwd.data <- paste0(this.dir(), '/../data')  # script-path/data
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -15,7 +20,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=3) {
     stop("\tArguments needed.\n
     \tusage:
-    \tRscript assign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
+    \tassign_SNPs_to_phylo.R <input_phylogeny.nwk> <input.vcf> <out prefix>", call.=FALSE)
 } else {
     cat("   Command used:",'\n\n')
     cat(paste("assign_SNPs_to_phylo.R", args[1], args[2],args[3]), '\n\n')
@@ -314,15 +319,10 @@ vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 cat(paste0("    Number of SNPs with missing data: ", dim(vcf_with_missing)[1]),'\n')
 cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
-
-
 edges<-data.frame(tree$edge)
 colnames(edges)<-c('pos1','pos2')
 edges$edge<-rownames(edges)
-snps<-read.table(paste0(packpwd,"/../data/snps_isogg2019.txt"))
+snps<-read.table(paste0(packpwd.data,"/snps_isogg2019.txt"))
 
 
 

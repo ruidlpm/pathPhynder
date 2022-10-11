@@ -1,11 +1,10 @@
+#!/usr/bin/env Rscript
+
 suppressWarnings(suppressPackageStartupMessages(library(scales)))
 suppressWarnings(suppressPackageStartupMessages(library(phytools)))
+suppressWarnings(suppressPackageStartupMessages(library(this.path)))
 
 getAncestors<-phytools:::getAncestors
-
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -13,7 +12,7 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)!=7) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maximumTolerance> <out_prefix>
+        \tchooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maximumTolerance> <out_prefix>
         ", call.=FALSE)
 }
 
@@ -72,7 +71,7 @@ colnames(calls)<-c('pos','REF','ALT','REFreads','ALTreads','geno')
 
 
 
-source(paste0(packpwd,'/functions_pathPhynder.R'))
+source(paste0(this.dir(),'/functions_pathPhynder.R'))
 
 #assignAncientCallsToBranch
 derived<-assignAncientCallsToBranch(calls, sites_info)$der
