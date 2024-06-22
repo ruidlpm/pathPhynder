@@ -89,6 +89,22 @@ final_tree.pdf - figure of the tree with ancient samples added into it.
 ```
 
 
+## Estimating Y-chromosome contamination percentage in male samples
+```
+Using transversions only
+python3 ~/software/pathPhynder/inst/python/contamin.py -i <sample name>.calls_hgs.pileup -o <sample name>.contamin.transv_only.mindepth2.txt -d 2 -g ~/software/pathPhynder/data/200803.snps_isogg.txt -m transversions
+
+Using all sites
+python3 ~/software/pathPhynder/inst/python/contamin.py -i <sample name>.calls_hgs.pileup -o <sample name>.contamin.transv_only.mindepth2.txt -d 2 -g ~/software/pathPhynder/data/200803.snps_isogg.txt -m nofilter
+
+
+example output
+Mean_contamination	nSNPs_included	nSNPs_excluded	mode	min_depth_cov
+0.0651%	7154	15738	transversions	2
+
+```
+
+
 Additional comments:
 
 This is an useful tool for exploration of Y-chromosome and other haploid data and ancient DNA sample affinity to present-day lineages.

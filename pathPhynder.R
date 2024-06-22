@@ -5,7 +5,7 @@
 suppressWarnings(suppressPackageStartupMessages(library("optparse")))
 suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
-current_version<-'1.a'
+current_version<-'Version: 1b'
 
 tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
 packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')

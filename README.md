@@ -1,4 +1,4 @@
-# pathPhynder v1.a
+# pathPhynder v1.b
 A workflow for ancient DNA placement into reference phylogenies.
 
 Description: Ancient DNA data is characterized by deamination and low-coverage sequencing, which results in a high fraction of missing data and erroneous calls. These factors affect the estimation of phylogenetic trees with modern and ancient DNA, especially when dealing with many ancient samples sequenced to lower coverage. Furthermore, most ancient DNA analyses of the Y chromosome, for example, rely on previously known markers, but additional variation will continuously emerge as more data is generated. This workflow offers a solution for integrating ancient and present-day haploid data, first by identifiying informative markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely branch where it belongs.
@@ -196,3 +196,10 @@ https://doi.org/10.1093/molbev/msac017
 ### Changes:
 
 01/05/2022 - Fixed bug in the likelihood method R scripts which occurred when processing a single query sample.
+
+05/2024 Version: 1b
+- added the "--no-BAQ" parameter to samtools mpileup to prevent base quality recalibration. This option is known to reduce reference bias.
+- added contamin.py script which estimates Y-chromosome contamination by looking at mismatches at ISOGG SNP sites. See tutorial for details.
+
+
+

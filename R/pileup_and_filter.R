@@ -78,7 +78,7 @@ if (input_type=="bam_file"){
 			cat('calling SNPs for tree placement\n')
 			cmd=paste0("samtools mpileup -q 25 ", file_path,
 				paste0(" --min-BQ ", base_qual), ' ' ,
-				" --ignore-RG --positions ",
+				" --no-BAQ --ignore-RG --positions ",
 				sites_var,
 				paste0(" -f ",refgen_path),
 				paste0(">", intree_folder,'/',sample_name,".pileup"))
@@ -92,7 +92,7 @@ if (input_type=="bam_file"){
 				cmd=paste0("samtools mpileup ",
 					paste0(file_path),
 					paste0(" --min-BQ ", base_qual),
-					" --ignore-RG --positions hg_call_df.txt",
+					" --no-BAQ --ignore-RG --positions hg_call_df.txt",
 					paste0(" -f ",refgen_path),
 					paste0(">", intree_folder,'/',sample_name,".calls_hgs.pileup"))
 
