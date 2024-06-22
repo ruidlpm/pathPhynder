@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 # pathPhynder
 # Author: Rui Martiniano
 # Contact: ruidlpm [at] gmail.com
