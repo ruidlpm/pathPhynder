@@ -1,4 +1,7 @@
 # pathPhynder v1.2.1
+
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/phynder/README.html)
+
 A workflow for ancient DNA placement into reference phylogenies.
 
 Description: Ancient DNA data is characterized by deamination and low-coverage sequencing, which results in a high fraction of missing data and erroneous calls. These factors affect the estimation of phylogenetic trees with modern and ancient DNA, especially when dealing with many ancient samples sequenced to lower coverage. Furthermore, most ancient DNA analyses of the Y chromosome, for example, rely on previously known markers, but additional variation will continuously emerge as more data is generated. This workflow offers a solution for integrating ancient and present-day haploid data, first by identifiying informative markers in a high coverage dataset, second, by calling and filtering these SNPs in ancient samples and lastly, by traversing the tree and evaluate the number of derived and ancestral markers in the ancients to find the most likely branch where it belongs.
@@ -7,6 +10,29 @@ Description: Ancient DNA data is characterized by deamination and low-coverage s
 _________________________________________________
 
 ### pathPhynder Installation
+
+#### Conda
+
+Create an environment (must have bioconda channel set up). Note this comes with phynder and all other dependencies pre-installed.
+
+``` bash
+conda create -n pathPhynder -c bioconda pathphynder
+```
+
+Once installed, activate the environment.
+
+```bash
+conda activate pathphynder
+pathPhynder -h
+```
+
+Once finished, deactivate the environment.
+
+```bash
+conda deactivate
+```
+
+#### Manual
 
 Prerequisites:
 
@@ -45,8 +71,6 @@ source ~/.bash_profile
 ```
 pathPhynder -h
 ```
-
-
 
 ### phynder Installation
 
