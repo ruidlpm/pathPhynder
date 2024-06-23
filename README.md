@@ -224,5 +224,5 @@ https://doi.org/10.1093/molbev/msac017
 06/2024 Version: 1.2.1
 - added the "--no-BAQ" parameter to samtools mpileup to prevent base quality recalibration. This option is known to reduce reference bias.
 - added contamin.py script which estimates Y-chromosome contamination by looking at mismatches at ISOGG SNP sites. See tutorial for details.
-- added shabang to rscript
+- added shebang to rscript
 
