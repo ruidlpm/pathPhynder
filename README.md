@@ -22,7 +22,7 @@ conda create -n pathPhynder -c bioconda pathphynder
 Once installed, activate the environment.
 
 ```bash
-conda activate pathphynder
+conda activate pathPhynder
 pathPhynder -h
 ```
 
