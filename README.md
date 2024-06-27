@@ -1,6 +1,7 @@
 # pathPhynder v1.2.1
 
-[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/phynder/README.html)
+[![install with 
+bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/pathphynder/README.html)
 
 A workflow for ancient DNA placement into reference phylogenies.
 
@@ -13,7 +14,8 @@ _________________________________________________
 
 #### Conda
 
-Create an environment (must have bioconda channel set up). Note this comes with phynder and all other dependencies pre-installed.
+Create an environment (must have bioconda channel set up, see https://bioconda.github.io/index.html).
+Note this comes with phynder and all other dependencies pre-installed.
 
 ``` bash
 conda create -n pathPhynder -c bioconda pathphynder
