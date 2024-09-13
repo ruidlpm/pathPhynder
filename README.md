@@ -1,4 +1,4 @@
-# pathPhynder
+# pathPhynder v1.2.2
 
 [![install with 
 bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/pathphynder/README.html)
@@ -226,5 +226,6 @@ https://doi.org/10.1093/molbev/msac017
 06/2024 Version: 1.2.1
 - added the "--no-BAQ" parameter to samtools mpileup to prevent base quality recalibration. This option is known to reduce reference bias.
 - added contamin.py script which estimates Y-chromosome contamination by looking at mismatches at ISOGG SNP sites. See tutorial for details.
-- added shebang to rscript
 
+13/09/2024 Version: 1.2.2
+- fixed paths issue with conda installation
