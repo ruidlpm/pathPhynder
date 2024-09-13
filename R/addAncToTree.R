@@ -2,8 +2,10 @@ suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
 cat('\n\n',"addAncToTree.R", '\n\n\n')
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('addAncToTree.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
 
 source(paste0(packpwd,'/functions_pathPhynder.R'))
 getAncestors<-phytools:::getAncestors

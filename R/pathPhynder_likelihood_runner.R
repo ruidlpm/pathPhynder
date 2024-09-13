@@ -3,10 +3,19 @@ suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 suppressWarnings(suppressPackageStartupMessages(library(phangorn)))
 suppressWarnings(suppressPackageStartupMessages(library(pracma)))
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'/R')
 
+
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('pathPhynder_likelihood_runner.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
 cat('\n\n',"pathPhynder_likelihood_runner.R", '\n\n\n')
+
+
 
 args = commandArgs(trailingOnly=TRUE)
 

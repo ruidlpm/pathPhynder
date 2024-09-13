@@ -6,10 +6,23 @@
 suppressWarnings(suppressPackageStartupMessages(library("optparse")))
 suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
-current_version<-'Version: 1b'
+current_version<-'Version: 1.2.2'
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'/R')
+
+# source(paste0(packpwd,'/pathPhynder_likelihood_functions.R'))
+
+st=format(Sys.time(), "%Y-%m-%d_%H:%M")
+logname<-paste("log.",st, ".txt", sep = "")
+
+sink(logname,append = T, type = c("output", "message"),
+          split = FALSE)
+
+# # pathPhynder  -i ~/software/pathPhynder/data/BigTree_Y/bigtree_annotated_V1.nwk -p ~/Ycap_project/Analysis/placement_bamq25/tree_data/BigTree_Y_data -b ../BAMs/GL107A.merged.sorted.rmdup.q25.rg.realigned.bam -s all -t 100 -G ~/software/pathPhynder/data/200803.snps_isogg.txt -r ~/software/pathPhynder/data/reference_sequences/hs37d5_Y.fa
+
 
 option_list <- list(
     
@@ -100,6 +113,9 @@ checkBamListIntegrity<-function(list_bams){
         }
     }
 }
+
+
+
 
 # #test if arguments were given
 if (is.null(opt$input_tree)){
@@ -256,12 +272,15 @@ if(opt$step == "prepare") {
 
             system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),samp,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name ,opt$haplogroups,base_qual))
             
-            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups))
+            system(paste("Rscript", paste0(packpwd,"/chooseBestPath.R"),opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name , opt$haplogroups ))
       
         }
     }
 
     system(paste("Rscript", paste0(packpwd,"/addAncToTree.R"),opt$input_tree, 'results_folder',opt$prefix))
+
+
+# # pathPhynder  -i ~/software/pathPhynder/data/BigTree_Y/bigtree_annotated_V1.nwk -p ~/Ycap_project/Analysis/placement_bamq25/tree_data/BigTree_Y_data -b ../BAMs/GL107A.merged.sorted.rmdup.q25.rg.realigned.bam -s 1 -t 100 -G ~/software/pathPhynder/data/200803.snps_isogg.txt -r ~/software/pathPhynder/data/reference_sequences/hs37d5_Y.fa
 
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
@@ -271,7 +290,7 @@ if(opt$step == "prepare") {
     if (input_type=="bam_file"){
         cat(paste0('Sample name:', opt$bam_file, '\n'))
 
-        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name, opt$haplogroups,base_qual ))
+        system(paste("Rscript", paste0(packpwd,"/pileup_and_filter.R"),opt$bam_file,opt$prefix,'intree_folder', opt$reference, opt$filtering_mode, chromosome_name,opt$pileup_read_mismatch_threshold, 'bam_file', sample_name, opt$haplogroups,base_qual))
     
     } else if (input_type=="bam_list"){
 
@@ -327,7 +346,9 @@ if(opt$step == "prepare") {
 
 }
 
+sink()
 
 
 cat("\n")
+
 

@@ -3,9 +3,10 @@ suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 
 getAncestors<-phytools:::getAncestors
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('chooseBestPath.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
 
 args = commandArgs(trailingOnly=TRUE)
 
@@ -17,7 +18,6 @@ if (length(args)!=7) {
         ", call.=FALSE)
 }
 
-# opt$input_tree,opt$prefix,paste0('intree_folder/',sample_name,'.intree.txt'), 'results_folder',  opt$maximumTolerance, sample_name ))
 
 tree_file=args[1]
 sites_info_file<-paste0(args[2],".sites.txt")
@@ -31,6 +31,7 @@ if (args[7]!='none'){
 } else {
 	call_hgs<-F
 }
+
 
 
 for (testfile in c(tree_file, sites_info_file, edge_df_file, calls_file)){

@@ -314,9 +314,10 @@ vcf_with_missing<-vcf[!vcf$POS %in% complete_vcf$POS,]
 cat(paste0("    Number of SNPs with missing data: ", dim(vcf_with_missing)[1]),'\n')
 cat(paste0("    Number of SNPs with no missing data: ", dim(complete_vcf)[1]),'\n')
 
-tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',tmpstr))),'R')
+tmparg <- commandArgs(trailingOnly = F)  
+scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
+# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
+packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'/R')
 
 
 edges<-data.frame(tree$edge)
