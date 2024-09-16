@@ -6,22 +6,16 @@
 suppressWarnings(suppressPackageStartupMessages(library("optparse")))
 suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
-current_version<-'Version: 1.2.2'
+current_version<-'Version: 1.2.3'
 
 tmparg <- commandArgs(trailingOnly = F)  
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
 # tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
 packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'/R')
 
-# source(paste0(packpwd,'/pathPhynder_likelihood_functions.R'))
 
 st=format(Sys.time(), "%Y-%m-%d_%H:%M")
 logname<-paste("log.",st, ".txt", sep = "")
-
-sink(logname,append = T, type = c("output", "message"),
-          split = FALSE)
-
-# # pathPhynder  -i ~/software/pathPhynder/data/BigTree_Y/bigtree_annotated_V1.nwk -p ~/Ycap_project/Analysis/placement_bamq25/tree_data/BigTree_Y_data -b ../BAMs/GL107A.merged.sorted.rmdup.q25.rg.realigned.bam -s all -t 100 -G ~/software/pathPhynder/data/200803.snps_isogg.txt -r ~/software/pathPhynder/data/reference_sequences/hs37d5_Y.fa
 
 
 option_list <- list(
@@ -75,14 +69,23 @@ option_list <- list(
         help = "Sample name. This only works if a single bam file is used as an input. [default %default]"),
 
     make_option(c("-G", "--haplogroups"), type="character", default='none', 
-        help = "List of known haplogroup-defining SNPs")
+        help = "List of known haplogroup-defining SNPs"),
+
+    make_option(c("-v", "--version"), action="store_true", default=FALSE,
+            help="Print version and exit")
 
 )
 
 
 
 # get command line options, if help option encountered print help and exit,
-opt <- parse_args(OptionParser(option_list=option_list))
+opt <- parse_args(OptionParser(option_list=option_list, prog="pathPhynder"))
+
+if ( opt$version ) {
+    cat(paste0('\npathPhynder ', current_version,'\n\n'))
+    quit()
+}
+
 
 base_qual<-opt$baseQuality
 
@@ -93,7 +96,7 @@ checkBamIntegrity<-function(bam_file){
         stop(paste0(bam_file," bam file does not exist."))
     } else {
         con=gzfile(bam_file, 'r')
-        magic = readChar(con, 4)
+        magic = suppressWarnings(readChar(con, 4))
         if (!identical(magic, 'BAM\1')){
             close(con)
             stop(paste0(bam_file," is not a valid bam file."))
@@ -186,6 +189,7 @@ if (opt$step != "prepare" & opt$haplogroups!='none'){
 }
 
 
+
 #print parameters into terminal
 cat("\n", paste0("Program: pathPhynder","\n"))
 cat("", paste0("Version: ", current_version,"\n"))
@@ -212,15 +216,54 @@ if (opt$step != "prepare") {
     if (input_type=="bam_file"){
         if (opt$output_prefix=="bamFileName"){
             sample_name<-unlist(strsplit(opt$bam_file,'\\/'))[as.numeric(length(unlist(strsplit(opt$bam_file,'\\/'))))]
-            cat("\n\t--output_prefix ", sample_name,'\n\n')
+            cat("\t--output_prefix ", sample_name,'\n\n')
         } else {
-            cat("\n\t--output_prefix ", opt$output_prefix,'\n\n')
+            cat("\t--output_prefix ", opt$output_prefix,'\n\n')
             sample_name<-opt$output_prefix
         }
     }
 
 }
 
+
+sink(logname,append = T, type = c("output", "message"),
+          split = FALSE)
+
+#sink parameters into file
+cat("\n", paste0("Program: pathPhynder","\n"))
+cat("", paste0("Version: ", current_version,"\n"))
+cat("", paste0("Contact: ruidlpm@gmail.com","\n", "\n\tParameters:\n"))
+cat("\n\tBest path mode")
+cat("\n\t--input_tree ", opt$input_tree)
+cat("\n\t--prefix ", opt$prefix)
+
+if (opt$step != "prepare") {
+   if (input_type=="bam_file"){
+      cat("\n\t--bam_file ", opt$bam_file)
+    } else if (input_type=="bam_list"){
+      cat("\n\t--list_of_bam_files ", opt$list_of_bam_files)
+    } 
+    cat("\n\t--reference ", opt$reference)
+    cat("\n\t--filtering_mode ", opt$filtering_mode)
+    cat("\n\t--maximumTolerance ", opt$maximumTolerance)
+    cat("\n\t--pileup_read_mismatch_threshold ", opt$pileup_read_mismatch_threshold)
+
+    if (opt$haplogroups!='none'){
+        cat("\n\t--haplogroups", opt$haplogroups, "\n")
+    }
+
+    if (input_type=="bam_file"){
+        if (opt$output_prefix=="bamFileName"){
+            sample_name<-unlist(strsplit(opt$bam_file,'\\/'))[as.numeric(length(unlist(strsplit(opt$bam_file,'\\/'))))]
+            cat("\t--output_prefix ", sample_name,'\n\n')
+        } else {
+            cat("\t--output_prefix ", opt$output_prefix,'\n\n')
+            sample_name<-opt$output_prefix
+        }
+    }
+
+}
+sink()
 
 
 cat("\n")
@@ -279,8 +322,6 @@ if(opt$step == "prepare") {
 
     system(paste("Rscript", paste0(packpwd,"/addAncToTree.R"),opt$input_tree, 'results_folder',opt$prefix))
 
-
-# # pathPhynder  -i ~/software/pathPhynder/data/BigTree_Y/bigtree_annotated_V1.nwk -p ~/Ycap_project/Analysis/placement_bamq25/tree_data/BigTree_Y_data -b ../BAMs/GL107A.merged.sorted.rmdup.q25.rg.realigned.bam -s 1 -t 100 -G ~/software/pathPhynder/data/200803.snps_isogg.txt -r ~/software/pathPhynder/data/reference_sequences/hs37d5_Y.fa
 
 
 } else if(opt$step == "pileup_and_filter" | opt$step == 1) {
@@ -345,8 +386,6 @@ if(opt$step == "prepare") {
         \t- 3 or addAncToTree - adds ancients samples to tree.")
 
 }
-
-sink()
 
 
 cat("\n")

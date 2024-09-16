@@ -1,4 +1,4 @@
-# pathPhynder v1.2.2
+# pathPhynder v1.2.3
 
 [![install with 
 bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/pathphynder/README.html)
@@ -12,13 +12,19 @@ _________________________________________________
 
 ### pathPhynder Installation
 
-#### Conda
+#### Conda installation
 
 Create an environment (must have bioconda channel set up, see https://bioconda.github.io/index.html).
 Note this comes with phynder and all other dependencies pre-installed.
 
 ``` bash
-conda create -n pathPhynder -c bioconda pathphynder
+# set up bioconda (note: channel_priority set to flexible)
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority flexible
+
+# create environment
+conda create -n pathPhynder -c bioconda pathphynder samtools=1.20
 ```
 
 Once installed, activate the environment.
@@ -34,7 +40,7 @@ Once finished, deactivate the environment.
 conda deactivate
 ```
 
-#### Manual
+#### Manual installation
 
 Prerequisites:
 
@@ -229,3 +235,9 @@ https://doi.org/10.1093/molbev/msac017
 
 13/09/2024 Version: 1.2.2
 - fixed paths issue with conda installation
+
+16/09/2024 Version: 1.2.3
+- fixed broken samtools when installing with conda (specify samtools=1.20)
+- fixed pathphynder help command
+- added --version command
+- added log
