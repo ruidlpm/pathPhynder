@@ -1,4 +1,4 @@
-# pathPhynder v1.2.3
+# pathPhynder v1.2.4
 
 [![install with 
 bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/pathphynder/README.html)
@@ -241,3 +241,7 @@ https://doi.org/10.1093/molbev/msac017
 - fixed pathphynder help command
 - added --version command
 - added log
+
+07/06/2025 Version: 1.2.4
+ - updated haplogroup nomenclature in newick and VCF files to match the one used on ISOGG list of variants 
+(BigTree.Y_GRCh37.V2.250606.nwk and BigTree.Y_GRCh37.V2.250606.vcf.gz)

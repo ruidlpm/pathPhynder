@@ -1,0 +1,256 @@
+ftp.sra.ebi.ac.uk/vol1/run/ERR104/ERR1043138/3DT16-55.f.slx.gz
+
+
+
+labadmin@lab-ba5ee66f-6dbb-45ed-afb5-906cdd2cdb47.uksouth.cloudapp.azure.com
+
+
+
+  cat accessions.txt  | cut -f8 | grep bam | grep  "3DT26\|3DT16\|NO3423" | cut -f1 -d\; > files.txt
+
+ cat accessions.txt  | cut -f8 | grep gz | grep  "3DT26-1\|3DT16-55\|NO3423-93" >> files.txt
+
+
+ cat files.txt | while read i; do wget $i; done &
+
+# mv M1489.100Kreads.fastq.gz sample1.fastq.gz
+# mv 3DT16-55.100Kreads.fastq.gz sample2.fastq.gz
+# mv 3DT26-1.100Kreads.fastq.gz sample3.fastq.gz
+# mv NO3423-93.100Kreads.fastq.gz sample4.fastq.gz
+
+# zcat ../Projects/BAH_2019/Screening4/fastq_reads/HT6-A-BEX1-LIB1-74-PCR1_S10_L001_R1_001.fastq.gz | head -n 400000 |gzip  > sample5.fastq.gz
+
+
+
+# Start here
+
+# install miniconda
+# download script for miniconda installation
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# make the script executable
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+
+# execute script, write yes or press enter when prompted
+sh Miniconda3-latest-Linux-x86_64.sh
+
+# install gdown
+conda install conda-forge::gdown
+
+
+# download data to your folder
+
+mkdir reference_genomes
+gdown --fuzzy  https://drive.google.com/file/d/1EqgHD7vRsvNhQ1o_Yl3xogTxCWwYZXkz/view?usp=drive_link
+
+unzip reference_genomes.zip
+cd ..
+
+
+
+ gdown --fuzzy  https://drive.google.com/file/d/1SJrTgimbZ6wHbIZxjThRz69xvr3GwMxk/view?usp=drive_link
+
+
+tar -xvf ALGY752_workshop.tar.gz
+
+
+ # install fastqc, write "Y" to accept installation
+conda create -n adna_fastqc -c bioconda fastqc
+
+# activate environment
+conda activate adna_fastqc
+
+# inspect your directory using ls
+ls
+
+# the raw data is in the raw_reads_aDNA_workshop folder
+# inspect its contents using ls
+ls raw_reads_aDNA_workshop/
+
+# how many samples have you got?
+# hint: look for files ending in fastq.gz
+
+#run fastqc on all files. to check syntax type fastqc -h
+# below an example of how to run this for sample 1
+fastqc raw_reads_aDNA_workshop/sample1.fastq.gz
+
+# now run fastqc on the other samples
+
+
+
+# the output is written into zip files. Use filezilla to download the zip files.
+# Host: genome.ljmu.ac.uk
+# User: <your username>
+# password: <your password>
+# Port: 22
+# after downloading the zip files to your local computer, open the zip files and open the fastqc_report.html file. Answer the questions in the handout.
+
+
+# Adapter trimming
+mkdir trimmed_reads
+
+# create environment and install software
+conda create -n adna_tools -c bioconda bwa cutadapt samtools=1.20 fastqc mapdamage2
+
+# activate new environment
+conda activate adna_tools
+
+
+ls raw_reads_aDNA_workshop/*fastq.gz | cut -f2 -d/ | cut -f1 -d. | while read i; do echo "cutadapt -a  AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -O 1 -m 30 raw_reads_aDNA_workshop/$i.fastq.gz > trimmed_reads/$i.trimmed.fastq" ; done  > run_cutadapt.sh
+
+sh run_cutadapt.sh
+
+# count the number of reads in the trimmed fastq files
+wc -l trimmed_reads/*fastq | head -n5 | awk '{print $1/4}'
+
+##########################################################
+#  BWA Align  - aligning reads to the human ref genome   #
+##########################################################
+
+
+
+#make bwa_align commands
+mkdir output
+
+
+# align reads to the reference genome
+refgen='../reference_genomes/hs37d5.fa.gz'
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+  echo "bwa aln -t4 -l1024 -n 0.01 -o 2 -q15 $refgen trimmed_reads/$i.trimmed.fastq > output/$i.sai "  > bwa_align.$i.sh
+done
+
+chmod +x bwa_align*.sh
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+ echo $i ; ./bwa_align.$i.sh; done 
+
+# this might take 15 mins
+
+
+##########################################################
+#  BWA Samse  - prints out reads into SAM file     #
+##########################################################
+
+conda activate adna_tools
+
+
+refgen='../reference_genomes/hs37d5.fa.gz'
+
+#make BWA SAMSE commands
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+  echo "bwa samse $refgen  output/$i.sai  trimmed_reads/$i.trimmed.fastq > output/$i.sam"  > bwa_samse.$i.sh
+done
+
+chmod +x bwa_samse.*.sh
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+ echo $i ; ./bwa_samse.$i.sh ; done 
+
+# this might take 5 mins
+
+
+##########################################################
+#  samtools view - converts SAM to BAM (binary format)   #
+##########################################################
+
+#make samtools view
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+  echo "samtools view -F4 -q 25 -Sbh output/$i.sam > output/$i.q25.bam "  > filter.$i.sh
+done
+
+chmod +x filter.*.sh
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+ echo $i ; ./filter.$i.sh & done 
+
+
+
+
+##########################################################
+#  counting the number of reads   #
+##########################################################
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+  samtools sort output/$i.q25.bam  -o output/$i.q25.sorted.bam
+done 
+
+ls trimmed_reads/*.trimmed.fastq  | cut -f1 -d. | cut -f2 -d/| while read i; do
+samtools rmdup -s output/$i.q25.sorted.bam output/$i.q25.sorted.rmdup.bam
+done 
+
+# index files
+ls output/*.q25.sorted.rmdup.bam | while read i; do samtools index $i;  done
+
+
+
+##########################################################
+#  counting the number of reads   #
+##########################################################
+
+# mapped q25
+ls output/*.q25.bam | while read i; do samtools view $i|wc -l; done
+
+# after duplicate removal
+ls output/*.q25.sorted.rmdup.bam | while read i; do samtools view $i|wc -l; done
+
+
+
+
+
+mkdir deamination_results
+ls output/*.q25.sorted.rmdup.bam | while read i; do mapDamage -i $i -r ../reference_genomes/hs37d5.fa.gz  --no-stats ; done && mv resu*/ deamination_results
+
+tar czf  deamination.tar.gz deamination_results/
+
+
+
+
+conda create -n adna_py27 python=2.7
+conda activate adna_py27
+
+
+wget https://raw.githubusercontent.com/pontussk/ry_compute/master/ry_compute.py
+
+chmod +x ry_compute.py
+
+mkdir sex
+
+ls output/*.q25.sorted.rmdup.bam | while read i; do echo $i ; samtools view  $i | python2.7 ry_compute.py ; done > sex/sex_results.txt
+
+
+# set up bioconda
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority flexible
+
+# create environment
+conda create -n adna_pathPhynder -c bioconda pathphynder samtools=1.20
+
+# activate environment
+conda activate adna_pathPhynder
+
+/home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/bigtree_annotated_V1.nwk
+
+/home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/BigTree.Y.201219.vcf.gz
+
+
+
+
+/home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/reference_sequences/hg19_chrY.fa.gz
+
+phynder -B -o branches.snp /home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/bigtree_annotated_V1.nwk /home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/BigTree.Y.201219.vcf.gz
+
+
+pathPhynder -s prepare -i /home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/bigtree_annotated_V1.nwk -p Ydata -f branches.snp
+
+ls *bam | grep -v sample1 > Ybam.list.txt
+
+pathPhynder -s all -i /home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/BigTree_Y/bigtree_annotated_V1.nwk  -p tree_data/Ydata -l Ybam.list.txt -r /home/nsprleit/software/miniconda3/envs/adna_pathPhynder/lib/R/library/pathphynder/data/reference_sequences/hg19_chrY.fa.gz
+
+ pathPhynder -s all -i tree.nwk -p tree_data/<prefix_output> -b <sample.bam>
+
+3DT26_noUDG.SG
+3DT16_noUDG.SG
+NO3423_noUDG.SG
+
