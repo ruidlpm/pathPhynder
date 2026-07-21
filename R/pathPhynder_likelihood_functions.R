@@ -4,7 +4,7 @@
 
 # added plotting functions (Rui 22/11/2019)
 
-tree.constructor = function(tree,edge.num,new.edge.length,pos){
+tree.constructor = function(tree,edge.num,new.edge.length,pos,query.name){
   new.tree = bind.tip(tree,tip.label=query.name,
                       edge.length=new.edge.length,
                       where=tree$edge[edge.num,2], 
@@ -99,12 +99,12 @@ estimatePlotDimensions<-function(tree){
 require(scales)
 
 plot_likes<-function(tree, likes_table, sample_name, results_folder, prior){
-  df<-data.frame(pp=posterior.normal.order, col=NA)
+  df<-data.frame(pp=likes_table, col=NA)
 
   df_filt<-df[log(df$pp)>-6,]
   df_below<-df[log(df$pp)<(-6),]
 
-  df<-data.frame(pp=posterior.normal.order, col=NA)
+  df<-data.frame(pp=likes_table, col=NA)
 
   df_filt<-df[log(df$pp)>-6,]
   df_below<-df[log(df$pp)<(-6),]
@@ -121,7 +121,7 @@ plot_likes<-function(tree, likes_table, sample_name, results_folder, prior){
   df<-df[order(as.numeric(rownames(df))),]
   
 
-  pdf(file=paste0(results_folder,'/',out_prefix,'.posteriors.',prior,'.pdf'),height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
+  pdf(file=paste0(results_folder,'/',sample_name,'.posteriors.',prior,'.pdf'),height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
   par(mar = rep(2, 4))
   plot((tree) ,  show.tip.label=T, edge.col=df$col, cex=0.25, col='grey', edge.width=1+df$pp)
   df_pphigh<-df_filt
@@ -142,7 +142,7 @@ plot_likes<-function(tree, likes_table, sample_name, results_folder, prior){
 
 
 plot_final_tree<-function(new.tree, out_prefix, results_folder, prior){
-  pdf(file=paste0(results_folder,'/',out_prefix,'final_tree.',prior,'.pdf'),height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
+  pdf(file=paste0(results_folder,'/',out_prefix,'final_tree.',prior,'.pdf'),height=estimatePlotDimensions(new.tree)[[1]], width=estimatePlotDimensions(new.tree)[[2]])
   plot(ladderize(new.tree) ,  show.tip.label=T)
   dev.off()
 }

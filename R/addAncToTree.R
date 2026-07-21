@@ -2,10 +2,9 @@ suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
 cat('\n\n',"addAncToTree.R", '\n\n\n')
 
-tmparg <- commandArgs(trailingOnly = F)  
+tmparg <- commandArgs(trailingOnly = F)
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
-# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('addAncToTree.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
+packpwd<-scriptPath
 
 source(paste0(packpwd,'/functions_pathPhynder.R'))
 getAncestors<-phytools:::getAncestors
@@ -49,7 +48,7 @@ readBestNodes<-function(){
 		stop("No files with best node info.")
 	} else {
 		for (i in res){
-			tmp<-try(read.table(paste0("results_folder/",i), h=T, stringsAsFactors=F), silent=T)
+			tmp<-try(read.table(paste0("results_folder/",i), h=T, sep='\t', stringsAsFactors=F), silent=T)
 			if (class(tmp)!="try-error"){
 				if (dim(tmp)[1]==1){
 					df<-rbind(df,tmp)
@@ -76,7 +75,6 @@ newtree<-tree
 
 added_samples<-NULL
 for (i in 1:length(best_nodes_table$best_node)){
-    print(best_nodes_table[i,])
     # Get descendants of final_node in tree
     desc<-(getDescendants(tree, best_nodes_table$best_node[i]))
     desc_tip_names<-tree$tip.label[tree$tip.label %in% tree$tip.label[desc]]
@@ -93,7 +91,6 @@ for (i in 1:length(best_nodes_table$best_node)){
    best_path_table<-read.table(best_path_table_str, h=T, sep='\t')
    
    score_string<-get_score(best_path_table)
-    print(paste0("Score (derived above-ancestral above;derived at branch-ancestral at branch):", score_string))
     if (best_nodes_table$estimated_loc_at_branch[i]==0){
         try(newtree<-bind.tip(tree=newtree, position = 0, edge.length=0.0001, where=final_node_in_new_tree,tip.label = paste0(best_nodes_table$sample[i],'  ', score_string)))
 
@@ -118,6 +115,6 @@ for (i in 1:length(best_nodes_table$best_node)){
 
 pdf(file=paste0("results_folder","/final_tree.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
 plot(ladderize(newtree), show.tip.label=T,tip.color=ifelse(newtree$tip.label %in% added_samples, yes=2, no=1), cex=0.15)
-dev.off()
+invisible(dev.off())
 
 write.tree(newtree,file=paste0('results_folder','/final_tree.nwk'))

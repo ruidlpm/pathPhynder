@@ -3,18 +3,17 @@ suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 
 getAncestors<-phytools:::getAncestors
 
-tmparg <- commandArgs(trailingOnly = F)  
+tmparg <- commandArgs(trailingOnly = F)
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
-# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('chooseBestPath.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
+packpwd<-scriptPath
 
 args = commandArgs(trailingOnly=TRUE)
 
 # test if no args are given
-if (length(args)!=7) {
+if (length(args)!=8) {
     stop("  Arguments needed.\n
         \tusage
-        \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maximumTolerance> <out_prefix>
+        \tRscript chooseBestPath.R <input_phylogeny.nwk> <prefix> intree.txt <results_folder> <maximumTolerance> <out_prefix> <haplogroups> <extra_reports>
         ", call.=FALSE)
 }
 
@@ -31,6 +30,10 @@ if (args[7]!='none'){
 } else {
 	call_hgs<-F
 }
+#diagnostic reports not needed for haplogroup calling and not read by any
+#later step (all_paths_report.txt, hg_in_tree_status.txt, .all_counts,
+#snp_info_along_path) - off unless -x/--extra_reports was passed
+extra_reports<-as.logical(args[8])
 
 
 
@@ -104,26 +107,28 @@ path_scores<-traversePaths(paths,branch_counts, maximumTolerance)
 if (sum(path_scores$total_derived)==0){
 
 	pdf(file=paste0(results_folder,"/",out_prefix,".branch_counts_no_path.pdf"), height=estimatePlotDimensions(tree)[[1]], width=estimatePlotDimensions(tree)[[2]])
-	plotAncDerSNPTree(branch_counts)
-	dev.off()
+	plotAncDerSNPTree(branch_counts, tree)
+	invisible(dev.off())
 
-	count_all_paths<-makeCountsEveryPath(paths, branch_counts)
-	write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+	if (extra_reports){
+		count_all_paths<-makeCountsEveryPath(paths, branch_counts)
+		write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+	}
 
 	stop("No Derived SNPs observed, can't choose path.")
 }
 
 #chose best path
-best_path<-chooseBestPath(path_scores,branch_counts)
+best_path<-chooseBestPath(path_scores,branch_counts,paths)
 
 best_node<-best_path[length(best_path)]
 
-cat(paste0('Best node: ',best_node), '\n')
+cat(paste0('Best node: ',best_node, '\n'))
 
 
 
 #get position in branch (0 if no conflict markers are seen)
-position_in_branch<-estimatePositionInBranch(best_path)
+position_in_branch<-estimatePositionInBranch(best_path,branch_counts)
 
 best_path_counts<-getCountsforPath(best_path, branch_counts, "nodes")
 
@@ -135,9 +140,10 @@ best_path_report<-getCountsforPath(best_path_counts$Edge,branch_counts, "edges")
 
 write.table(best_path_report, file=paste0(results_folder,"/",out_prefix,".best_path_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
-count_all_paths<-makeCountsEveryPath(paths, branch_counts)
-
-write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+if (extra_reports){
+	count_all_paths<-makeCountsEveryPath(paths, branch_counts)
+	write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_paths_report.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+}
 
 
 
@@ -148,9 +154,9 @@ write.table(count_all_paths, file=paste0(results_folder,"/",out_prefix,".all_pat
 #makeSNPStatusOutput
 snp_status<-makeSNPStatusOutput(all_counts)
 
-write.table(all_counts, file=paste0(results_folder,"/",out_prefix,".all_counts"), sep='\t',row.names=F, col.names=T, quote=F)
-
-table(all_counts$allele_status)
+if (extra_reports){
+	write.table(all_counts, file=paste0(results_folder,"/",out_prefix,".all_counts"), sep='\t',row.names=F, col.names=T, quote=F)
+}
 
 if (call_hgs){
 	cat('Writing haplogroup reports\n')
@@ -161,10 +167,11 @@ if (call_hgs){
 		}
 	} else {
 	#makeHaplogroupStatusOutput
-	hg_status<-makeHaplogroupStatusOutput(all_counts)
-	
-	write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
-	
+	if (extra_reports){
+		hg_status<-makeHaplogroupStatusOutput(all_counts)
+		write.table(hg_status, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+	}
+
 	
 	# hg_status_derived<-hg_status[hg_status$derived_count>0,]
 	# write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_derived_only.txt"), sep='\t',row.names=F, col.names=T, quote=F)
@@ -178,23 +185,30 @@ if (call_hgs){
 	hg_status_derived<-makeHaplogroupStatusOutput(df)
 	write.table(hg_status_derived, file=paste0(results_folder,"/",out_prefix,".hg_in_tree_status_along_bestpath.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 	
+	#markers explicitly flagged as 'mismatch' (or with no hg_strand at all) get no hg_status -
+	#using exact equality here (rather than !=) so 'mismatch' isn't mistaken for a flip
+	same_orientation<-as.character(df$hg_strand)==as.character(df$status)
+	flipped_orientation<-(df$hg_strand=='+' & df$status=='-') | (df$hg_strand=='-' & df$status=='+')
 	df$hg_status<-NA
-	df$hg_status[which(as.character(df$hg_strand)==as.character(df$status) & df$allele_status=='Der')]<-"Der"	
-	df$hg_status[which(as.character(df$hg_strand)==as.character(df$status) & df$allele_status=='Anc')]<-"Anc"	
-	df$hg_status[which(as.character(df$hg_strand)!=as.character(df$status) & df$allele_status=='Anc')]<-"Der"	
-	df$hg_status[which(as.character(df$hg_strand)!=as.character(df$status) & df$allele_status=='Der')]<-"Anc"	
+	df$hg_status[which(same_orientation & df$allele_status=='Der')]<-"Der"
+	df$hg_status[which(same_orientation & df$allele_status=='Anc')]<-"Anc"
+	df$hg_status[which(flipped_orientation & df$allele_status=='Anc')]<-"Der"
+	df$hg_status[which(flipped_orientation & df$allele_status=='Der')]<-"Anc"
 
 
 	# df$allele_status<-NULL
 
 
-	write.table(df, file=paste0(results_folder,"/",out_prefix,".snp_info_along_path"), sep='\t',row.names=F, col.names=T, quote=F)
+	if (extra_reports){
+		write.table(df, file=paste0(results_folder,"/",out_prefix,".snp_info_along_path"), sep='\t',row.names=F, col.names=T, quote=F)
+	}
 
 	isogg_hgs_out<- paste0("intree_folder/",out_prefix,".hgs.txt")
 
 	if(file.exists(isogg_hgs_out)){
-		hg_isogg_status<-determineHG(isogg_hgs_out, best_path_report)
-		write.table(hg_isogg_status, file=paste0(results_folder,"/",out_prefix,".isogg_hg_determination.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+		hg_isogg_status<-determineHG(isogg_hgs_out, best_path_report, edge_df=edge_df)
+		write.table(hg_isogg_status$summary, file=paste0(results_folder,"/",out_prefix,".isogg_hg_determination.txt"), sep='\t',row.names=F, col.names=T, quote=F)
+		write.table(hg_isogg_status$marker_detail, file=paste0(results_folder,"/",out_prefix,".isogg_marker_detail.txt"), sep='\t',row.names=F, col.names=T, quote=F)
 
 	} else {
 		print('for more detailed haplogroup information, run step 1 with with -G <known haplogroups list>, and then rerun step 2')
@@ -215,7 +229,7 @@ if (is.null(position_in_branch)){
 
 }
 
-dev.off()
+invisible(dev.off())
 
 
 

@@ -3,16 +3,9 @@ suppressWarnings(suppressPackageStartupMessages(library(phytools)))
 suppressWarnings(suppressPackageStartupMessages(library(phangorn)))
 suppressWarnings(suppressPackageStartupMessages(library(pracma)))
 
-tmparg <- commandArgs(trailingOnly = F)  
+tmparg <- commandArgs(trailingOnly = F)
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
-# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'/R')
-
-
-tmparg <- commandArgs(trailingOnly = F)  
-scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
-# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pathPhynder_likelihood_runner.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
+packpwd<-scriptPath
 cat('\n\n',"pathPhynder_likelihood_runner.R", '\n\n\n')
 
 
@@ -155,7 +148,7 @@ model = "GTR" # make this the default, and make it a user option i think
 fake.fasta = apply(temp,1, function(x) ifelse( x[1:num.samples]==0,x[num.samples+1],x[num.samples+2]) )
 phydat = phyDat(fake.fasta)
 edge.loglik = function(edge.num){
-  tree.with.query = tree.constructor(tree,edge.num,new.edge.length=1e-3*tree$edge.length[edge.num],pos=0.5*tree$edge.length[edge.num])
+  tree.with.query = tree.constructor(tree,edge.num,new.edge.length=1e-3*tree$edge.length[edge.num],pos=0.5*tree$edge.length[edge.num],query.name=query.name)
   return(pml(tree.with.query,phydat,model=model)$logLik)
 }
 
@@ -194,10 +187,10 @@ if (length(final.edge.num)>1) {
   ymin = 1e-3 * branch.length # minimum place on edge
   ymax = (1-1e-3) * branch.length # maximum place on edge
   new.edge.length = 1e-3 * min(tree$edge.length) # length of query branch, effectively 0
-  fels = function(y) -pml(tree.constructor( tree,final.edge.num,new.edge.length,pos=y),phydat,model=model)$logLik
+  fels = function(y) -pml(tree.constructor( tree,final.edge.num,new.edge.length,pos=y,query.name=query.name),phydat,model=model)$logLik
   robot = optim(par=branch.length/2,fn=fels,method="L-BFGS-B",
                 lower = ymin,upper=ymax,control = list(parscale=ymin))
-  new.tree = tree.constructor(tree,final.edge.num,new.edge.length,pos=robot$par)
+  new.tree = tree.constructor(tree,final.edge.num,new.edge.length,pos=robot$par,query.name=query.name)
   newqueryedge = which(new.tree$edge[,2] == which(new.tree$tip.label == query.name))
 
   # if one result

@@ -41,7 +41,7 @@ else:
     print('mode: ' + mode)
 
 if min_depth_cov==None:
-    min_depth_cov='1'
+    min_depth_cov=1
     print('min_depth_cov: ' + str(1))
 else:
     print('min_depth_cov: ' + str(min_depth_cov))

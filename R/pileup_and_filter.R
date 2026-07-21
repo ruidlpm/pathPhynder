@@ -12,10 +12,9 @@ if (length(args)<10) {
 }
 
 
-tmparg <- commandArgs(trailingOnly = F)  
+tmparg <- commandArgs(trailingOnly = F)
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))
-# tmpstr<-system('bash -l',input=c("shopt -s expand_aliases","type pathPhynder"), intern=T)
-packpwd<-paste0(gsub('pileup_and_filter.R','',gsub('\'','',gsub('.*.Rscript ','',scriptPath))),'')
+packpwd<-scriptPath
 
 
 sites_data<-args[2] 
@@ -47,9 +46,6 @@ for (testfile in c(args[1], sites_var, args[4])){
 	}
 }
 
-print(refgen_path)
-
-
 
 if (args[10]!='none'){
 	haplogroups<-args[10]
@@ -57,7 +53,7 @@ if (args[10]!='none'){
 	a$V3<-as.numeric(a$V3)
 	a<-a[!is.na(a$V3),]
 	if (dim(a)[2]!=5){
-		stop(paste0('expected 5 columns in haplogroup table, found ', dim(5)[2]))
+		stop(paste0('expected 5 columns in haplogroup table, found ', dim(a)[2]))
 	}
 	hg_call_df<-data.frame(chromosome_name,a$V3-1, a$V3)
 	write.table(file='hg_call_df.txt',hg_call_df, quote=F, row.names=F, col.names=F, sep='\t')
@@ -67,35 +63,32 @@ if (args[10]!='none'){
 if (input_type=="bam_file"){
 		file_path<-args[1]
 
-		sample_name<-unlist(strsplit(file_path,'\\/'))[as.numeric(length(unlist(strsplit(file_path,'\\/'))))]
-		if (out_prefix!="sample"){
-			sample_name<-out_prefix
-		}
+		#out_prefix is always the resolved sample name passed in by pathPhynder.R
+		sample_name<-out_prefix
 		if (!file.exists(file_path)) {
 			print(paste(file_path, "- does this file exist?"))
 		} else {
 			pos_var<-paste0(sites_data,".sites.txt")
 			
 			cat('calling SNPs for tree placement\n')
-			cmd=paste0("samtools mpileup -q 25 ", file_path,
+			cmd=paste0("samtools mpileup -q 25 ", shQuote(file_path),
 				paste0(" --min-BQ ", base_qual), ' ' ,
 				" --no-BAQ --ignore-RG --positions ",
-				sites_var,
-				paste0(" -f ",refgen_path),
-				paste0(">", intree_folder,'/',sample_name,".pileup"))
-			
+				shQuote(sites_var),
+				paste0(" -f ",shQuote(refgen_path)),
+				paste0(" > ", shQuote(paste0(intree_folder,'/',sample_name,".pileup"))))
+
 			system(cmd, wait=T)
-	print(cmd)
-		
+
 			if (args[10]!='none'){
-				
+
 				cat('calling haplogroup defining SNPs\n')
 				cmd=paste0("samtools mpileup ",
-					paste0(file_path),
+					shQuote(file_path),
 					paste0(" --min-BQ ", base_qual),
 					" --no-BAQ --ignore-RG --positions hg_call_df.txt",
-					paste0(" -f ",refgen_path),
-					paste0(">", intree_folder,'/',sample_name,".calls_hgs.pileup"))
+					paste0(" -f ",shQuote(refgen_path)),
+					paste0(" > ", shQuote(paste0(intree_folder,'/',sample_name,".calls_hgs.pileup"))))
 
 				system(cmd, wait=T)
 				# system('rm hg_call_df.txt')
@@ -104,26 +97,26 @@ if (input_type=="bam_file"){
 			#for likelihood estimation
 			#if 'likes' in names of sites variable, then output with name 'status.txt'
 			if (length(grep('likes', sites_var))>0){
-				cmd_likes=paste0("python3 ",gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py ",
-					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
+				cmd_likes=paste0("python3 ",shQuote(paste0(gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py")),
+					paste0(" -i ", shQuote(paste0(intree_folder,'/',sample_name,".pileup"))),
 					paste0(" -m ", mode),
-					paste0(" -o ", intree_folder,'/',sample_name,".status.txt"),
-					paste0(" -t ", pos_var),
+					paste0(" -o ", shQuote(paste0(intree_folder,'/',sample_name,".status.txt"))),
+					paste0(" -t ", shQuote(pos_var)),
 					paste0(" -c ", pileup_read_mismatch_threshold)
 					)
 
 				system(cmd_likes, wait=T)
 			} else {
 				#for best path estimation
-				cmd_bestpath=paste0("python3 ",gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py ",
-					paste0(" -i ", intree_folder,'/',sample_name,".pileup"),
+				cmd_bestpath=paste0("python3 ",shQuote(paste0(gsub("R$","",packpwd), "inst/python/call_bases_chrY_v2.1.py")),
+					paste0(" -i ", shQuote(paste0(intree_folder,'/',sample_name,".pileup"))),
 					paste0(" -m ", mode),
-					paste0(" -o ", intree_folder,'/',sample_name,".intree.txt"),
-					paste0(" -t ", pos_var),
+					paste0(" -o ", shQuote(paste0(intree_folder,'/',sample_name,".intree.txt"))),
+					paste0(" -t ", shQuote(pos_var)),
 					paste0(" -c ", pileup_read_mismatch_threshold),
-					paste0(" -g ", args[10])
+					paste0(" -g ", shQuote(args[10]))
 					)
 				system(cmd_bestpath, wait=T)
-		}	
+		}
 	}
 }

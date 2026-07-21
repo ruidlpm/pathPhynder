@@ -62,9 +62,9 @@ main_file<-main_file[c('CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'IN
 
 
 
-system(paste('echo \\#\\#fileformat=VCFv4.2 > ',outfile))
-system(paste('echo \\#\\#FORMAT=\\<ID=GT,Number=1,Type=String,Description=\\"Genotype\\"\\> >>',outfile))
-system(paste("echo", "\\#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT", paste(sample_names, collapse="\t"), " | tr -s ' ' |tr ' ' '\t' >>", outfile,  sep='\t'))
+system(paste('echo \\#\\#fileformat=VCFv4.2 > ',shQuote(outfile)))
+system(paste('echo \\#\\#FORMAT=\\<ID=GT,Number=1,Type=String,Description=\\"Genotype\\"\\> >>',shQuote(outfile)))
+system(paste("echo", "\\#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT", paste(sample_names, collapse="\t"), " | tr -s ' ' |tr ' ' '\t' >>", shQuote(outfile),  sep='\t'))
 
 write.table(file=outfile,main_file, append=T, sep='\t', col.names=F, row.names=F, quote=F)
 

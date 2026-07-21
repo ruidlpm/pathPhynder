@@ -13,7 +13,7 @@ parser.add_argument('-m', action="store", dest="mode_selected", type=str)
 parser.add_argument('-t', action="store", dest="SNP_info", type=str)
 parser.add_argument('-o', action="store", dest="allele_count_output", type=str)
 parser.add_argument('-c', action="store", dest="pileup_read_mismatch_threshold", type=float)
-parser.add_argument('-d', action="store", dest="min_depth_cov", type=int)
+parser.add_argument('-d', action="store", dest="min_depth_cov", type=int, help="minimum combined ANC+DER read depth required to call a site (default 0, i.e. no minimum)")
 parser.add_argument('-g', action="store", dest="call_haplogroups", type=str)
 
 
@@ -66,56 +66,33 @@ print ("\nProcessing ", pileup_input)
 #################################################################
 def remove_deamin(A_count, T_count,Derived_match, mut, mode):
     """
-    remove cases where mismateches can be reliably excluded.
+    remove cases where mismatches can be reliably excluded.
+    Only called when mut is 'C->T' or 'G->A' (deamination-prone mutations);
+    'transversions' mode is handled by the caller before this function is reached.
 
-    mode 'default' - if mutation is C->T or G->A, then if T_count or A_count==1 (and allele count is = 1),
-                          then set A_count=0 or T_count=0.
+    mode 'default' - if T_count or A_count==1 (a single supporting read),
+                          treat it as deamination noise and set it to 0.
                           if allele count more than 1, then consider it real,  i.e.
-                          T_count or A_count>1, then consider this as a real nutation
+                          T_count or A_count>1, then consider this as a real mutation
     mode 'no-filter' - leave C->T or G->A mutations as they are
     """
-    if mut!='C->T' and mut!='G->A':
-        if Derived_match=='T':
-            if T_count>0:
-                T_count=0
-                return((T_count))
+    if mode=='default':
+        if mut=='C->T' and Derived_match=='T':
+            if T_count==1:
+                return(0)
             else:
-                return((T_count))
-        elif Derived_match=='A':
-            if A_count>0:
-                A_count=0
-                return((A_count))
-            else:
-                return((A_count))
-
-    if mut=='C->T' or mut=='G->A':
-        if mode=='default':
-            if mut=='C->T' and Derived_match=='T':
-                if T_count==1:
-                    T_count=0
-                    return((T_count))
-                else:
-                    return((T_count))
-            elif mut=='G->A' and Derived_match=='A':
-                if A_count==1:
-                    A_count=0
-                    return((A_count))
-                else:
-                    return((A_count))
-
-        elif mode=='no-filter':
-            if mut=='C->T' and Derived_match=='T':
                 return(T_count)
-            if mut=='G->A' and Derived_match=='A':
-                return((A_count))
+        elif mut=='G->A' and Derived_match=='A':
+            if A_count==1:
+                return(0)
+            else:
+                return(A_count)
 
-        # elif mode=='transversions':
-        #     if mut=='C->T' and Derived_match=='T':
-        #         T_count=0
-        #         return(T_count)
-        #     if mut=='G->A' and Derived_match=='A':
-        #         A_count=0
-        #         return(A_count)
+    elif mode=='no-filter':
+        if mut=='C->T' and Derived_match=='T':
+            return(T_count)
+        if mut=='G->A' and Derived_match=='A':
+            return(A_count)
 
 
 def chunk_string(s, n):
@@ -251,31 +228,36 @@ for entry in base_calls:
                         T_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
                     elif mut_match=='G->A' and Derived_match=='A':
                         A_count = remove_deamin(A_count, T_count,Derived_match, mut_match, mode_selected)
-                if eval(Ancestral_match + '_count')>0 and eval(Derived_match + '_count')>0:
-                    obs_mismatchAnc = eval(Ancestral_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
-                    obs_mismatchDer = eval(Derived_match + '_count')/(eval(Ancestral_match + '_count')+eval(Derived_match + '_count'))
+                base_counts = {'A': A_count, 'T': T_count, 'C': C_count, 'G': G_count}
+                total_depth = base_counts[Ancestral_match] + base_counts[Derived_match]
+                if total_depth < min_depth_cov:
+                    res_removed.append(hg_match)
+                    output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], '-9'])
+                elif base_counts[Ancestral_match]>0 and base_counts[Derived_match]>0:
+                    obs_mismatchAnc = base_counts[Ancestral_match]/(base_counts[Ancestral_match]+base_counts[Derived_match])
+                    obs_mismatchDer = base_counts[Derived_match]/(base_counts[Ancestral_match]+base_counts[Derived_match])
                     if obs_mismatchAnc!=obs_mismatchDer:
                         if obs_mismatchAnc>obs_mismatchDer and obs_mismatchAnc>=pileup_read_mismatch_threshold:
-                            output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 0])
+                            output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], 0])
                             res_ancestral.append(hg_match)
                         elif obs_mismatchAnc<obs_mismatchDer and obs_mismatchDer>=pileup_read_mismatch_threshold:
-                            output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 1])
+                            output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], 1])
                             res_derived.append(hg_match)
                         else:
-                            output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
+                            output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], -9])
                             res_mismatch.append(hg_match)
                     else:
                         res_mismatch.append(hg_match)
-                        output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), -9])
-                elif eval(Derived_match + '_count')>0 and eval(Ancestral_match + '_count')==0:
+                        output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], -9])
+                elif base_counts[Derived_match]>0 and base_counts[Ancestral_match]==0:
                     res_derived.append(hg_match)
-                    output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 1])
-                elif eval(Ancestral_match + '_count')>0 and eval(Derived_match + '_count')==0:
+                    output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], 1])
+                elif base_counts[Ancestral_match]>0 and base_counts[Derived_match]==0:
                     res_ancestral.append(hg_match)
-                    output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), 0])
-                elif eval(Ancestral_match + '_count')==0 and eval(Derived_match + '_count')==0:
+                    output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], 0])
+                elif base_counts[Ancestral_match]==0 and base_counts[Derived_match]==0:
                     res_removed.append(hg_match)
-                    output_allele_status.append([POS, Ancestral_match, Derived_match, eval(Ancestral_match + '_count'), eval(Derived_match + '_count'), '-9'])
+                    output_allele_status.append([POS, Ancestral_match, Derived_match, base_counts[Ancestral_match], base_counts[Derived_match], '-9'])
     else:
         print('not in dict')
 
@@ -366,12 +348,15 @@ if not options.call_haplogroups == 'none':
                     status='NA(nodatapassfilt)'
                     NA_snps=NA_snps+1
                 elif ANC_count>0 and DER_count>0:
-                    obs_mismatchAnc = ANC_count/ANC_count+DER_count
-                    obs_mismatchDer = DER_count/ANC_count+DER_count
+                    obs_mismatchAnc = ANC_count/(ANC_count+DER_count)
+                    obs_mismatchDer = DER_count/(ANC_count+DER_count)
                     if obs_mismatchAnc>obs_mismatchDer and obs_mismatchAnc>=pileup_read_mismatch_threshold:
                         status='NA(mismatch)'
                         NA_snps=NA_snps+1
                     elif obs_mismatchDer>obs_mismatchAnc and obs_mismatchDer>=pileup_read_mismatch_threshold:
+                        status='NA(mismatch)'
+                        NA_snps=NA_snps+1
+                    else:
                         status='NA(mismatch)'
                         NA_snps=NA_snps+1
                 else:
