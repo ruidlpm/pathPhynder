@@ -6,7 +6,7 @@
 suppressWarnings(suppressPackageStartupMessages(library("optparse")))
 suppressWarnings(suppressPackageStartupMessages(library("phytools")))
 
-current_version<-'Version: 1.3.0'
+current_version<-'Version: 1.3.1'
 
 tmparg <- commandArgs(trailingOnly = F)
 scriptPath <- normalizePath(dirname(sub("^--file=", "", tmparg[grep("^--file=", tmparg)])))

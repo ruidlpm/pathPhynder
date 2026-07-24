@@ -26,3 +26,6 @@
  - added -x/--extra_reports flag to skip writing diagnostic-only reports (all_paths_report.txt, hg_in_tree_status.txt, .all_counts, snp_info_along_path) by default
  - cleaned up console output (removed leftover debug prints, suppressed stray auto-prints)
  - restructured documentation into docs/installation.md, docs/workflow.md, and CHANGELOG.md; added scripts/update_workflow_options.sh to keep the CLI reference in sync with --help
+
+21/07/2026 Version: 1.3.1
+ - re-added R/assign_noNA.R as an empty stub (real script moved to archive/assign_noNA.R in 1.3.0) for compatibility with the bioconda-recipes build script, which hardcodes this filename in a post-install path-rewrite step
