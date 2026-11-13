@@ -95,6 +95,25 @@ def remove_deamin(A_count, T_count,Derived_match, mut, mode):
             return(A_count)
 
 
+def filter_haplogroup_counts(anc_count, der_count, anc, der, reference, mode):
+    """Apply damage filters to counts in ancestral/derived order."""
+    if (anc=='C' and der=='T') or (anc=='T' and der=='C'):
+        source, damaged='C', 'T'
+    elif (anc=='G' and der=='A') or (anc=='A' and der=='G'):
+        source, damaged='G', 'A'
+    else:
+        return anc_count, der_count
+
+    if mode=='transversions':
+        return 0, 0
+    if mode=='default' and reference==source:
+        if anc==damaged and anc_count==1:
+            anc_count=0
+        elif der==damaged and der_count==1:
+            der_count=0
+    return anc_count, der_count
+
+
 def chunk_string(s, n):
     return [s[i:i+n] for i in range(len(s)-n+1)]
 
@@ -344,6 +363,8 @@ if not options.call_haplogroups == 'none':
                 DER=hg_match[4]
                 ANC_count=line[base_dict[ANC]]
                 DER_count=line[base_dict[DER]]
+                ANC_count, DER_count=filter_haplogroup_counts(
+                    ANC_count, DER_count, ANC, DER, line[2], mode_selected)
                 if ANC_count==0 and DER_count==0:
                     status='NA(nodatapassfilt)'
                     NA_snps=NA_snps+1
